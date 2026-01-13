@@ -1,4 +1,4 @@
-package com.smtm.pickle
+package com.smtm.pickle.data
 
 import org.junit.Test
 
