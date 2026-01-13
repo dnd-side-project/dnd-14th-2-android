@@ -1,4 +1,4 @@
-package com.smtm.pickle.ui.theme
+package com.smtm.pickle.presentation.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
