@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Pickle"
 include(":app")
+include(":domain")
+include(":presentation")
+include(":data")
