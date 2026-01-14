@@ -1,5 +1,6 @@
 package com.smtm.pickle.presentation.onboarding
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,13 +25,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -39,7 +46,10 @@ data class OnboardingPage(
 )
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(
+    viewModel: OnboardingViewModel = hiltViewModel(),
+    onCompleted: () -> Unit = {},
+) {
     val pages = remember {
         listOf(
             OnboardingPage(
@@ -56,11 +66,25 @@ fun OnboardingScreen() {
             )
         )
     }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.events.collect { effect ->
+                when (effect) {
+                    is OnboardingEvent.NavigateToLogin -> {
+                        Toast.makeText(context, "온보딩 완료\n로그인 화면으로 이동 구현 필요", Toast.LENGTH_SHORT).show()
+                        onCompleted()
+                    }
+                }
+            }
+        }
+    }
 
     OnBoardingRoute(
         pages = pages,
         onBack = {},
-        onSkipOrFinish = {}
+        onSkipOrFinish = viewModel::completeOnboarding
     )
 }
 
