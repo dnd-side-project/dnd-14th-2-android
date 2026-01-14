@@ -81,7 +81,7 @@ fun OnboardingScreen(
         }
     }
 
-    OnBoardingRoute(
+    OnboardingContent(
         pages = pages,
         onBack = {},
         onSkipOrFinish = viewModel::completeOnboarding
@@ -89,7 +89,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun OnBoardingRoute(
+private fun OnboardingContent(
     pages: List<OnboardingPage>,
     onBack: () -> Unit,
     onSkipOrFinish: () -> Unit,
@@ -224,9 +224,8 @@ fun PageIndicator(
             Box(
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
-                    .size(8.dp)
-                    .clip(RoundedCornerShape(4.dp))
                     .size(if (isSelected) 8.dp else 6.dp)
+                    .clip(RoundedCornerShape(4.dp))
                     .background(if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFFBDBDBDBD)),
             )
         }
