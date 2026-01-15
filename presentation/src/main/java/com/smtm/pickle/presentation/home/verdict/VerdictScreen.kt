@@ -7,7 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -17,8 +20,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.smtm.pickle.presentation.common.utils.isPostNotificationsGranted
 import com.smtm.pickle.presentation.common.utils.openAppSettings
 
@@ -79,12 +87,40 @@ fun VerdictScreen(modifier: Modifier) {
 
 @Composable
 private fun VerdictContent(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "소비 심판 화면")
+            Text(
+                modifier = Modifier
+                    .weight(1f),
+                text = "소비 심판 화면",
+                textAlign = TextAlign.Center
+            )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp)
+                    .padding(horizontal = 16.dp),
+                onClick = {
+                    val notification = NotificationCompat.Builder(context, "verdict_result")
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setContentTitle("소비 심판 결과")
+                        .setContentText("오늘 커피 5,000원은 낭비예요!")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .build()
+
+                    NotificationManagerCompat.from(context)
+                        .notify(System.currentTimeMillis().toInt(), notification)
+
+                }) {
+                Text(text = "Notification Send")
+            }
         }
     }
 }

@@ -46,6 +46,12 @@ mockk = "1.14.7"
 # UI
 material = "1.13.0"
 
+# Google Service
+googleServices = "4.4.4"
+
+# Firebase
+firebaseBom = "34.7.0"
+
 [libraries]
 # AndroidX
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -100,6 +106,10 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 # UI
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+
 [plugins]
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -116,6 +126,9 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+# Google
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 
 [bundles]
 androidx = [

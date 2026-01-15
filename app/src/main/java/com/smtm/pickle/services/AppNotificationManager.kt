@@ -3,6 +3,7 @@ package com.smtm.pickle.services
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,5 +34,18 @@ class AppNotificationManager @Inject constructor(
         }
 
         notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    fun showNotification(title: String, message: String, channel: AppNotificationChannel) {
+        val notificationId = System.currentTimeMillis().toInt()
+        val notification = NotificationCompat.Builder(context, channel.channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(channel.importance)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(notificationId, notification)
     }
 }
