@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invaild_credential_type">Invaild credential type</string>
+    <string name="unknown_error">Unknown Error</string>
+</resources>
