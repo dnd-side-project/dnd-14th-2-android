@@ -1,7 +1,8 @@
 package com.smtm.pickle.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.smtm.pickle.data.source.local.datastore.TokenDataStore
+import com.smtm.pickle.data.source.remote.api.AuthService
+import com.smtm.pickle.domain.provider.TokenProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "" // TODO: 추후 서버 주소 삽입
+    private const val BASE_URL = "https://jsonplaceholder.typicode.com/" // TODO: 추후 서버 주소 삽입
 
     @Provides
     @Singleton
@@ -40,7 +41,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenDataStore: TokenDataStore): Interceptor {
+    fun provideAuthInterceptor(tokenProvider: TokenProvider): Interceptor {
         // 로그인 요청이 아니면 토큰 추가
         return Interceptor { chain ->
             val originalRequest = chain.request()
@@ -49,7 +50,7 @@ object NetworkModule {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
-            val accessToken = runBlocking { tokenDataStore.getAccessToken() }
+            val accessToken = runBlocking { tokenProvider.getAccessToken() }
 
             val newRequest = accessToken?.let {
                 originalRequest.newBuilder()
