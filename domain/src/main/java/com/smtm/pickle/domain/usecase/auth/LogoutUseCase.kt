@@ -1,12 +1,12 @@
 package com.smtm.pickle.domain.usecase.auth
 
-import com.smtm.pickle.domain.repository.AuthRepository
+import com.smtm.pickle.domain.provider.TokenProvider
 import javax.inject.Inject
 
 class LogoutUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val tokenProvider: TokenProvider
 ) {
     suspend operator fun invoke() {
-        authRepository.clearToken()
+        tokenProvider.clearToken()
     }
 }

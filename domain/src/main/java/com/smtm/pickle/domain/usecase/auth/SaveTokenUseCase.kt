@@ -1,13 +1,13 @@
 package com.smtm.pickle.domain.usecase.auth
 
 import com.smtm.pickle.domain.model.auth.AuthToken
-import com.smtm.pickle.domain.repository.AuthRepository
+import com.smtm.pickle.domain.provider.TokenProvider
 import javax.inject.Inject
 
 class SaveTokenUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val tokenProvider: TokenProvider
 ) {
     suspend operator fun invoke(token: AuthToken) {
-        authRepository.saveToken(token)
+        tokenProvider.saveToken(token)
     }
 }
