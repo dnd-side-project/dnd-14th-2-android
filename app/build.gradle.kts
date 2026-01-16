@@ -48,12 +48,17 @@ dependencies {
     implementation(project(":data"))
 
     implementation(libs.bundles.androidx)
+    implementation(libs.androidx.work.runtime)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    // Hilt WorkManager
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
 
     // Logging
     implementation(libs.timber)
