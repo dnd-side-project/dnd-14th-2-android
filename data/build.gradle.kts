@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
 
 android {
@@ -17,6 +26,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            type = "String",
+            name = "GOOGLE_WEB_CLIENT_ID",
+            value = "\"${localProperties.getProperty("GOOGLE_WEB_CLIENT_ID") ?: ""}\""
+        )
     }
 
     buildTypes {
@@ -31,6 +46,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -53,9 +71,15 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore)
 
+    // Social SDK
+    implementation(libs.bundles.social)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    // Logging
+    implementation(libs.timber)
 
     testImplementation(libs.bundles.testing)
 }

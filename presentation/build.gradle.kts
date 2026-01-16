@@ -1,18 +1,9 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-}
-
-val localProperties = Properties().apply {
-    val localPropertiesFile = rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        load(localPropertiesFile.inputStream())
-    }
 }
 
 android {
@@ -26,12 +17,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        buildConfigField(
-            type = "String",
-            name = "GOOGLE_WEB_CLIENT_ID",
-            value = "\"${localProperties.getProperty("GOOGLE_WEB_CLIENT_ID") ?: ""}\""
-        )
     }
 
     buildTypes {
@@ -74,6 +59,9 @@ dependencies {
 
     // Social SDK
     implementation(libs.bundles.social)
+
+    // Logging
+    implementation(libs.timber)
 
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
