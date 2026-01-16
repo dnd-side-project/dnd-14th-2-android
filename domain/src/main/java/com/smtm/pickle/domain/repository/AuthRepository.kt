@@ -11,11 +11,7 @@ interface AuthRepository {
         type: SocialLoginType,
     ): Result<AuthToken>
 
-    suspend fun saveToken(token: AuthToken)
-
-    suspend fun getToken(): AuthToken?
-
-    suspend fun clearToken()
+    suspend fun loginWithGoogle(): Result<AuthToken>
 
     suspend fun getUserInfo(): Result<User>
 }
