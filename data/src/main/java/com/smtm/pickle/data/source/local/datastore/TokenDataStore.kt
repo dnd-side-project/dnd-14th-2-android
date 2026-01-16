@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.smtm.pickle.domain.model.auth.AuthToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -41,10 +42,10 @@ class TokenDataStore @Inject constructor(
         }
     }
 
-    suspend fun getAccessToken(): String? =
-        dataStoreFlow
-            .map { preferences -> preferences[ACCESS_TOKEN_KEY] }
-            .first()
+    /** Interceptor용 일회성 엑세스 토큰 획득 */
+    suspend fun getAccessToken(): String? = dataStoreFlow.first()[ACCESS_TOKEN_KEY]
+
+    suspend fun getRefreshToken(): String? = dataStoreFlow.first()[REFRESH_TOKEN_KEY]
 
     suspend fun clearToken() {
         dataStore.edit { preferences ->
@@ -52,6 +53,24 @@ class TokenDataStore @Inject constructor(
             preferences.remove(REFRESH_TOKEN_KEY)
         }
     }
+
+    /** UI 관찰용 엑세스 토큰 획득 */
+    fun getAccessTokenFlow(): Flow<String?> = dataStoreFlow.map { preferences ->
+        preferences[ACCESS_TOKEN_KEY]
+    }
+
+    fun getTokenFlow(): Flow<AuthToken?> = dataStoreFlow.map { preferences ->
+        val accessToken = preferences[ACCESS_TOKEN_KEY]
+        val refreshToken = preferences[REFRESH_TOKEN_KEY]
+
+        if (accessToken != null && refreshToken != null) {
+            AuthToken(accessToken, refreshToken)
+        } else {
+            null
+        }
+    }
+
+    fun isLoggedInFlow(): Flow<Boolean> = getAccessTokenFlow().map { it != null }
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
