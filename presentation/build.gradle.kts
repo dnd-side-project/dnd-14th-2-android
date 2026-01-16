@@ -50,11 +50,14 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
 
     // Coroutines
     implementation(libs.bundles.coroutines)
+
+    // Google Sign-In
+    implementation(libs.bundles.google.signin)
 
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))

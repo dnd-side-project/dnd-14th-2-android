@@ -36,13 +36,13 @@ timber = "5.0.1"
 okhttp = "5.3.2"
 retrofit = "3.0.0"
 retrofitKotlinSerializationConverter = "1.0.0"
-loggingIntercepter = "4.10.0"
 
 # Serialization
 kotlinxSerialization = "1.9.0"
 
 # Social
-googleServicesAuth = "21.5.0"
+credentials = "1.5.0"
+googleid = "1.1.1"
 kakaoUser = "2.23.1"
 
 # Testing
@@ -93,13 +93,15 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinSerializationConverter" }
-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingIntercepter" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 # Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 # Social
-google-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleServicesAuth" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoUser" }
 
 # Testing
@@ -160,8 +162,15 @@ room = [
     "androidx-room-ktx"
 ]
 social = [
-    "google-services-auth",
+    "androidx-credentials",
+    "androidx-credentials-play-services-auth",
+    "googleid",
     "kakao-user"
+]
+google-signin = [
+    "androidx-credentials",
+    "androidx-credentials-play-services-auth",
+    "googleid",
 ]
 testing = [
     "junit",
