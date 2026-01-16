@@ -167,11 +167,6 @@ social = [
     "googleid",
     "kakao-user"
 ]
-google-signin = [
-    "androidx-credentials",
-    "androidx-credentials-play-services-auth",
-    "googleid",
-]
 testing = [
     "junit",
     "mockk"
