@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "909084441155",
+    "project_id": "pickle-35fc8",
+    "storage_bucket": "pickle-35fc8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909084441155:android:9ed43b69f56720d869b2f6",
+        "android_client_info": {
+          "package_name": "com.smtm.pickle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfxHGmP2C8rQk0yotMY0iYMw--v3AoG8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
