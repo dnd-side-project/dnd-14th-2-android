@@ -1,16 +1,19 @@
 package com.smtm.pickle.presentation.common.auth
 
 import android.content.Context
+import androidx.compose.runtime.Stable
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.smtm.pickle.presentation.R
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
+@Stable
+@ActivityScoped
 class KakaoLoginManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ActivityContext private val context: Context
 ) {
-
     fun login(
         onSuccess: (String) -> Unit,
         onFailure: (Throwable) -> Unit
@@ -31,10 +34,9 @@ class KakaoLoginManager @Inject constructor(
         }
     }
 
-}
-
-fun logout(onCompleted: () -> Unit) {
-    UserApiClient.instance.logout { error ->
-        onCompleted()
+    fun logout(onCompleted: () -> Unit) {
+        UserApiClient.instance.logout { error ->
+            onCompleted()
+        }
     }
 }
