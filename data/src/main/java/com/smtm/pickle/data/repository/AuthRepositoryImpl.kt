@@ -23,10 +23,24 @@ class AuthRepositoryImpl @Inject constructor(
     ): Result<AuthToken> = runCatching {
         // TODO: 서버 API 연동 시 구현
 
-        Result.success(AuthToken("access", "refresh"))
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
+//        val response = authService.socialLogin(
+//            request = LoginRequest(
+//                token = token,
+//                loginType = type.name
+//            )
+//        )
+//
+//        val authToken = AuthToken(
+//            access = response.accessToken,
+//            refresh = response.refreshToken
+//        )
+//
+//        tokenProvider.saveToken(
+//            AuthToken(authToken.access, authToken.refresh)
+//        )
+//
+//        authToken
+
         val mockToken = AuthToken("access", "refresh")
 
         mockToken
