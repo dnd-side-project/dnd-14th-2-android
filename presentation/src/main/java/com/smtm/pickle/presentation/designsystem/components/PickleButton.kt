@@ -31,7 +31,6 @@ fun PickleButton(
     Box(modifier = modifier.fillMaxWidth()) {
         Button(
             modifier = modifier
-                .fillMaxWidth()
                 .height(Dimensions.buttonHeight),
             onClick = onClick,
             enabled = enabled,

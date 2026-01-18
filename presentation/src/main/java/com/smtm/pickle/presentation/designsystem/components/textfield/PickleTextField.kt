@@ -13,6 +13,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,6 +49,9 @@ import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
  * @param keyboardType 키보드 타입(텍스트, 이메일 등)
  * @param imeAction 키보드 액션 버튼
  * @param locale 소프트 키보드 노출 시 언어
+ *
+ * @sample com.smtm.pickle.presentation.designsystem.components.textfield.TextFieldWithValue
+ *
  */
 @Composable
 fun PickleTextField(
@@ -120,10 +127,22 @@ fun PickleTextField(
     )
 }
 
+/**
+ * 서포팅 텍스트를 포함한 텍스트 필드
+ * @param inputState 입력 값 처리 상태
+ * @param value 텍스트 필드 입력 값
+ * @param onValueChange 텍스트 필드 입력 값 변경
+ * @param modifier
+ * @param hint 텍스트 필드 힌트
+ * @param trailingIcon 텍스트 필드 뒤쪽 아이콘
+ * @param defaultSupportingText 기본 서포팅 텍스트
+ *
+ * @sample com.smtm.pickle.presentation.designsystem.components.textfield.TextFieldWithSupporting
+ */
 @Composable
 fun PickleTextFieldWithSupporting(
-    value: String,
     inputState: InputState,
+    value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     hint: String = "",
@@ -154,6 +173,10 @@ fun PickleTextFieldWithSupporting(
     }
 }
 
+/**
+ * PickleTextField 헲퍼
+ * @sample com.smtm.pickle.presentation.designsystem.components.textfield.PickleTextFieldWithSupporting
+ */
 object PickleTextField {
 
     @Composable
@@ -257,20 +280,32 @@ private fun TextFieldWithHint() {
 @Preview
 @Composable
 private fun TextFieldWithValue() {
+    var email by remember { mutableStateOf("test@test.com") }
+
     PickleTextField(
-        value = "가나다라마바사",
-        onValueChange = {},
+        value = email,
+        onValueChange = { email = it },
         hint = "텍스트를 입력해주세요",
+        interaction = TextFieldInteraction.ONLY_ERROR_INTERACTION,
+        isError = email.isEmpty() || email.length > 10 || !email.contains("@"),
     )
 }
 
 @Preview
 @Composable
 private fun TextFieldWithSupporting() {
+    var email by remember { mutableStateOf("") }
+
     PickleTextFieldWithSupporting(
-        value = "가나다라마바사",
+        value = "",
         onValueChange = {},
-        defaultSupportingText = "텍스트를 입력해주세요",
-        inputState = InputState.Idle,
+        hint = "이메일",
+        defaultSupportingText = "이메일을 입력해주세요",
+        inputState = when {
+            email == "" -> InputState.Idle
+            email.contains("@") -> InputState.Success(null)
+            !email.contains("@") -> InputState.Error("이메일 형식이 올바르지 않습니다")
+            else -> InputState.Error("이메일을 다시 확인해주세요")
+        },
     )
 }
