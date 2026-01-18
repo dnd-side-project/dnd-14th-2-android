@@ -139,7 +139,8 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 androidx = [
     "androidx-core-ktx",
     "androidx-lifecycle-runtime-ktx",
-    "androidx-activity-compose"
+    "androidx-activity-compose",
+    "androidx-navigation-compose"
 ]
 compose = [
     "androidx-compose-ui",
