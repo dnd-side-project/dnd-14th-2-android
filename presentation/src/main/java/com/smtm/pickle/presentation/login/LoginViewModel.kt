@@ -3,57 +3,62 @@ package com.smtm.pickle.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.model.auth.SocialLoginType
-import com.smtm.pickle.domain.usecase.auth.GetTokenUseCase
-import com.smtm.pickle.domain.usecase.auth.LogoutUseCase
+import com.smtm.pickle.domain.usecase.auth.GoogleLoginUseCase
 import com.smtm.pickle.domain.usecase.auth.SocialLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val socialLoginUseCase: SocialLoginUseCase,
-    private val getTokenUseCase: GetTokenUseCase,
-    private val logoutUseCase: LogoutUseCase,
+    private val googleLoginUseCase: GoogleLoginUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    init {
-        checkToken()
-    }
-
-    private fun checkToken() {
-        viewModelScope.launch {
-            val token = getTokenUseCase()
-            if (token != null) {
-                _uiState.value = LoginUiState.Success
-            }
-        }
-    }
-
-    fun socialLogin(token: String, type: SocialLoginType) {
+    fun loginWithGoogle() {
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            socialLoginUseCase(token, type)
-                .onSuccess {
-                    _uiState.value = LoginUiState.Success
+            googleLoginUseCase()
+                .onSuccess { token ->
+                    _uiState.value = LoginUiState.Success(isNewUser = false)
+                    Timber.d("Google 로그인 성공: ${token.access.take(50)}")
                 }
                 .onFailure { error ->
-                    _uiState.value = LoginUiState.Error(error.message ?: "로그인에 실패했습니다")
+                    _uiState.value = LoginUiState.Error(error.message ?: "Google 로그인 실패")
+                    Timber.e(error, error.message)
                 }
         }
     }
 
-    fun logout() {
+    fun loginWithKakao(accessToken: String) {
         viewModelScope.launch {
-            logoutUseCase()
-            _uiState.value = LoginUiState.Idle
+            _uiState.value = LoginUiState.Loading
+
+            socialLoginUseCase(token = accessToken, type = SocialLoginType.KAKAO)
+                .onSuccess { token ->
+                    _uiState.value = LoginUiState.Success(isNewUser = false)
+                    Timber.d("Kakao 로그인 성공: ${token.access.take(50)}")
+                }
+                .onFailure { error ->
+                    _uiState.value = LoginUiState.Error(error.message ?: "Kakao 로그인 실패")
+                    Timber.e(error, error.message)
+                }
         }
+    }
+
+    fun handleLoginError(message: String) {
+        _uiState.value = LoginUiState.Error(message)
+    }
+
+    fun clearError() {
+        _uiState.value = LoginUiState.Idle
     }
 }
