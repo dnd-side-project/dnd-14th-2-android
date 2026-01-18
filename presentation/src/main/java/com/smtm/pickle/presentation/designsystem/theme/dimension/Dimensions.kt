@@ -12,6 +12,7 @@ object Dimensions {
 
     // 입력 필드
     val inputHeight = 48.dp
+    val searchHeight = 40.dp
 
     // 아이콘
     val iconLarge = 32.dp

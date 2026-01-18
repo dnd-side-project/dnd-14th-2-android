@@ -35,4 +35,7 @@ object ColorPalette {
     // Error Colors
     val error50 = Color(0xFFFF4646)
     val error100 = Color(0xFFFF7373)
+
+    // Other
+    val transparent = Color(0x00000000)
 }

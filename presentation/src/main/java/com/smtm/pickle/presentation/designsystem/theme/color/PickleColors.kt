@@ -29,6 +29,7 @@ data class PickleColors(
     val background100: Color,
     val error50: Color,
     val error100: Color,
+    val transparent: Color,
 )
 
 val LightPickleColors = PickleColors(
@@ -55,6 +56,7 @@ val LightPickleColors = PickleColors(
     background100 = ColorPalette.background100,
     error50 = ColorPalette.error50,
     error100 = ColorPalette.error100,
+    transparent = ColorPalette.transparent,
 )
 
 val DarkPickleColors = LightPickleColors
