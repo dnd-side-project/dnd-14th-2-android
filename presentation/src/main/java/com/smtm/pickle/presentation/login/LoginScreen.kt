@@ -3,12 +3,17 @@ package com.smtm.pickle.presentation.login
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smtm.pickle.presentation.common.auth.KakaoLoginManager
@@ -20,13 +25,16 @@ import com.smtm.pickle.presentation.login.components.ButtonSection
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     onLoginSuccess: (isNewUser: Boolean) -> Unit,
-    kakaoLoginManager: KakaoLoginManager,
 ) {
+    val context = LocalContext.current
+    val kakaoLoginManager = remember(context) { KakaoLoginManager(context) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState) {
-        if (uiState is LoginUiState.Success) {
-            onLoginSuccess((uiState as LoginUiState.Success).isNewUser)
+        when (uiState) {
+            is LoginUiState.Success -> onLoginSuccess((uiState as LoginUiState.Success).isNewUser)
+            is LoginUiState.Error -> viewModel.clearError()
+            else -> Unit
         }
     }
 
@@ -54,7 +62,9 @@ fun LoginContent(
     onKakaoLogin: () -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
@@ -67,6 +77,8 @@ fun LoginContent(
             onGoogleLogin = onGoogleLogin,
             onKakaoLogin = onKakaoLogin,
         )
+
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
 

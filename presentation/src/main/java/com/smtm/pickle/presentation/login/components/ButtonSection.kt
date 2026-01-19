@@ -40,6 +40,8 @@ fun ButtonSection(
 
         Button(
             onClick = onGoogleLogin,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_google),
