@@ -1,4 +1,4 @@
-package com.smtm.pickle.presentation.login
+package com.smtm.pickle.presentation.mypage.setting
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,31 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
+import com.smtm.pickle.presentation.navigation.navigator.MyPageNavigator
 
 @Composable
-fun LoginScreen(
-    navigator: AuthNavigator,
-    viewModel: LoginViewModel = hiltViewModel()
+fun SettingScreen(
+    navigator: MyPageNavigator,
+    viewModel: SettingViewModel = hiltViewModel(),
 ) {
-    LoginContent(
-        onLoginClick = navigator::navigateToMain
+
+    SettingContent(
+        onBackClick = navigator::navigateBack
     )
 }
 
 @Composable
-private fun LoginContent(
-    onLoginClick: () -> Unit,
-    modifier: Modifier = Modifier
+private fun SettingContent(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Login Screen")
-            Button(onClick = onLoginClick) {
-                Text("로그인")
+            Text(text = "Setting Screen")
+            Button(onClick = onBackClick) {
+                Text("뒤로가기")
             }
         }
     }
