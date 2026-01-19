@@ -2,6 +2,7 @@ package com.smtm.pickle.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.smtm.pickle.data.source.remote.api.AuthService
+import com.smtm.pickle.data.source.remote.auth.TokenAuthenticator
 import com.smtm.pickle.domain.provider.TokenProvider
 import dagger.Module
 import dagger.Provides
@@ -46,7 +47,10 @@ object NetworkModule {
         return Interceptor { chain ->
             val originalRequest = chain.request()
 
-            if (originalRequest.url.encodedPath.contains("auth/login")) {
+            // TODO: 실제 엔드포인트에 맞춰 변경
+            if (originalRequest.url.encodedPath.contains("auth/login") ||
+                originalRequest.url.encodedPath.contains("auth/refresh")
+            ) {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
@@ -66,10 +70,12 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         authInterceptor: Interceptor,
-        loggingInterceptor: HttpLoggingInterceptor
+        tokenAuthenticator: TokenAuthenticator,
+        loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -90,5 +96,11 @@ object NetworkModule {
                 json.asConverterFactory("application/json".toMediaType())
             )
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 }
