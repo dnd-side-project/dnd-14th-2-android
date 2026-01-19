@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 
 @Composable
@@ -19,7 +20,7 @@ fun PickleBottomNavigationBar(
         BottomNavItem.entries.forEach { item ->
             // 현재 destination이 이 탭의 Graph에 속하는지 확인
             val isSelected = currentDestination?.hierarchy?.any {
-                it.route?.contains(item.graphRouteClass.simpleName ?: "") == true
+                it.hasRoute(item.graphRouteClass)
             } == true
 
             NavigationBarItem(
