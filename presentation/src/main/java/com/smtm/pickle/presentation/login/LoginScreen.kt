@@ -1,7 +1,5 @@
 package com.smtm.pickle.presentation.login
 
-import android.R.attr.onClick
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,19 +84,10 @@ fun LoginContent(
         )
 
         Spacer(modifier = Modifier.height(40.dp))
+
+        Button(onClick = onLoginClick) { Text("로그인") }
     }
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Login Screen")
-            Button(onClick = onLoginClick) {
-                Text("로그인")
-            }
-        }
-    }
 }
 
 @Preview
