@@ -1,7 +1,9 @@
 package com.smtm.pickle.data.repository
 
+import com.smtm.pickle.data.mapper.toDomain
 import com.smtm.pickle.data.source.remote.api.AuthService
 import com.smtm.pickle.data.source.remote.datasource.GoogleAuthDataSource
+import com.smtm.pickle.data.source.remote.model.LoginRequest
 import com.smtm.pickle.domain.model.auth.AuthToken
 import com.smtm.pickle.domain.model.auth.SocialLoginType
 import com.smtm.pickle.domain.model.auth.User
@@ -17,46 +19,33 @@ class AuthRepositoryImpl @Inject constructor(
     private val googleAuthDataSource: GoogleAuthDataSource,
 ) : AuthRepository {
 
+    /**  카카오, 구글 소셜 로그인 */
     override suspend fun socialLogin(
         token: String,
         type: SocialLoginType
     ): Result<AuthToken> = runCatching {
-        // TODO: 서버 API 연동 시 구현
 
-//        val response = authService.socialLogin(
-//            request = LoginRequest(
-//                token = token,
-//                loginType = type.name
-//            )
-//        )
-//
-//        val authToken = AuthToken(
-//            access = response.accessToken,
-//            refresh = response.refreshToken
-//        )
-//
-//        tokenProvider.saveToken(
-//            AuthToken(authToken.access, authToken.refresh)
-//        )
-//
-//        authToken
+        val response = authService.socialLogin(
+            request = LoginRequest(
+                token = token,
+                loginType = type.name
+            )
+        )
 
-        val mockToken = AuthToken("access", "refresh")
+        val authToken = response.toDomain()
 
-        mockToken
+        tokenProvider.saveToken(authToken)
+
+        authToken
     }
 
-    /** Google 로그인 */
+    /** Google 토큰 획득 -> 로그인 */
     override suspend fun loginWithGoogle(): Result<AuthToken> =
         googleAuthDataSource.getIdToken().map { idToken ->
-
-            // TODO: 서버로 idToken 전송하여 우리 서버 토큰 받기
-            // val serverTokens = authService.signInWithGoogle(idToken).toDomain()
-            // tokenDataStore.saveToken(serverTokens)
-
-            val mockToken = AuthToken("access", "refresh")
-
-            mockToken
+            socialLogin(
+                token = idToken,
+                type = SocialLoginType.GOOGLE
+            ).getOrThrow()
         }
 
     override suspend fun getUserInfo(): Result<User> {

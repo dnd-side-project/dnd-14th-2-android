@@ -2,9 +2,8 @@ package com.smtm.pickle.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smtm.pickle.domain.model.auth.SocialLoginType
 import com.smtm.pickle.domain.usecase.auth.GoogleLoginUseCase
-import com.smtm.pickle.domain.usecase.auth.SocialLoginUseCase
+import com.smtm.pickle.domain.usecase.auth.KakaoLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val socialLoginUseCase: SocialLoginUseCase,
+    private val socialLoginUseCase: KakaoLoginUseCase,
     private val googleLoginUseCase: GoogleLoginUseCase,
 ) : ViewModel() {
 
@@ -33,7 +32,7 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _uiState.value = LoginUiState.Error(error.message ?: "Google 로그인 실패")
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 }
         }
     }
@@ -42,14 +41,14 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            socialLoginUseCase(token = accessToken, type = SocialLoginType.KAKAO)
+            socialLoginUseCase(token = accessToken)
                 .onSuccess { token ->
                     _uiState.value = LoginUiState.Success(isNewUser = false)
                     Timber.d("Kakao 로그인 성공: ${token.access.take(50)}")
                 }
                 .onFailure { error ->
                     _uiState.value = LoginUiState.Error(error.message ?: "Kakao 로그인 실패")
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 }
         }
     }

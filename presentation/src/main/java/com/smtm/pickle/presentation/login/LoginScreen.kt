@@ -35,7 +35,11 @@ fun LoginScreen(
 
     LaunchedEffect(uiState) {
         when (uiState) {
-//            is LoginUiState.Success -> onLoginSuccess((uiState as LoginUiState.Success).isNewUser)
+            is LoginUiState.Success -> {
+                val isNewUser = (uiState as LoginUiState.Success).isNewUser
+
+                // TODO: 신규 유저면 닉네임 아니라면 홈 navigate
+            }
             is LoginUiState.Error -> viewModel.clearError()
             else -> Unit
         }

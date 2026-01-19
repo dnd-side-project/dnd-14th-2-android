@@ -10,7 +10,4 @@ interface AuthService {
     @POST("auth/login")
     suspend fun socialLogin(@Body request: LoginRequest): LoginResponse
 
-    @POST("auth/google")
-    suspend fun signInWithGoogle(@Body idToken: String): LoginResponse
-
 }

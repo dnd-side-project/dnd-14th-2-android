@@ -5,7 +5,7 @@ import com.smtm.pickle.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class GoogleLoginUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(): Result<AuthToken> =
         authRepository.loginWithGoogle()
