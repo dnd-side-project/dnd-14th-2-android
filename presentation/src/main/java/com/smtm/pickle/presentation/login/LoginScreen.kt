@@ -38,8 +38,14 @@ fun LoginScreen(
             is LoginUiState.Success -> {
                 val isNewUser = (uiState as LoginUiState.Success).isNewUser
 
-                // TODO: 신규 유저면 닉네임 아니라면 홈 navigate
+                if (isNewUser) {
+                    // TODO: 신규 유저면 닉네임 설정 화면으로 이동
+//                    navigator.navigateToNickname()
+                } else {
+                    navigator.navigateToMain()
+                }
             }
+
             is LoginUiState.Error -> viewModel.clearError()
             else -> Unit
         }
@@ -89,7 +95,7 @@ fun LoginContent(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // TODO: 로그인 구현 후 삭제
+        // TODO: 로그인 서버 연결 후 삭제
         Button(onClick = onLoginClick) { Text("로그인") }
     }
 
