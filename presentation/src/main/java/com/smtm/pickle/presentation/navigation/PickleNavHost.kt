@@ -5,6 +5,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,7 +28,7 @@ fun PickleNavHost(
     // Bottom Navigation 표시 여부: 현재 destination이 Bottom Nav 탭의 Graph에 속하면 표시
     val shouldShowBottomBar = currentDestination?.hierarchy?.any { destination ->
         BottomNavItem.entries.any { item ->
-            destination.route?.contains(item.graphRouteClass.simpleName ?: "") == true
+            destination.hasRoute(item.graphRouteClass)
         }
     } == true
 
