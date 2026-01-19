@@ -26,13 +26,13 @@ class MainActivity : ComponentActivity() {
                         when (event) {
                             is GlobalNavEvent.Logout -> {
                                 navController.navigate(LoginRoute) {
-                                    popUpTo(MainGraphRoute) { inclusive = true }
+                                    popUpTo(navController.graph.id) { inclusive = true }
                                 }
                             }
 
                             is GlobalNavEvent.SessionExpired -> {
                                 navController.navigate(LoginRoute) {
-                                    popUpTo(0) { inclusive = true }
+                                    popUpTo(navController.graph.id) { inclusive = true }
                                 }
                             }
                         }
