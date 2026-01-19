@@ -35,6 +35,6 @@ class TokenProviderImpl @Inject constructor(
     override fun getAccessTokenFlow(): Flow<String?> =
         tokenDataStore.getAccessTokenFlow()
 
-    override fun isLoggedIn(): Flow<Boolean> =
+    override fun isLoggedInFlow(): Flow<Boolean> =
         tokenDataStore.isLoggedInFlow()
 }
