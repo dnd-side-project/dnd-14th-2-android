@@ -2,24 +2,36 @@ package com.smtm.pickle.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import com.smtm.pickle.domain.usecase.auth.GetTokenUseCase
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getTokenUseCase: GetTokenUseCase,
 ) : ViewModel() {
+    private val _navigationEvent = MutableSharedFlow<NavEvent>(replay = 0)
+    val navigationEvent: SharedFlow<NavEvent> = _navigationEvent.asSharedFlow()
 
-    suspend fun checkAppState(): String {
-        delay(1000)
+    init {
+        checkInitialDestination()
+    }
 
-        val token = getTokenUseCase()
-
-        // TODO: 첫 실행 시 온보딩 화면으로 이동 추가
-        return when {
-            token == null -> "Screen.Login.route"
-            else -> "Screen.Home.route"
+    private fun checkInitialDestination() {
+        viewModelScope.launch {
+            delay(1500L)
+            _navigationEvent.emit(NavEvent.NavigateToOnboarding)
         }
+    }
+
+    sealed interface NavEvent {
+        data object NavigateToOnboarding : NavEvent
+        data object NavigateToLogin : NavEvent
+        data object NavigateToMain : NavEvent
     }
 }

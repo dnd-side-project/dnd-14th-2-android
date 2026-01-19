@@ -1,10 +1,14 @@
 package com.smtm.pickle.presentation.login
 
+import android.R.attr.onClick
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,11 +24,12 @@ import com.smtm.pickle.presentation.common.auth.KakaoLoginManager
 import com.smtm.pickle.presentation.designsystem.components.PickleIcon
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.login.components.ButtonSection
+import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccess: (isNewUser: Boolean) -> Unit,
+    navigator: AuthNavigator,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val kakaoLoginManager = remember(context) { KakaoLoginManager(context) }
@@ -32,7 +37,7 @@ fun LoginScreen(
 
     LaunchedEffect(uiState) {
         when (uiState) {
-            is LoginUiState.Success -> onLoginSuccess((uiState as LoginUiState.Success).isNewUser)
+//            is LoginUiState.Success -> onLoginSuccess((uiState as LoginUiState.Success).isNewUser)
             is LoginUiState.Error -> viewModel.clearError()
             else -> Unit
         }
@@ -51,7 +56,8 @@ fun LoginScreen(
                     viewModel.handleLoginError(error.message ?: "Kakao 로그인 실패")
                 }
             )
-        }
+        },
+        onLoginClick = navigator::navigateToMain
     )
 }
 
@@ -60,6 +66,7 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     onGoogleLogin: () -> Unit,
     onKakaoLogin: () -> Unit,
+    onLoginClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -80,6 +87,18 @@ fun LoginContent(
 
         Spacer(modifier = Modifier.height(40.dp))
     }
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "Login Screen")
+            Button(onClick = onLoginClick) {
+                Text("로그인")
+            }
+        }
+    }
 }
 
 @Preview
@@ -88,7 +107,8 @@ private fun LoginContentPreview() {
     PickleTheme {
         LoginContent(
             onGoogleLogin = {},
-            onKakaoLogin = {}
+            onKakaoLogin = {},
+            onLoginClick = {},
         )
     }
 }

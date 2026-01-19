@@ -7,23 +7,36 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.smtm.pickle.presentation.designsystem.components.PickleIcon
+import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
 @Composable
 fun SplashScreen(
-    viewModel: SplashViewModel = hiltViewModel(),
-    onNavigate: (destination: String) -> Unit
+    navigator: AuthNavigator,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        val destination = viewModel.checkAppState()
-        onNavigate(destination)
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.navigationEvent.collect { event ->
+                when (event) {
+                    SplashViewModel.NavEvent.NavigateToOnboarding -> navigator.navigateToOnboarding()
+                    SplashViewModel.NavEvent.NavigateToLogin -> navigator.navigateToLogin()
+                    SplashViewModel.NavEvent.NavigateToMain -> navigator.navigateToMain()
+                }
+            }
+        }
     }
 
     SplashContent()
 }
 
 @Composable
-fun SplashContent(modifier: Modifier = Modifier) {
+private fun SplashContent(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

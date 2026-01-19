@@ -1,4 +1,4 @@
-package com.smtm.pickle.presentation.home
+package com.smtm.pickle.presentation.verdict
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,31 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.smtm.pickle.presentation.navigation.navigator.HomeNavigator
+import com.smtm.pickle.presentation.navigation.navigator.VerdictNavigator
 
 @Composable
-fun HomeScreen(
-    navigator: HomeNavigator,
-    viewModel: HomeViewModel = hiltViewModel()
+fun VerdictScreen(
+    navigator: VerdictNavigator,
+    viewModel: VerdictViewModel = hiltViewModel()
 ) {
-    HomeContent(
-        onBackClick = navigator::navigateBack
+
+    VerdictContent(
+        onVerdictItemClick = navigator::navigateToDetail
     )
 }
 
 @Composable
-private fun HomeContent(
+private fun VerdictContent(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    onVerdictItemClick: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Home Screen")
-            Button(onClick = onBackClick) {
-                Text("뒤로가기")
+            Text(text = "Verdict Screen")
+            Button(onClick = onVerdictItemClick) {
+                Text("투표 상세 이동")
             }
         }
     }

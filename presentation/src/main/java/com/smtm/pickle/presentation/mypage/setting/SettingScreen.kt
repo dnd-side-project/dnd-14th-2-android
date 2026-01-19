@@ -1,4 +1,4 @@
-package com.smtm.pickle.presentation.home
+package com.smtm.pickle.presentation.mypage.setting
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,20 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.smtm.pickle.presentation.navigation.navigator.HomeNavigator
+import com.smtm.pickle.presentation.navigation.navigator.MyPageNavigator
 
 @Composable
-fun HomeScreen(
-    navigator: HomeNavigator,
-    viewModel: HomeViewModel = hiltViewModel()
+fun SettingScreen(
+    navigator: MyPageNavigator,
+    viewModel: SettingViewModel = hiltViewModel(),
 ) {
-    HomeContent(
+
+    SettingContent(
         onBackClick = navigator::navigateBack
     )
 }
 
 @Composable
-private fun HomeContent(
+private fun SettingContent(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
@@ -31,7 +32,7 @@ private fun HomeContent(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Home Screen")
+            Text(text = "Setting Screen")
             Button(onClick = onBackClick) {
                 Text("뒤로가기")
             }
