@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.remember
+import androidx.navigation.compose.rememberNavController
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.navigation.GlobalNavEvent
+import com.smtm.pickle.presentation.navigation.PickleNavHost
+import com.smtm.pickle.presentation.navigation.route.LoginRoute
+import com.smtm.pickle.presentation.navigation.route.MainGraphRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,29 +20,30 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PickleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                val handleGlobalNavEvent: (GlobalNavEvent) -> Unit = remember(navController) {
+                    { event ->
+                        when (event) {
+                            is GlobalNavEvent.Logout -> {
+                                navController.navigate(LoginRoute) {
+                                    popUpTo(navController.graph.id) { inclusive = true }
+                                }
+                            }
+
+                            is GlobalNavEvent.SessionExpired -> {
+                                navController.navigate(LoginRoute) {
+                                    popUpTo(navController.graph.id) { inclusive = true }
+                                }
+                            }
+                        }
+                    }
                 }
+
+                PickleNavHost(
+                    navController = navController,
+                    onGlobalNavEvent = handleGlobalNavEvent,
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PickleTheme {
-        Greeting("Android")
     }
 }
