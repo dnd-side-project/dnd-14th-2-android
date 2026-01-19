@@ -1,7 +1,6 @@
 package com.smtm.pickle.data.source.remote.auth
 
-import com.smtm.pickle.data.source.remote.api.AuthService
-import com.smtm.pickle.data.source.remote.model.RefreshRequest
+import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.domain.model.auth.AuthToken
 import com.smtm.pickle.domain.provider.TokenProvider
 import kotlinx.coroutines.runBlocking
@@ -15,23 +14,19 @@ import javax.inject.Singleton
 @Singleton
 class TokenAuthenticator @Inject constructor(
     private val tokenProvider: TokenProvider,
-    private val authService: AuthService,
+    private val refreshApi: RefreshTokenApi,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
 
         if (responseCount(response) >= 2) return null
 
-        val refreshToken = runBlocking {
-            tokenProvider.getRefreshToken()
-        } ?: return null
-
         // RefreshToken으로 새로운 Token 발급
         val newToken = runBlocking {
+            val refreshToken = tokenProvider.getRefreshToken() ?: return@runBlocking null
+
             runCatching {
-                authService.refreshToken(
-                    RefreshRequest(refreshToken)
-                )
+                refreshApi.refreshToken("Bearer $refreshToken")
             }.getOrNull()
         } ?: run {
             // 리프레시 토큰 만료시 로그아웃 처리

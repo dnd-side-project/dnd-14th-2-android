@@ -2,6 +2,7 @@ package com.smtm.pickle.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.smtm.pickle.data.source.remote.api.AuthService
+import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.data.source.remote.auth.TokenAuthenticator
 import com.smtm.pickle.domain.provider.TokenProvider
 import dagger.Module
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -48,9 +50,7 @@ object NetworkModule {
             val originalRequest = chain.request()
 
             // TODO: 실제 엔드포인트에 맞춰 변경
-            if (originalRequest.url.encodedPath.contains("auth/login") ||
-                originalRequest.url.encodedPath.contains("auth/refresh")
-            ) {
+            if (originalRequest.url.encodedPath.contains("auth/login")) {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
@@ -75,8 +75,8 @@ object NetworkModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
-            .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
+            .authenticator(tokenAuthenticator)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -92,9 +92,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(
-                json.asConverterFactory("application/json".toMediaType())
-            )
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 
@@ -103,4 +101,23 @@ object NetworkModule {
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
+
+    @Provides
+    @Singleton
+    @Named("RefreshRetrofit")
+    fun provideRefreshRetrofit(
+        json: Json
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefreshApi(
+        @Named("RefreshRetrofit") retrofit: Retrofit
+    ): RefreshTokenApi =
+        retrofit.create(RefreshTokenApi::class.java)
 }
