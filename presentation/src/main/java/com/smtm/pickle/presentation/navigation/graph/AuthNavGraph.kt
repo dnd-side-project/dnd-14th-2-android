@@ -6,11 +6,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.smtm.pickle.presentation.login.LoginScreen
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 import com.smtm.pickle.presentation.navigation.route.AuthGraphRoute
 import com.smtm.pickle.presentation.navigation.route.LoginRoute
 import com.smtm.pickle.presentation.navigation.route.OnboardingRoute
 import com.smtm.pickle.presentation.navigation.route.SplashRoute
+import com.smtm.pickle.presentation.onboarding.OnboardingScreen
+import com.smtm.pickle.presentation.splash.SplashScreen
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
@@ -19,17 +22,17 @@ fun NavGraphBuilder.authNavGraph(
     navigation<AuthGraphRoute>(startDestination = SplashRoute) {
         composable<SplashRoute> {
             val navigator = rememberAuthNavigator(navController, onNavigateToMain)
-//            SplashScreen()
+            SplashScreen(navigator = navigator)
         }
 
         composable<OnboardingRoute> {
             val navigator = rememberAuthNavigator(navController, onNavigateToMain)
-//            OnboardingScreen {  }
+            OnboardingScreen(navigator = navigator)
         }
 
         composable<LoginRoute> {
             val navigator = rememberAuthNavigator(navController, onNavigateToMain)
-//            LoginScreen {  }
+            LoginScreen(navigator = navigator)
         }
     }
 }

@@ -6,6 +6,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.smtm.pickle.presentation.mypage.MyPageScreen
+import com.smtm.pickle.presentation.mypage.alarmsetting.AlarmSettingScreen
+import com.smtm.pickle.presentation.mypage.setting.SettingScreen
 import com.smtm.pickle.presentation.navigation.GlobalNavEvent
 import com.smtm.pickle.presentation.navigation.navigator.MyPageNavigator
 import com.smtm.pickle.presentation.navigation.route.AlarmSettingRoute
@@ -20,17 +23,17 @@ fun NavGraphBuilder.myPageNavGraph(
     navigation<MyPageGraphRoute>(startDestination = MyPageRoute) {
         composable<MyPageRoute> {
             val navigator = rememberMyPageNavigator(navController, onGlobalNavEvent)
-//            MyPageScreen()
+            MyPageScreen(navigator = navigator)
         }
 
         composable<SettingRoute> {
             val navigator = rememberMyPageNavigator(navController, onGlobalNavEvent)
-//            SettingScreen()
+            SettingScreen(navigator = navigator)
         }
 
         composable<AlarmSettingRoute> {
             val navigator = rememberMyPageNavigator(navController, onGlobalNavEvent)
-//            AlarmSettingScreen()
+            AlarmSettingScreen(navigator = navigator)
         }
     }
 }

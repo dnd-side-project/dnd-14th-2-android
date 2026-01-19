@@ -10,6 +10,8 @@ import com.smtm.pickle.presentation.navigation.navigator.VerdictNavigator
 import com.smtm.pickle.presentation.navigation.route.VerdictDetailRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictGraphRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictRoute
+import com.smtm.pickle.presentation.verdict.VerdictScreen
+import com.smtm.pickle.presentation.verdict.detail.VerdictDetailScreen
 
 fun NavGraphBuilder.verdictNavGraph(
     navController: NavController,
@@ -17,12 +19,12 @@ fun NavGraphBuilder.verdictNavGraph(
     navigation<VerdictGraphRoute>(startDestination = VerdictRoute) {
         composable<VerdictRoute> {
             val navigator = rememberVerdictNavigator(navController)
-            // VerdictScreen()
+            VerdictScreen(navigator = navigator)
         }
 
         composable<VerdictDetailRoute> {
             val navigator = rememberVerdictNavigator(navController)
-            // VerdictDetailScreen()
+            VerdictDetailScreen(navigator = navigator)
         }
     }
 }
