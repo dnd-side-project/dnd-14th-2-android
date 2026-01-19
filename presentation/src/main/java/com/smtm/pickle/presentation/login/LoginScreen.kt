@@ -72,7 +72,7 @@ fun LoginContent(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1.2f))
 
         PickleIcon()
 
@@ -85,6 +85,7 @@ fun LoginContent(
 
         Spacer(modifier = Modifier.height(40.dp))
 
+        // TODO: 로그인 구현 후 삭제
         Button(onClick = onLoginClick) { Text("로그인") }
     }
 
