@@ -1,6 +1,7 @@
 package com.smtm.pickle.data.source.local.datastore
 
 import android.content.Context
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -30,17 +31,7 @@ class TokenDataStore @Inject constructor(
         }
     }
 
-    suspend fun getToken(): AuthToken? {
-        val preferences = dataStoreFlow.first()
-        val accessToken = preferences[ACCESS_TOKEN_KEY]
-        val refreshToken = preferences[REFRESH_TOKEN_KEY]
-
-        return if (accessToken != null && refreshToken != null) {
-            AuthToken(accessToken, refreshToken)
-        } else {
-            null
-        }
-    }
+    suspend fun getToken(): AuthToken? = dataStoreFlow.first().getAuthToken()
 
     /** Interceptor용 일회성 엑세스 토큰 획득 */
     suspend fun getAccessToken(): String? = dataStoreFlow.first()[ACCESS_TOKEN_KEY]
@@ -60,17 +51,21 @@ class TokenDataStore @Inject constructor(
     }
 
     fun getTokenFlow(): Flow<AuthToken?> = dataStoreFlow.map { preferences ->
-        val accessToken = preferences[ACCESS_TOKEN_KEY]
-        val refreshToken = preferences[REFRESH_TOKEN_KEY]
+        preferences.getAuthToken()
+    }
 
-        if (accessToken != null && refreshToken != null) {
+    fun isLoggedInFlow(): Flow<Boolean> = getAccessTokenFlow().map { it != null }
+
+    private fun Preferences.getAuthToken(): AuthToken? {
+        val accessToken = this[ACCESS_TOKEN_KEY]
+        val refreshToken = this[REFRESH_TOKEN_KEY]
+
+        return if (accessToken != null && refreshToken != null) {
             AuthToken(accessToken, refreshToken)
         } else {
             null
         }
     }
-
-    fun isLoggedInFlow(): Flow<Boolean> = getAccessTokenFlow().map { it != null }
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")

@@ -41,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     /** Google 토큰 획득 -> 로그인 */
     override suspend fun loginWithGoogle(): Result<AuthToken> =
-        googleAuthDataSource.getIdToken().map { idToken ->
+        googleAuthDataSource.getIdToken().mapCatching { idToken ->
             socialLogin(
                 token = idToken,
                 type = SocialLoginType.GOOGLE

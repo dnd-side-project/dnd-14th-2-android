@@ -22,7 +22,7 @@ class TokenProviderImpl @Inject constructor(
         tokenDataStore.getAccessToken()
 
     override suspend fun getRefreshToken(): String? =
-        tokenDataStore.getToken()?.refresh
+        tokenDataStore.getRefreshToken()
 
     override suspend fun clearToken() {
         tokenDataStore.clearToken()

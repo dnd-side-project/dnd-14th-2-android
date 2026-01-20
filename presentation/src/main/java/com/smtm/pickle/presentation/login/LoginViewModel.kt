@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val socialLoginUseCase: KakaoLoginUseCase,
+    private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val googleLoginUseCase: GoogleLoginUseCase,
 ) : ViewModel() {
 
@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            socialLoginUseCase(token = accessToken)
+            kakaoLoginUseCase(token = accessToken)
                 .onSuccess { token ->
                     _uiState.value = LoginUiState.Success(isNewUser = false)
                     Timber.d("Kakao 로그인 성공: ${token.access.take(50)}")
