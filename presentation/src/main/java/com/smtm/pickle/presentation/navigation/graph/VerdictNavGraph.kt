@@ -10,7 +10,7 @@ import com.smtm.pickle.presentation.navigation.navigator.VerdictNavigator
 import com.smtm.pickle.presentation.navigation.route.VerdictDetailRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictGraphRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictRoute
-import com.smtm.pickle.presentation.verdict.VerdictScreen
+import com.smtm.pickle.presentation.verdict.main.VerdictScreen
 import com.smtm.pickle.presentation.verdict.detail.VerdictDetailScreen
 
 fun NavGraphBuilder.verdictNavGraph(
