@@ -1,6 +1,8 @@
 package com.smtm.pickle.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.kakao.sdk.common.util.KakaoJson.json
+import com.smtm.pickle.data.BuildConfig
 import com.smtm.pickle.data.source.remote.api.AuthService
 import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.data.source.remote.auth.TokenAuthenticator
@@ -31,14 +33,18 @@ object NetworkModule {
     fun provideJson(): Json = Json {
         ignoreUnknownKeys = true    // 서버 응답에 모르는 필드 무시
         coerceInputValues = true    // null -> 기본값 사용
-        prettyPrint = true
+        prettyPrint = BuildConfig.DEBUG
     }
 
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
     }
 
@@ -104,12 +110,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("RefreshOkHttp")
+    fun provideRefreshOkHttp(
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
     @Named("RefreshRetrofit")
     fun provideRefreshRetrofit(
-        json: Json
+        json: Json,
+        @Named("RefreshOkHttp") okHttpClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
