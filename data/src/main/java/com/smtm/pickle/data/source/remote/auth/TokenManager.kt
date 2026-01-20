@@ -30,35 +30,39 @@ class TokenManager @Inject constructor(
     private val tokenProvider: TokenProvider,
     private val refreshApi: RefreshTokenApi,
 ) {
+    private var cachedToken: AuthToken? = null
+
     private var refreshJob: Deferred<AuthToken?>? = null
     private val refreshLock = Mutex()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    suspend fun init() {
+        cachedToken = tokenProvider.getToken()
+    }
 
     suspend fun refreshTokenIfNeeded(): AuthToken? {
         return refreshLock.withLock {
 
             // Access 코드를 이미 획득했는지 판단
-            tokenProvider.getAccessToken()
-                ?.takeIf { it.isNotBlank() && !it.isExpired() }
-                ?.let {
-                    return AuthToken(
-                        access = it,
-                        refresh = tokenProvider.getRefreshToken()!!
-                    )
-                }
+            cachedToken
+                ?.takeIf { it.access.isNotBlank() && !it.access.isExpired() }
+                ?.let { return it }
 
             // 이미 refresh 중이면 대기
             refreshJob?.let { return it.await() }
 
             val job = scope.async {
                 // 사용자에게 토큰이 있으면 획득, 없으면
-                val refreshToken = tokenProvider.getRefreshToken() ?: return@async null
+                val refreshToken = cachedToken?.refresh
+                    ?: tokenProvider.getRefreshToken()
+                    ?: return@async null
 
                 val response = runCatching {
                     refreshApi.refreshToken("Bearer $refreshToken")
                 }.getOrNull() ?: run {
                     // 리프레시 토큰 만료시 로그아웃 처리
                     tokenProvider.clearToken()
+                    cachedToken = null
                     return@async null
                 }
 
@@ -68,6 +72,7 @@ class TokenManager @Inject constructor(
                 ).also {
                     // 토큰 저장
                     tokenProvider.saveToken(it)
+                    cachedToken = it
                 }
             }
 
@@ -81,4 +86,8 @@ class TokenManager @Inject constructor(
             }
         }
     }
+
+    fun getAccessToken(): String? = cachedToken?.access
+
+    fun getRefreshToken(): String? = cachedToken?.refresh
 }

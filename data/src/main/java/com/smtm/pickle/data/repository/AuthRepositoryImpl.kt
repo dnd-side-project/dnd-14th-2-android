@@ -2,6 +2,7 @@ package com.smtm.pickle.data.repository
 
 import com.smtm.pickle.data.mapper.toDomain
 import com.smtm.pickle.data.source.remote.api.AuthService
+import com.smtm.pickle.data.source.remote.auth.TokenManager
 import com.smtm.pickle.data.source.remote.datasource.GoogleAuthDataSource
 import com.smtm.pickle.data.source.remote.model.LoginRequest
 import com.smtm.pickle.domain.model.auth.AuthToken
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
     private val tokenProvider: TokenProvider,
+    private val tokenManager: TokenManager,
     private val googleAuthDataSource: GoogleAuthDataSource,
 ) : AuthRepository {
 
@@ -51,4 +53,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun getUserInfo(): Result<User> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun initToken() {
+        tokenManager.init()
+    }
+
+    override fun getAccessToken(): String? = tokenManager.getAccessToken()
 }

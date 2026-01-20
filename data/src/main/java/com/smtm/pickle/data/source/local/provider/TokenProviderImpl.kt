@@ -18,9 +18,6 @@ class TokenProviderImpl @Inject constructor(
     override suspend fun getToken(): AuthToken? =
         tokenDataStore.getToken()
 
-    override suspend fun getAccessToken(): String? =
-        tokenDataStore.getAccessToken()
-
     override suspend fun getRefreshToken(): String? =
         tokenDataStore.getRefreshToken()
 

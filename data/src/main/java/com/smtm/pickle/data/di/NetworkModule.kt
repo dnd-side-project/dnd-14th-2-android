@@ -1,17 +1,15 @@
 package com.smtm.pickle.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.kakao.sdk.common.util.KakaoJson.json
 import com.smtm.pickle.data.BuildConfig
 import com.smtm.pickle.data.source.remote.api.AuthService
 import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.data.source.remote.auth.TokenAuthenticator
-import com.smtm.pickle.domain.provider.TokenProvider
+import com.smtm.pickle.data.source.remote.auth.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -50,7 +48,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenProvider: TokenProvider): Interceptor {
+    fun provideAuthInterceptor(tokenManager: TokenManager): Interceptor {
         // 로그인 요청이 아니면 토큰 추가
         return Interceptor { chain ->
             val originalRequest = chain.request()
@@ -60,7 +58,7 @@ object NetworkModule {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
-            val accessToken = runBlocking { tokenProvider.getAccessToken() }
+            val accessToken = tokenManager.getAccessToken()
 
             val newRequest = accessToken?.let {
                 originalRequest.newBuilder()

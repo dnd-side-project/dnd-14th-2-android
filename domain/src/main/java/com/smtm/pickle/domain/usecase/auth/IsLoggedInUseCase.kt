@@ -1,11 +1,11 @@
 package com.smtm.pickle.domain.usecase.auth
 
-import com.smtm.pickle.domain.model.auth.AuthToken
 import com.smtm.pickle.domain.provider.TokenProvider
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetTokenUseCase @Inject constructor(
+class IsLoggedInUseCase @Inject constructor(
     private val tokenProvider: TokenProvider
 ) {
-    suspend operator fun invoke(): AuthToken? = tokenProvider.getToken()
+    operator fun invoke(): Flow<Boolean> = tokenProvider.isLoggedInFlow()
 }

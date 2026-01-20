@@ -13,8 +13,6 @@ interface TokenProvider {
 
     suspend fun getToken(): AuthToken?
 
-    suspend fun getAccessToken(): String?
-
     suspend fun getRefreshToken(): String?
 
     suspend fun clearToken()

@@ -33,9 +33,6 @@ class TokenDataStore @Inject constructor(
 
     suspend fun getToken(): AuthToken? = dataStoreFlow.first().getAuthToken()
 
-    /** Interceptor용 일회성 엑세스 토큰 획득 */
-    suspend fun getAccessToken(): String? = dataStoreFlow.first()[ACCESS_TOKEN_KEY]
-
     suspend fun getRefreshToken(): String? = dataStoreFlow.first()[REFRESH_TOKEN_KEY]
 
     suspend fun clearToken() {
