@@ -31,7 +31,6 @@ class TokenProviderImpl @Inject constructor(
     override fun getTokenFlow(): Flow<AuthToken?> =
         tokenDataStore.getTokenFlow()
 
-
     override fun getAccessTokenFlow(): Flow<String?> =
         tokenDataStore.getAccessTokenFlow()
 
