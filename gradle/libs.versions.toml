@@ -62,6 +62,7 @@ androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graph
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-mateiral-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 # Database
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }

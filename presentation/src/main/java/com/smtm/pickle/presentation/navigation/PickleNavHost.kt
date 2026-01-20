@@ -15,6 +15,7 @@ import com.smtm.pickle.presentation.navigation.graph.authNavGraph
 import com.smtm.pickle.presentation.navigation.graph.mainNavGraph
 import com.smtm.pickle.presentation.navigation.route.AuthGraphRoute
 import com.smtm.pickle.presentation.navigation.route.MainGraphRoute
+import com.smtm.pickle.presentation.navigation.route.VerdictGraphRoute
 
 @Composable
 fun PickleNavHost(
@@ -52,7 +53,7 @@ fun PickleNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AuthGraphRoute,
+            startDestination = MainGraphRoute,
             modifier = Modifier.padding(innerPadding),
             builder = {
                 authNavGraph(
