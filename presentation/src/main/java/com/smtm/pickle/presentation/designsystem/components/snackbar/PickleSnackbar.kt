@@ -60,7 +60,7 @@ fun PickleSnackbar(
             .padding(16.dp)
             .height(Dimensions.snackbarHeight)
             .clip(RoundedCornerShape(Dimensions.radius))
-            .background(PickleTheme.colors.base50)
+            .background(PickleTheme.colors.base60)
             .padding(16.dp),
         contentAlignment = Alignment.Center,
     ) {

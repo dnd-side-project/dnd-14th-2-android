@@ -5,7 +5,8 @@ import androidx.compose.ui.graphics.Color
 object ColorPalette {
     // Base Colors
     val base0 = Color(0xFFFFFFFF)
-    val base50 = Color(0x99202020)
+    val base30 = Color(0x4D202020)
+    val base60 = Color(0x99202020)
     val base100 = Color(0xFF202020)
 
     // Primary Colors

@@ -7,7 +7,8 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class PickleColors(
     val base0: Color,
-    val base50: Color,
+    val base30: Color,
+    val base60: Color,
     val base100: Color,
     val primary50: Color,
     val primary100: Color,
@@ -34,7 +35,8 @@ data class PickleColors(
 
 val LightPickleColors = PickleColors(
     base0 = ColorPalette.base0,
-    base50 = ColorPalette.base50,
+    base30 = ColorPalette.base30,
+    base60 = ColorPalette.base60,
     base100 = ColorPalette.base100,
     primary50 = ColorPalette.primary50,
     primary100 = ColorPalette.primary100,
