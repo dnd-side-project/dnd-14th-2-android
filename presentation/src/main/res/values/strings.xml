@@ -4,4 +4,21 @@
     <string name="nav_home">홈</string>
     <string name="nav_verdict">판결</string>
     <string name="nav_mypage">마이페이지</string>
+
+    <!-- Verdict Screen -->
+    <string name="verdict_title">심판</string>
+    <string name="verdict_empty_result">결과가 없습니다</string>
+    <string name="verdict_all_loaded">모든 요청을 불러왔습니다</string>
+    <string name="verdict_retry">다시 시도</string>
+    <string name="verdict_banner_no_request">새로운 심판 요청이 없어요</string>
+    <string name="verdict_banner_will_notify">요청이 오면 알려드릴게요</string>
+    <string name="verdict_banner_request_arrived">심판 요청이 도착했어요</string>
+    <string name="verdict_banner_check_spending">소비를 확인하고 판결해보세요</string>
+    <string name="verdict_banner_view">보기</string>
+    <string name="verdict_my_requests">내가 보낸 심판요청</string>
+    <string name="verdict_total_count">전체 %1$d</string>
+    <string name="verdict_filter_all">전체</string>
+    <string name="verdict_filter_pending">대기중</string>
+    <string name="verdict_filter_completed">완료</string>
+    <string name="verdict_joined_count">함께한 심판 %1$d회</string>
 </resources>

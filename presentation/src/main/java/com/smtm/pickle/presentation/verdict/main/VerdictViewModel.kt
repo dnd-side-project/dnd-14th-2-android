@@ -85,6 +85,7 @@ class VerdictViewModel @Inject constructor(
                     items = response.items,
                     hasMore = response.hasMore,
                     currentPage = FIRST_PAGE,
+                    totalCount = response.totalCount,
                     isLoading = false
                 )
             },
@@ -121,6 +122,7 @@ class VerdictViewModel @Inject constructor(
                             hasMore = result.hasMore,
                             currentPage = nextPage,
                             isLoading = false,
+                            totalCount = current.totalCount,
                             error = null
                         )
                     }

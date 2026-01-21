@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.NewReleases
@@ -30,6 +32,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +58,8 @@ import com.smtm.pickle.domain.model.verdict.VerdictRequest
 import com.smtm.pickle.domain.model.verdict.VerdictRequestFilter
 import com.smtm.pickle.domain.model.verdict.VerdictRequestedStatus
 import com.smtm.pickle.domain.model.verdict.VerdictStatus
+import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.common.utils.emptyWindowInsets
 import com.smtm.pickle.presentation.navigation.navigator.VerdictNavigator
 
 private const val VERDICT_REQUEST_ITEM_KEY_PREFIX = "verdict"
@@ -68,22 +74,29 @@ fun VerdictScreen(
     val listState = rememberLazyListState()
 
     Scaffold(
+        contentWindowInsets = emptyWindowInsets,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("심판") },
+                windowInsets = emptyWindowInsets,
+                title = { Text(stringResource(R.string.verdict_title)) },
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(Icons.Default.Groups, contentDescription = null)
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {}) {
+                Icon(Icons.Filled.Add, contentDescription = null)
+            }
         }
     ) { paddingValues ->
         VerdictContent(
             modifier = Modifier.padding(paddingValues),
             uiState = uiState,
             listState = listState,
-            onFilterSelect = viewModel::selectFilter,
+            onFilterClick = viewModel::selectFilter,
             onLoadMore = viewModel::loadMore,
             onRequestItemClick = {}
         )
@@ -95,7 +108,7 @@ private fun VerdictContent(
     modifier: Modifier = Modifier,
     uiState: VerdictUiState,
     listState: LazyListState,
-    onFilterSelect: (VerdictRequestFilter) -> Unit,
+    onFilterClick: (VerdictRequestFilter) -> Unit,
     onLoadMore: () -> Unit,
     onRequestItemClick: (VerdictRequest) -> Unit
 ) {
@@ -128,88 +141,40 @@ private fun VerdictContent(
 
     LazyColumn(
         state = listState,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
+        modifier = modifier.fillMaxSize()
     ) {
-        item(key = "banner") {
-            VerdictRequestedBanner(
-                status = uiState.requestedStatus,
-                onClick = {}
-            )
-        }
-        item(key = "divider") {
-            HorizontalDivider(thickness = 10.dp)
-        }
-        item("header") {
-            VerdictRequestsHeader(
-                selectedTab = uiState.selectedFilter,
-                totalCounts = 10,
-                onSelectTabClick = onFilterSelect
-            )
-        }
-        items(
+        bannerSection(
+            requestedStatus = uiState.requestedStatus,
+            onMoreClick = {}
+        )
+        requestsHeaderSection(
+            selectedFilter = uiState.selectedFilter,
+            totalCount = uiState.currentList.totalCount,
+            onFilterTabClick = onFilterClick
+        )
+        requestListSection(
             items = uiState.currentList.items,
-            key = { "${VERDICT_REQUEST_ITEM_KEY_PREFIX}_${it.id}" }
-        ) { item ->
-            VerdictItem(
-                item = item,
-                onItemClick = onRequestItemClick,
-                onOptionClick = {},
-            )
-        }
-
-        // 로딩 인디케이터
-        if (uiState.currentList.isLoading) {
-            item(key = "loading") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-            }
-        }
-        // 에러 표시
-        uiState.currentList.error?.let { error ->
-            item(key = "error") {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = error,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextButton(onClick = onLoadMore) {
-                        Text("다시 시도")
-                    }
-                }
-            }
-        }
-
-        // 더 이상 데이터 없음
-        if (!uiState.currentList.hasMore && uiState.currentList.items.isNotEmpty()) {
-            item(key = "end") {
-                Text(
-                    text = "모든 요청을 불러왔습니다",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-            }
-        }
+            isLoading = uiState.currentList.isLoading,
+            error = uiState.currentList.error,
+            onItemClick = onRequestItemClick,
+            onOptionClick = { }
+        )
     }
+}
 
-
+private fun LazyListScope.bannerSection(
+    requestedStatus: VerdictRequestedStatus,
+    onMoreClick: () -> Unit,
+) {
+    item(key = "banner") {
+        VerdictRequestedBanner(
+            status = requestedStatus,
+            onClick = onMoreClick
+        )
+    }
+    item(key = "divider") {
+        HorizontalDivider(thickness = 10.dp)
+    }
 }
 
 @Composable
@@ -240,8 +205,8 @@ private fun VerdictRequestedBanner(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(text = "새로운 심판 요청이 없어요")
-                    Text(text = "요청이 오면 알려드릴게요")
+                    Text(text = stringResource(R.string.verdict_banner_no_request))
+                    Text(text = stringResource(R.string.verdict_banner_will_notify))
                 }
             }
 
@@ -251,7 +216,7 @@ private fun VerdictRequestedBanner(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "심판 요청이 도착했어요")
+                        Text(text = stringResource(R.string.verdict_banner_request_arrived))
                         Spacer(modifier = Modifier.width(6.dp))
                         Image(
                             imageVector = Icons.Default.NewReleases,
@@ -259,25 +224,39 @@ private fun VerdictRequestedBanner(
                             modifier = Modifier.size(16.dp)
                         )
                     }
-                    Text(text = "소비를 확인하고 판결해보세요")
+                    Text(text = stringResource(R.string.verdict_banner_check_spending))
                 }
                 TextButton(
                     modifier = Modifier.padding(6.dp),
                     shape = ShapeDefaults.Medium,
                     onClick = onClick
                 ) {
-                    Text(text = "보기")
+                    Text(text = stringResource(R.string.verdict_banner_view))
                 }
             }
         }
     }
 }
 
+private fun LazyListScope.requestsHeaderSection(
+    selectedFilter: VerdictRequestFilter,
+    totalCount: Int,
+    onFilterTabClick: (VerdictRequestFilter) -> Unit
+) {
+    item(key = "requests_header") {
+        VerdictRequestsHeader(
+            selectedFilter = selectedFilter,
+            totalCount = totalCount,
+            onFilterTabClick = onFilterTabClick
+        )
+    }
+}
+
 @Composable
 private fun VerdictRequestsHeader(
-    selectedTab: VerdictRequestFilter,
-    totalCounts: Int,
-    onSelectTabClick: (VerdictRequestFilter) -> Unit
+    selectedFilter: VerdictRequestFilter,
+    totalCount: Int,
+    onFilterTabClick: (VerdictRequestFilter) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -286,45 +265,106 @@ private fun VerdictRequestsHeader(
     ) {
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = "내가 보낸 심판요청",
+            text = stringResource(R.string.verdict_my_requests),
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(10.dp))
-        VerdictRequestTabs(selectedTab = selectedTab, onSelect = onSelectTabClick)
+        VerdictRequestTabs(selectedFilter = selectedFilter, onFilterClick = onFilterTabClick)
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = "전체 $totalCounts"
+            text = stringResource(R.string.verdict_total_count, totalCount)
         )
     }
 }
 
 @Composable
 private fun VerdictRequestTabs(
-    selectedTab: VerdictRequestFilter,
-    onSelect: (VerdictRequestFilter) -> Unit
+    selectedFilter: VerdictRequestFilter,
+    onFilterClick: (VerdictRequestFilter) -> Unit
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         FilterChip(
-            selected = selectedTab == VerdictRequestFilter.All,
-            onClick = { onSelect(VerdictRequestFilter.All) },
-            label = { Text("전체") }
+            selected = selectedFilter == VerdictRequestFilter.All,
+            onClick = { onFilterClick(VerdictRequestFilter.All) },
+            label = { Text(stringResource(R.string.verdict_filter_all)) }
         )
         FilterChip(
-            selected = selectedTab == VerdictRequestFilter.Pending,
-            onClick = { onSelect(VerdictRequestFilter.Pending) },
-            label = { Text("대기중") }
+            selected = selectedFilter == VerdictRequestFilter.Pending,
+            onClick = { onFilterClick(VerdictRequestFilter.Pending) },
+            label = { Text(stringResource(R.string.verdict_filter_pending)) }
         )
         FilterChip(
-            selected = selectedTab == VerdictRequestFilter.Completed,
-            onClick = { onSelect(VerdictRequestFilter.Completed) },
-            label = { Text("완료") }
+            selected = selectedFilter == VerdictRequestFilter.Completed,
+            onClick = { onFilterClick(VerdictRequestFilter.Completed) },
+            label = { Text(stringResource(R.string.verdict_filter_completed)) }
         )
 
     }
 }
 
+private fun LazyListScope.requestListSection(
+    items: List<VerdictRequest>,
+    isLoading: Boolean,
+    error: String?,
+    onItemClick: (VerdictRequest) -> Unit,
+    onOptionClick: (VerdictRequest) -> Unit,
+) {
+    val isEmpty = items.isEmpty() && !isLoading && error == null
+    if (isEmpty) {
+        item(key = "empty") {
+            VerdictEmptyItem()
+        }
+    } else {
+        items(
+            items = items,
+            key = { "${VERDICT_REQUEST_ITEM_KEY_PREFIX}_${it.id}" }
+        ) { item ->
+            VerdictItem(
+                item = item,
+                onItemClick = onItemClick,
+                onOptionClick = onOptionClick
+            )
+        }
+
+        if (isLoading) {
+            item("paging_loading") {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                }
+            }
+        }
+    }
+}
+
 @Composable
-fun VerdictItem(
+private fun VerdictEmptyItem() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 48.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.Pending,
+            contentDescription = null,
+            modifier = Modifier.size(200.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.verdict_empty_result),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+private fun VerdictItem(
     modifier: Modifier = Modifier,
     item: VerdictRequest,
     onItemClick: (VerdictRequest) -> Unit = {},
@@ -334,10 +374,7 @@ fun VerdictItem(
         modifier = modifier
             .padding(vertical = 16.dp)
             .fillMaxWidth()
-            .clickable(
-                enabled = true,
-                onClick = { onItemClick(item) }
-            ),
+            .clickable(onClick = { onItemClick(item) }),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
@@ -348,7 +385,7 @@ fun VerdictItem(
                 .clip(RoundedCornerShape(12.dp))
         )
 
-        Spacer(modifier = modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
 
         Column(
             modifier = Modifier
@@ -356,7 +393,6 @@ fun VerdictItem(
             verticalArrangement = Arrangement.Center
         ) {
             Row(
-                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = item.nickname)
@@ -373,13 +409,12 @@ fun VerdictItem(
                 }
             }
             Row(
-                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = when (item.status) {
-                        VerdictStatus.Pending -> "대기중"
-                        VerdictStatus.Completed -> "완료"
+                        VerdictStatus.Pending -> stringResource(R.string.verdict_filter_pending)
+                        VerdictStatus.Completed -> stringResource(R.string.verdict_filter_completed)
                     }
                 )
                 Spacer(modifier = Modifier.width(3.dp))
@@ -389,7 +424,7 @@ fun VerdictItem(
                         .background(Color.Gray),
                 )
                 Spacer(modifier = Modifier.width(3.dp))
-                Text("함께한 심판 ${item.joinedCount}회")
+                Text(stringResource(R.string.verdict_joined_count, item.joinedCount))
             }
         }
 

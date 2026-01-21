@@ -5,6 +5,7 @@ data class PaginatedList<T>(
     val isLoading: Boolean = false,
     val hasMore: Boolean = true,
     val currentPage: Int = -1,
+    val totalCount: Int = 0,
     val error: String? = null,
 ) {
     val isInitialized: Boolean
