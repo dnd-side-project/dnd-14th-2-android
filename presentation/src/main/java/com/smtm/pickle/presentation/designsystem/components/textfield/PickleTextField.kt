@@ -1,15 +1,20 @@
 package com.smtm.pickle.presentation.designsystem.components.textfield
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,9 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.designsystem.components.PickleSupportingText
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.KeyboardLocale
-import com.smtm.pickle.presentation.designsystem.components.textfield.model.TextFieldInteraction
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.toUiState
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
@@ -44,87 +51,124 @@ import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
  * @param hint 텍스트 필드 힌트
  * @param leadingIcon 텍스트 필드 앞쪽 아이콘
  * @param trailingIcon 텍스트 필드 뒤쪽 아이콘
- * @param isError 호출 부의 에러 조건
- * @param singleLine 단일 라인 입력 여부
+ * @param isSingleLine 단일 라인 입력 여부
+ * @param minLines 최소 라인 수
+ * @param inputState 입력 값 처리 상태
  * @param keyboardType 키보드 타입(텍스트, 이메일 등)
  * @param imeAction 키보드 액션 버튼
  * @param locale 소프트 키보드 노출 시 언어
- *
- * @sample com.smtm.pickle.presentation.designsystem.components.textfield.TextFieldWithValue
- *
  */
 @Composable
 fun PickleTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    inputState: InputState,
     height: Dp = Dimensions.inputHeight,
     enabled: Boolean = true,
     readOnly: Boolean = false,
+    isSingleLine: Boolean = true,
+    minLines: Int = 1,
     hint: String = "",
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    singleLine: Boolean = true,
-    interaction: TextFieldInteraction = TextFieldInteraction.DEFAULT,
+    decoration: @Composable ((innerTextField: @Composable () -> Unit) -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
     locale: KeyboardLocale = KeyboardLocale.KOREA,
 ) {
-    val isErrorValue = isError && value.isNotEmpty()
-    val focusedBorderColor = when (interaction) {
-        TextFieldInteraction.DEFAULT ->
-            PickleTheme.colors.primary400
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
 
-        TextFieldInteraction.ONLY_ERROR_INTERACTION, TextFieldInteraction.NO_INTERACTION ->
-            PickleTheme.colors.transparent
+    val borderColor = when {
+        inputState is InputState.Error -> PickleTheme.colors.error50
+        inputState is InputState.Success && !isFocused -> PickleTheme.colors.primary400
+        isFocused -> PickleTheme.colors.primary400
+        else -> PickleTheme.colors.transparent
     }
 
-    OutlinedTextField(
-        value = value,
-        onValueChange = { onValueChange(it) },
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height),
-        enabled = enabled,
-        readOnly = readOnly,
-        textStyle = PickleTheme.typography.body4Medium.copy(
-            color = PickleTheme.colors.gray800,
-        ),
-        placeholder = {
-            Text(
-                text = hint,
-                style = PickleTheme.typography.body4Medium,
-                color = PickleTheme.colors.gray500,
-            )
-        },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        isError = isErrorValue,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = keyboardType,
-            imeAction = imeAction,
-            hintLocales = LocaleList(
-                Locale(locale.language)
-            )
-        ),
-        keyboardActions = KeyboardActions(),
-        singleLine = singleLine,
-        maxLines = if (singleLine) 1 else 5,
-        shape = RoundedCornerShape(Dimensions.radius),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = PickleTheme.colors.gray50,
-            unfocusedContainerColor = PickleTheme.colors.gray50,
-            errorContainerColor = PickleTheme.colors.gray50,
+    val textFieldColor = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = PickleTheme.colors.transparent,
+        unfocusedBorderColor = PickleTheme.colors.transparent,
+        errorBorderColor = PickleTheme.colors.transparent,
 
-            focusedBorderColor = focusedBorderColor,
-            unfocusedBorderColor = PickleTheme.colors.transparent,
-            errorBorderColor = PickleTheme.colors.error50,
-
-            unfocusedSupportingTextColor = PickleTheme.colors.gray600,
-            errorSupportingTextColor = PickleTheme.colors.error50,
-        ),
+        focusedContainerColor = PickleTheme.colors.gray50,
+        unfocusedContainerColor = PickleTheme.colors.gray50,
+        errorContainerColor = PickleTheme.colors.gray50,
     )
+
+    val borderWidth = if (borderColor == PickleTheme.colors.transparent) 0.dp else 2.dp
+
+    val heightModifier = if (isSingleLine) Modifier.height(height) else Modifier
+
+    val decorationBox = decoration ?: @Composable { innerTextField ->
+        OutlinedTextFieldDefaults.DecorationBox(
+            value = value,
+            visualTransformation = VisualTransformation.None,
+            innerTextField = innerTextField,
+            placeholder = {
+                Text(
+                    text = hint,
+                    style = PickleTheme.typography.body4Medium,
+                    color = PickleTheme.colors.gray500,
+                )
+            },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            singleLine = isSingleLine,
+            enabled = enabled,
+            isError = inputState is InputState.Error,
+            interactionSource = interactionSource,
+            colors = textFieldColor,
+            container = {
+                OutlinedTextFieldDefaults.Container(
+                    enabled = enabled,
+                    isError = inputState is InputState.Error,
+                    interactionSource = interactionSource,
+                    shape = RoundedCornerShape(Dimensions.radius),
+                    colors = textFieldColor
+                )
+            },
+        )
+    }
+
+    Box(
+        modifier = modifier
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                shape = RoundedCornerShape(Dimensions.radius),
+            )
+            .padding(1.dp)
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = { onValueChange(it) },
+            modifier = Modifier
+                .then(heightModifier)
+                .fillMaxWidth(),
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = PickleTheme.typography.body4Medium.copy(
+                color = PickleTheme.colors.gray800,
+            ),
+            cursorBrush = SolidColor(
+                if (inputState is InputState.Error)
+                    PickleTheme.colors.error50
+                else
+                    PickleTheme.colors.primary400
+            ),
+            decorationBox = decorationBox,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = keyboardType,
+                imeAction = imeAction,
+                hintLocales = LocaleList(Locale(locale.language))
+            ),
+            singleLine = isSingleLine,
+            minLines = minLines,
+            maxLines = if (isSingleLine) 1 else 8,
+        )
+    }
 }
 
 /**
@@ -136,8 +180,53 @@ fun PickleTextField(
  * @param hint 텍스트 필드 힌트
  * @param trailingIcon 텍스트 필드 뒤쪽 아이콘
  * @param defaultSupportingText 기본 서포팅 텍스트
+ * ---
+ * ###### 예시 코드
+ * ```
+ * // EmailViewModel.kt
+ * @HiltViewModel
+ * class EmailViewModel @Inject constructor() : ViewModel() {
  *
- * @sample com.smtm.pickle.presentation.designsystem.components.textfield.TextFieldWithSupporting
+ *     private val _email = MutableStateFlow("")
+ *     val email: StateFlow<String> = _email
+ *
+ *     private val _emailInputState = MutableStateFlow<InputState>(InputState.Idle)
+ *     val emailInputState: StateFlow<InputState> = _emailInputState
+ *
+ *     fun onEmailChange(value: String) {
+ *         _email.value = value
+ *         _emailInputState.value = validateEmail(value)
+ *     }
+ *
+ *     private fun validateEmail(value: String): InputState {
+ *         if (value.isBlank()) return InputState.Idle
+ *
+ *         if (!value.contains("@")) return InputState.Error("이메일 형식이 올바르지 않습니다")
+ *
+ *         if (value.length > 30) return InputState.Error("이메일이 너무 깁니다")
+ *
+ *         return InputState.Success("사용 가능한 이메일입니다")
+ *     }
+ * }
+ * ```
+ * ```
+ * // EmailScreen.kt
+ * @Composable
+ * fun EmailScreen(
+ *     viewModel: EmailViewModel = hiltViewModel()
+ * ) {
+ *     val email by viewModel.email.collectAsState()
+ *     val inputState by viewModel.emailInputState.collectAsState()
+ *
+ *     PickleTextFieldWithSupporting(
+ *         value = email,
+ *         onValueChange = viewModel::onEmailChange,
+ *         inputState = inputState,
+ *         hint = "이메일",
+ *         defaultSupportingText = "이메일을 입력해주세요"
+ *     )
+ * }
+ * ```
  */
 @Composable
 fun PickleTextFieldWithSupporting(
@@ -149,19 +238,20 @@ fun PickleTextFieldWithSupporting(
     trailingIcon: @Composable (() -> Unit)? = null,
     defaultSupportingText: String? = null,
 ) {
-    val (isError, supportingText) = inputState.toUiState(defaultSupportingText)
+    val supportingText = inputState.toUiState(defaultSupportingText)
 
     Column(modifier = modifier.fillMaxWidth()) {
-        PickleTextField.Default(
+        PickleTextField(
             value = value,
             onValueChange = onValueChange,
             hint = hint,
             trailingIcon = trailingIcon,
-            isError = isError,
+            inputState = inputState,
         )
 
         supportingText?.let {
             Spacer(modifier = Modifier.height(4.dp))
+
             Row {
                 Spacer(modifier = Modifier.width(8.dp))
                 PickleSupportingText(
@@ -173,24 +263,20 @@ fun PickleTextFieldWithSupporting(
     }
 }
 
-/**
- * PickleTextField 헲퍼
- * @sample com.smtm.pickle.presentation.designsystem.components.textfield.PickleTextFieldWithSupporting
- */
+/** PickleTextField 헬퍼 */
 object PickleTextField {
 
+    /** 상호작용이 없는 텍스트 필드 */
     @Composable
-    fun Default(
-        modifier: Modifier = Modifier,
+    fun Static(
         value: String,
         onValueChange: (String) -> Unit,
+        modifier: Modifier = Modifier,
         enabled: Boolean = true,
         readOnly: Boolean = false,
         hint: String = "",
         leadingIcon: @Composable (() -> Unit)? = null,
         trailingIcon: @Composable (() -> Unit)? = null,
-        isError: Boolean = false,
-        interaction: TextFieldInteraction = TextFieldInteraction.DEFAULT,
         keyboardType: KeyboardType = KeyboardType.Text,
         imeAction: ImeAction = ImeAction.Done,
         locale: KeyboardLocale = KeyboardLocale.KOREA
@@ -204,8 +290,43 @@ object PickleTextField {
             hint = hint,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
-            isError = isError,
-            interaction = interaction,
+            keyboardType = keyboardType,
+            inputState = InputState.Idle,
+            imeAction = imeAction,
+            locale = locale,
+        )
+    }
+
+    /**
+     * 상호작용이 있는 텍스트 필드
+     *
+
+     */
+    @Composable
+    fun Interactive(
+        value: String,
+        onValueChange: (String) -> Unit,
+        inputState: InputState,
+        modifier: Modifier = Modifier,
+        hint: String = "",
+        enabled: Boolean = true,
+        readOnly: Boolean = false,
+        leadingIcon: @Composable (() -> Unit)? = null,
+        trailingIcon: @Composable (() -> Unit)? = null,
+        keyboardType: KeyboardType = KeyboardType.Text,
+        imeAction: ImeAction = ImeAction.Done,
+        locale: KeyboardLocale = KeyboardLocale.KOREA
+    ) {
+        PickleTextField(
+            modifier = modifier,
+            value = value,
+            onValueChange = onValueChange,
+            inputState = inputState,
+            enabled = enabled,
+            readOnly = readOnly,
+            hint = hint,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
             keyboardType = keyboardType,
             imeAction = imeAction,
             locale = locale,
@@ -214,25 +335,75 @@ object PickleTextField {
 
     @Composable
     fun MultiLine(
-        modifier: Modifier = Modifier,
         value: String,
         onValueChange: (String) -> Unit,
+        inputState: InputState = InputState.Idle,
+        maxCount: Int,
+        modifier: Modifier = Modifier,
         readOnly: Boolean = false,
         hint: String = "",
-        imeAction: ImeAction = ImeAction.Done,
+        minLines: Int = 4,
         locale: KeyboardLocale = KeyboardLocale.KOREA
     ) {
-        PickleTextField(
-            modifier = modifier,
-            value = value,
-            onValueChange = onValueChange,
-            readOnly = readOnly,
-            hint = hint,
-            singleLine = false,
-            keyboardType = KeyboardType.Text,
-            imeAction = imeAction,
-            locale = locale,
-        )
+        Box(modifier = modifier) {
+            PickleTextField(
+                modifier = Modifier,
+                value = value,
+                onValueChange = { newValue ->
+                    if (newValue.length <= maxCount) onValueChange(newValue)
+                },
+                readOnly = readOnly,
+                hint = hint,
+                isSingleLine = false,
+                minLines = minLines,
+                keyboardType = KeyboardType.Text,
+                inputState = inputState,
+                imeAction = ImeAction.Done,
+                locale = locale,
+                decoration = { innerTextField ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = PickleTheme.colors.gray50,
+                                shape = RoundedCornerShape(Dimensions.radius)
+                            )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = 12.dp,
+                                    end = 12.dp,
+                                    top = 12.dp,
+                                    bottom = 32.dp
+                                )
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = hint,
+                                    style = PickleTheme.typography.body4Medium,
+                                    color = PickleTheme.colors.gray500
+                                )
+                            }
+                            innerTextField()
+                        }
+
+                        Text(
+                            text = "${value.length}/100",
+                            style = PickleTheme.typography.caption1Medium,
+                            color = if (inputState is InputState.Error)
+                                PickleTheme.colors.error50
+                            else
+                                PickleTheme.colors.gray500,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(end = 12.dp, bottom = 8.dp)
+                        )
+                    }
+                }
+            )
+        }
     }
 
     @Composable
@@ -251,8 +422,8 @@ object PickleTextField {
             hint = hint,
             leadingIcon = { /* TODO: 검색 아이콘 추가 */ },
 //            trailingIcon = if (value.isNotEmpty()) /* TODO: 삭제 아이콘 추가 */ else null,
-            isError = false,
             keyboardType = KeyboardType.Text,
+            inputState = InputState.Idle,
             imeAction = ImeAction.Search,
         )
     }
@@ -261,7 +432,7 @@ object PickleTextField {
 @Preview
 @Composable
 private fun EmptyTextField() {
-    PickleTextField(
+    PickleTextField.Static(
         value = "",
         onValueChange = {}
     )
@@ -270,7 +441,7 @@ private fun EmptyTextField() {
 @Preview
 @Composable
 private fun TextFieldWithHint() {
-    PickleTextField(
+    PickleTextField.Static(
         value = "",
         onValueChange = {},
         hint = "텍스트를 입력해주세요",
@@ -282,12 +453,11 @@ private fun TextFieldWithHint() {
 private fun TextFieldWithValue() {
     var email by remember { mutableStateOf("test@test.com") }
 
-    PickleTextField(
+    PickleTextField.Interactive(
         value = email,
         onValueChange = { email = it },
         hint = "텍스트를 입력해주세요",
-        interaction = TextFieldInteraction.ONLY_ERROR_INTERACTION,
-        isError = email.isEmpty() || email.length > 10 || !email.contains("@"),
+        inputState = InputState.Error("에러입니다")
     )
 }
 
@@ -297,14 +467,15 @@ private fun TextFieldWithSupporting() {
     var email by remember { mutableStateOf("") }
 
     PickleTextFieldWithSupporting(
-        value = "",
-        onValueChange = {},
+        value = email,
+        onValueChange = { email = it },
         hint = "이메일",
         defaultSupportingText = "이메일을 입력해주세요",
         inputState = when {
             email == "" -> InputState.Idle
-            email.contains("@") -> InputState.Success(null)
+            email.length > 10 -> InputState.Error("이메일을 다시 확인해주세요")
             !email.contains("@") -> InputState.Error("이메일 형식이 올바르지 않습니다")
+            email.contains("@") -> InputState.Success(null)
             else -> InputState.Error("이메일을 다시 확인해주세요")
         },
     )

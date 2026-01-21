@@ -11,19 +11,19 @@ import com.smtm.pickle.presentation.designsystem.components.textfield.PickleText
  */
 sealed class InputState() {
     data object Idle : InputState()
-    data class Success(val message: String?) : InputState()
     data class Error(val message: String) : InputState()
+    data class Success(val message: String?) : InputState()
 }
 
 @Composable
 fun InputState.toUiState(
     defaultSupportingText: String?
-): Pair<Boolean, String?> {
+): String? {
     return when (this) {
-        InputState.Idle -> false to defaultSupportingText
+        InputState.Idle -> defaultSupportingText
 
-        is InputState.Success -> false to message
+        is InputState.Success -> message
 
-        is InputState.Error -> true to message
+        is InputState.Error ->  message
     }
 }
