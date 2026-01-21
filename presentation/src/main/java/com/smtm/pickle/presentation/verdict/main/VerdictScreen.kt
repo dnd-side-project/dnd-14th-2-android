@@ -41,11 +41,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,6 +76,17 @@ fun VerdictScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
+    var selectedRequest by remember { mutableStateOf<VerdictRequest?>(null) }
+    val sheetState = rememberModalBottomSheetState()
+
+    selectedRequest?.let { request ->
+        VerdictRequestInfoBottomSheet(
+            sheetState = sheetState,
+            request = request,
+            onDismiss = { selectedRequest = null }
+        )
+    }
+
     Scaffold(
         contentWindowInsets = emptyWindowInsets,
         topBar = {
@@ -98,7 +112,7 @@ fun VerdictScreen(
             listState = listState,
             onFilterClick = viewModel::selectFilter,
             onLoadMore = viewModel::loadMore,
-            onRequestItemClick = {}
+            onRequestItemClick = { selectedRequest = it }
         )
     }
 }
@@ -395,7 +409,7 @@ private fun VerdictItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = item.nickname)
+                Text(text = item.jurorNickname)
 
                 Spacer(modifier = Modifier.width(6.dp))
 
@@ -405,7 +419,7 @@ private fun VerdictItem(
                         .background(color = MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = item.badge)
+                    Text(text = item.jurorBadge)
                 }
             }
             Row(
