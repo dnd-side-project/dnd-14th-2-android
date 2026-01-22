@@ -1,7 +1,9 @@
 package com.smtm.pickle.presentation.designsystem.theme.dimension
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.dp
 
+@Immutable
 object Dimensions {
     // 버튼
     /** 수입/지출 버튼 */

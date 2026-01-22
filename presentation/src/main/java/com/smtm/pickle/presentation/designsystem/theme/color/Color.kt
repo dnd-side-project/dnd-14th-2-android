@@ -1,7 +1,9 @@
 package com.smtm.pickle.presentation.designsystem.theme.color
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+@Immutable
 object ColorPalette {
     // Base Colors
     val base0 = Color(0xFFFFFFFF)
