@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -24,7 +25,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -75,10 +78,12 @@ fun PickleTextField(
     decoration: @Composable ((innerTextField: @Composable () -> Unit) -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
+    onImeAction: (() -> Unit)? = null,
     locale: KeyboardLocale = KeyboardLocale.KOREA,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val focusManager = LocalFocusManager.current
 
     val borderColor = when {
         inputState is InputState.Error -> PickleTheme.colors.error50
@@ -164,6 +169,24 @@ fun PickleTextField(
                 imeAction = imeAction,
                 hintLocales = LocaleList(Locale(locale.language))
             ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onImeAction?.invoke()
+                    focusManager.clearFocus()
+                },
+                onSearch = {
+                    onImeAction?.invoke()
+                    focusManager.clearFocus()
+                },
+                onSend = {
+                    onImeAction?.invoke()
+                    focusManager.clearFocus()
+                },
+                onNext = {
+                    onImeAction?.invoke()
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             singleLine = isSingleLine,
             minLines = minLines,
             maxLines = if (isSingleLine) 1 else 8,
@@ -235,6 +258,8 @@ fun PickleTextFieldWithSupporting(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     hint: String = "",
+    imeAction: ImeAction = ImeAction.Done,
+    onImeAction: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     defaultSupportingText: String? = null,
 ) {
@@ -247,6 +272,8 @@ fun PickleTextFieldWithSupporting(
             hint = hint,
             trailingIcon = trailingIcon,
             inputState = inputState,
+            imeAction = imeAction,
+            onImeAction = onImeAction
         )
 
         supportingText?.let {
@@ -279,6 +306,7 @@ object PickleTextField {
         trailingIcon: @Composable (() -> Unit)? = null,
         keyboardType: KeyboardType = KeyboardType.Text,
         imeAction: ImeAction = ImeAction.Done,
+        onImeAction: (() -> Unit)? = null,
         locale: KeyboardLocale = KeyboardLocale.KOREA
     ) {
         PickleTextField(
@@ -293,15 +321,12 @@ object PickleTextField {
             keyboardType = keyboardType,
             inputState = InputState.Idle,
             imeAction = imeAction,
+            onImeAction = onImeAction,
             locale = locale,
         )
     }
 
-    /**
-     * 상호작용이 있는 텍스트 필드
-     *
-
-     */
+    /** 상호작용이 있는 텍스트 필드 */
     @Composable
     fun Interactive(
         value: String,
@@ -313,8 +338,9 @@ object PickleTextField {
         readOnly: Boolean = false,
         leadingIcon: @Composable (() -> Unit)? = null,
         trailingIcon: @Composable (() -> Unit)? = null,
-        keyboardType: KeyboardType = KeyboardType.Text,
         imeAction: ImeAction = ImeAction.Done,
+        onImeAction: (() -> Unit)? = null,
+        keyboardType: KeyboardType = KeyboardType.Text,
         locale: KeyboardLocale = KeyboardLocale.KOREA
     ) {
         PickleTextField(
@@ -329,6 +355,7 @@ object PickleTextField {
             trailingIcon = trailingIcon,
             keyboardType = keyboardType,
             imeAction = imeAction,
+            onImeAction = onImeAction,
             locale = locale,
         )
     }
@@ -343,6 +370,7 @@ object PickleTextField {
         readOnly: Boolean = false,
         hint: String = "",
         minLines: Int = 4,
+        onDone: (() -> Unit)? = null,
         locale: KeyboardLocale = KeyboardLocale.KOREA
     ) {
         Box(modifier = modifier) {
@@ -359,6 +387,7 @@ object PickleTextField {
                 keyboardType = KeyboardType.Text,
                 inputState = inputState,
                 imeAction = ImeAction.Done,
+                onImeAction = onDone,
                 locale = locale,
                 decoration = { innerTextField ->
                     Box(
@@ -413,6 +442,7 @@ object PickleTextField {
         onValueChange: (String) -> Unit,
         height: Dp = Dimensions.searchHeight,
         hint: String = "",
+        onSearch: (() -> Unit)? = null
     ) {
         PickleTextField(
             modifier = modifier,
@@ -425,6 +455,7 @@ object PickleTextField {
             keyboardType = KeyboardType.Text,
             inputState = InputState.Idle,
             imeAction = ImeAction.Search,
+            onImeAction = onSearch,
         )
     }
 }
@@ -435,16 +466,6 @@ private fun EmptyTextField() {
     PickleTextField.Static(
         value = "",
         onValueChange = {}
-    )
-}
-
-@Preview
-@Composable
-private fun TextFieldWithHint() {
-    PickleTextField.Static(
-        value = "",
-        onValueChange = {},
-        hint = "텍스트를 입력해주세요",
     )
 }
 
