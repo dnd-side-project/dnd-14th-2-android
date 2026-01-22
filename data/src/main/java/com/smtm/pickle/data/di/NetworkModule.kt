@@ -5,7 +5,7 @@ import com.smtm.pickle.data.BuildConfig
 import com.smtm.pickle.data.source.remote.api.AuthService
 import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.data.source.remote.auth.TokenAuthenticator
-import com.smtm.pickle.data.source.remote.auth.TokenManager
+import com.smtm.pickle.domain.provider.TokenProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,7 +48,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager): Interceptor {
+    fun provideAuthInterceptor(tokenProvider: TokenProvider): Interceptor {
         // 로그인 요청이 아니면 토큰 추가
         return Interceptor { chain ->
             val originalRequest = chain.request()
@@ -58,7 +58,7 @@ object NetworkModule {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
-            val accessToken = tokenManager.getAccessToken()
+            val accessToken = tokenProvider.getCachedToken()?.access
 
             val newRequest = accessToken?.let {
                 originalRequest.newBuilder()

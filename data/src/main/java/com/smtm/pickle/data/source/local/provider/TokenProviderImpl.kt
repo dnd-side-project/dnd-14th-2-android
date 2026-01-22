@@ -11,19 +11,32 @@ import javax.inject.Singleton
 class TokenProviderImpl @Inject constructor(
     private val tokenDataStore: TokenDataStore
 ) : TokenProvider {
+
+    @Volatile
+    private var cachedToken: AuthToken? = null
+
+    override suspend fun init() {
+        cachedToken = tokenDataStore.getToken()
+    }
+
     override suspend fun saveToken(token: AuthToken) {
+        cachedToken = token
         tokenDataStore.saveToken(token)
     }
 
-    override suspend fun getToken(): AuthToken? =
-        tokenDataStore.getToken()
+    override suspend fun getToken(): AuthToken? {
+        return cachedToken ?: tokenDataStore.getToken().also { cachedToken = it }
+    }
 
     override suspend fun getRefreshToken(): String? =
         tokenDataStore.getRefreshToken()
 
     override suspend fun clearToken() {
+        cachedToken = null
         tokenDataStore.clearToken()
     }
+
+    override fun getCachedToken(): AuthToken? = cachedToken
 
     override fun getTokenFlow(): Flow<AuthToken?> =
         tokenDataStore.getTokenFlow()

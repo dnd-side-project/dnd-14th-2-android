@@ -14,8 +14,4 @@ interface AuthRepository {
     suspend fun loginWithGoogle(): Result<AuthToken>
 
     suspend fun getUserInfo(): Result<User>
-
-    suspend fun initToken()
-
-    fun getAccessToken(): String?
 }

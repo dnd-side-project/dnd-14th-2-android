@@ -26,25 +26,19 @@ import javax.inject.Singleton
  *   access 토큰이 없는 동안 실행된 요청이 모두 완료 시 Authenticator가 새 Request를 만들어 재시도
  */
 @Singleton
-class TokenManager @Inject constructor(
+class TokenRefresher @Inject constructor(
     private val tokenProvider: TokenProvider,
     private val refreshApi: RefreshTokenApi,
 ) {
-    private var cachedToken: AuthToken? = null
-
     private var refreshJob: Deferred<AuthToken?>? = null
     private val refreshLock = Mutex()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-    suspend fun init() {
-        cachedToken = tokenProvider.getToken()
-    }
 
     suspend fun refreshTokenIfNeeded(): AuthToken? {
         return refreshLock.withLock {
 
             // Access 코드를 이미 획득했는지 판단
-            cachedToken
+            tokenProvider.getToken()
                 ?.takeIf { it.access.isNotBlank() && !it.access.isExpired() }
                 ?.let { return it }
 
@@ -53,16 +47,13 @@ class TokenManager @Inject constructor(
 
             val job = scope.async {
                 // 사용자에게 토큰이 있으면 획득, 없으면
-                val refreshToken = cachedToken?.refresh
-                    ?: tokenProvider.getRefreshToken()
-                    ?: return@async null
+                val refreshToken = tokenProvider.getRefreshToken() ?: return@async null
 
                 val response = runCatching {
                     refreshApi.refreshToken("Bearer $refreshToken")
                 }.getOrNull() ?: run {
                     // 리프레시 토큰 만료시 로그아웃 처리
                     tokenProvider.clearToken()
-                    cachedToken = null
                     return@async null
                 }
 
@@ -72,7 +63,6 @@ class TokenManager @Inject constructor(
                 ).also {
                     // 토큰 저장
                     tokenProvider.saveToken(it)
-                    cachedToken = it
                 }
             }
 
@@ -86,8 +76,4 @@ class TokenManager @Inject constructor(
             }
         }
     }
-
-    fun getAccessToken(): String? = cachedToken?.access
-
-    fun getRefreshToken(): String? = cachedToken?.refresh
 }

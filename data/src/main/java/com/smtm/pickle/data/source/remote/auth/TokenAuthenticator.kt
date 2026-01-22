@@ -11,7 +11,7 @@ import javax.inject.Singleton
 /** 서버 응답이 401일때 OkHttp가 자동으로 실행 */
 @Singleton
 class TokenAuthenticator @Inject constructor(
-    private val tokenManager: TokenManager
+    private val tokenRefresher: TokenRefresher
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -21,7 +21,7 @@ class TokenAuthenticator @Inject constructor(
 
         // RefreshToken으로 새로운 Token 발급
         val newToken = runBlocking {
-            tokenManager.refreshTokenIfNeeded()
+            tokenRefresher.refreshTokenIfNeeded()
         } ?: return null
 
         // 401 엑세스 토큰 만료로 실패한 요청에 새 토큰을 넣어 재시도

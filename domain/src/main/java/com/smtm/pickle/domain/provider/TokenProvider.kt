@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
  */
 interface TokenProvider {
 
+    suspend fun init()
+
     suspend fun saveToken(token: AuthToken)
 
     suspend fun getToken(): AuthToken?
@@ -16,6 +18,8 @@ interface TokenProvider {
     suspend fun getRefreshToken(): String?
 
     suspend fun clearToken()
+
+    fun getCachedToken(): AuthToken?
 
     fun getTokenFlow(): Flow<AuthToken?>
 
