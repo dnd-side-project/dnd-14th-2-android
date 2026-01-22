@@ -72,7 +72,7 @@ dependencies {
     implementation(libs.androidx.datastore)
 
     // Social SDK
-    implementation(libs.bundles.social)
+    implementation(libs.bundles.google.login)
 
     // Hilt
     implementation(libs.hilt.android)

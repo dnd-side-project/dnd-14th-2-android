@@ -120,9 +120,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 
-# Firebase
-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsPlugin" }
-
 # Hilt
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
@@ -162,11 +159,10 @@ room = [
     "androidx-room-runtime",
     "androidx-room-ktx"
 ]
-social = [
+google-login = [
     "androidx-credentials",
     "androidx-credentials-play-services-auth",
     "googleid",
-    "kakao-user"
 ]
 testing = [
     "junit",

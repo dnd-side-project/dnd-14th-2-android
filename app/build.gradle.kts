@@ -73,7 +73,7 @@ dependencies {
     implementation(libs.timber)
     
     // Social SDK
-    implementation(libs.bundles.social)
+    implementation(libs.kakao.user)
 
     // Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
