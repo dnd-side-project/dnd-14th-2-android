@@ -70,9 +70,7 @@ class TokenRefresher @Inject constructor(
             try {
                 job.await()
             } finally {
-                refreshLock.withLock {
-                    if (refreshJob == job) refreshJob = null
-                }
+                if (refreshJob == job) refreshJob = null
             }
         }
     }
