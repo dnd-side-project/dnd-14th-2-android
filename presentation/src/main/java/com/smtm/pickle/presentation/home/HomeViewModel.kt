@@ -29,15 +29,24 @@ class HomeViewModel @Inject constructor(
     private fun loadInitialDailyLedgers() {
         viewModelScope.launch {
             val dailyLedgers = getDailyLedgersUseCase()
+            val selectedDate = _uiState.value.selectedDate
+            val selectedDailyLedger = dailyLedgers.firstOrNull { it.date == selectedDate }
             _uiState.update { state ->
-                state.copy(dailyLedgers = dailyLedgers)
+                state.copy(
+                    dailyLedgers = dailyLedgers,
+                    selectedDailyLedger = selectedDailyLedger
+                )
             }
         }
     }
 
     fun selectDate(newSelectedDate: LocalDate) {
+        val newSelectedDailyLedger = _uiState.value.dailyLedgers.firstOrNull { it.date == newSelectedDate }
         _uiState.update { state ->
-            state.copy(selectedDate = newSelectedDate)
+            state.copy(
+                selectedDate = newSelectedDate,
+                selectedDailyLedger = newSelectedDailyLedger
+            )
         }
     }
 
@@ -51,5 +60,6 @@ class HomeViewModel @Inject constructor(
 data class HomeUiState(
     val dailyLedgers: List<DailyLedger> = emptyList(),
     val selectedDate: LocalDate = LocalDate.now(),
+    val selectedDailyLedger: DailyLedger? = null,
     val calendarMode: CalendarMode = CalendarMode.MONTHLY,
 )
