@@ -1,8 +1,5 @@
 package com.smtm.pickle.presentation.onboarding
 
-import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,20 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
-
-data class OnboardingPage(
-    val title: String,
-    val description: String,
-)
 
 @Composable
 fun OnboardingScreen(
-    viewModel: OnboardingViewModel = hiltViewModel(),
+    navigator: AuthNavigator,
     onCompleted: () -> Unit = {},
+    viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val pages = remember {
         listOf(
@@ -152,119 +141,3 @@ private fun OnboardingContent(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun OnboardingTopBar(
-    onBack: () -> Unit,
-    onSkip: () -> Unit,
-) {
-    CenterAlignedTopAppBar(
-        title = {},
-        navigationIcon = {
-            TextButton(onClick = onBack) {
-                Text("Back")
-            }
-        },
-        actions = {
-            TextButton(onClick = onSkip) {
-                Text("건너뛰기")
-            }
-        },
-    )
-}
-
-@Composable
-private fun OnboardingPageContent(
-    modifier: Modifier = Modifier,
-    page: OnboardingPage,
-) {
-    Column(
-        modifier = modifier.padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(text = "Image")
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = page.title,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = page.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-    }
-}
-
-@Composable
-fun PageIndicator(
-    modifier: Modifier = Modifier,
-    currentPage: Int,
-    pageCount: Int,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        repeat(pageCount) { index ->
-            val isSelected = index == currentPage
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .size(if (isSelected) 8.dp else 6.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFFBDBDBDBD)),
-            )
-        }
-    }
-}
-
-@Composable
-private fun BottomButton(
-    modifier: Modifier = Modifier,
-    currentPage: Int,
-    lastPageIndex: Int,
-    onPrev: () -> Unit,
-    onNext: () -> Unit,
-    onFinish: () -> Unit,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (currentPage > 0) {
-            OutlinedButton(
-                modifier = Modifier.width(88.dp),
-                onClick = onPrev,
-            ) {
-                Text("이전")
-            }
-        }
-
-        val isLast = currentPage == lastPageIndex
-        Button(
-            modifier = Modifier
-                .height(48.dp)
-                .weight(1f),
-            shape = RoundedCornerShape(12.dp),
-            onClick = { if (isLast) onFinish() else onNext() },
-        ) {
-            Text(if (isLast) "시작하기" else "다음")
-        }
-    }
-}
