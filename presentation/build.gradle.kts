@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.material)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.androidx.compose.mateiral.icons.extended)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -57,6 +58,9 @@ dependencies {
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Calendar
+    implementation(libs.kizitonwose.calendar.compose)
 
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))

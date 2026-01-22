@@ -46,6 +46,9 @@ mockk = "1.14.7"
 # UI
 material = "1.13.0"
 
+# Calendar
+kizitonwoseCalendar = "2.6.0"
+
 [libraries]
 # AndroidX
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -62,6 +65,7 @@ androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graph
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-mateiral-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 # Database
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -99,6 +103,9 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 # UI
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Calendar
+kizitonwose-calendar-compose = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "kizitonwoseCalendar" }
 
 [plugins]
 # Android
