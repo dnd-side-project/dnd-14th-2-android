@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.components.PickleSupportingText
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.KeyboardLocale
@@ -84,57 +87,33 @@ fun PickleTextField(
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val focusManager = LocalFocusManager.current
-
-    val borderColor = when {
-        inputState is InputState.Error -> PickleTheme.colors.error50
-        inputState is InputState.Success && !isFocused -> PickleTheme.colors.primary400
-        isFocused -> PickleTheme.colors.primary400
-        else -> PickleTheme.colors.transparent
-    }
+    val colors = PickleTheme.colors
 
     val textFieldColor = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = PickleTheme.colors.transparent,
-        unfocusedBorderColor = PickleTheme.colors.transparent,
-        errorBorderColor = PickleTheme.colors.transparent,
+        focusedBorderColor = colors.transparent,
+        unfocusedBorderColor = colors.transparent,
+        errorBorderColor = colors.transparent,
 
-        focusedContainerColor = PickleTheme.colors.gray50,
-        unfocusedContainerColor = PickleTheme.colors.gray50,
-        errorContainerColor = PickleTheme.colors.gray50,
+        focusedContainerColor = colors.gray50,
+        unfocusedContainerColor = colors.gray50,
+        errorContainerColor = colors.gray50,
     )
 
-    val borderWidth = if (borderColor == PickleTheme.colors.transparent) 0.dp else 2.dp
+    val borderColor = remember(inputState, isFocused) {
+        when {
+            inputState is InputState.Error -> colors.error50
+            inputState is InputState.Success && !isFocused -> colors.primary400
+            isFocused -> colors.primary400
+            else -> colors.transparent
+        }
+    }
 
-    val heightModifier = if (isSingleLine) Modifier.height(height) else Modifier
+    val borderWidth = remember(borderColor) {
+        if (borderColor == colors.transparent) 0.dp else 2.dp
+    }
 
-    val decorationBox = decoration ?: @Composable { innerTextField ->
-        OutlinedTextFieldDefaults.DecorationBox(
-            value = value,
-            visualTransformation = VisualTransformation.None,
-            innerTextField = innerTextField,
-            placeholder = {
-                Text(
-                    text = hint,
-                    style = PickleTheme.typography.body4Medium,
-                    color = PickleTheme.colors.gray500,
-                )
-            },
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            singleLine = isSingleLine,
-            enabled = enabled,
-            isError = inputState is InputState.Error,
-            interactionSource = interactionSource,
-            colors = textFieldColor,
-            container = {
-                OutlinedTextFieldDefaults.Container(
-                    enabled = enabled,
-                    isError = inputState is InputState.Error,
-                    interactionSource = interactionSource,
-                    shape = RoundedCornerShape(Dimensions.radius),
-                    colors = textFieldColor
-                )
-            },
-        )
+    val heightModifier = remember(isSingleLine, height) {
+        if (isSingleLine) Modifier.height(height) else Modifier
     }
 
     Box(
@@ -163,7 +142,36 @@ fun PickleTextField(
                 else
                     PickleTheme.colors.primary400
             ),
-            decorationBox = decorationBox,
+            decorationBox = decoration ?: @Composable { innerTextField ->
+                OutlinedTextFieldDefaults.DecorationBox(
+                    value = value,
+                    visualTransformation = VisualTransformation.None,
+                    innerTextField = innerTextField,
+                    placeholder = {
+                        Text(
+                            text = hint,
+                            style = PickleTheme.typography.body4Medium,
+                            color = PickleTheme.colors.gray500,
+                        )
+                    },
+                    leadingIcon = leadingIcon,
+                    trailingIcon = trailingIcon,
+                    singleLine = isSingleLine,
+                    enabled = enabled,
+                    isError = inputState is InputState.Error,
+                    interactionSource = interactionSource,
+                    colors = textFieldColor,
+                    container = {
+                        OutlinedTextFieldDefaults.Container(
+                            enabled = enabled,
+                            isError = inputState is InputState.Error,
+                            interactionSource = interactionSource,
+                            shape = RoundedCornerShape(Dimensions.radius),
+                            colors = textFieldColor
+                        )
+                    },
+                )
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = keyboardType,
                 imeAction = imeAction,
@@ -444,14 +452,37 @@ object PickleTextField {
         hint: String = "",
         onSearch: (() -> Unit)? = null
     ) {
+        val leadingIcon = remember {
+            @Composable {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search_magnifier),
+                    contentDescription = null,
+                )
+            }
+        }
+
+        val hasText = value.isNotEmpty()
+        val trailingIcon = remember(hasText) {
+            if (hasText) {
+                @Composable {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_search_close),
+                        contentDescription = null,
+                    )
+                }
+            } else {
+                null
+            }
+        }
+
         PickleTextField(
             modifier = modifier,
             value = value,
             onValueChange = onValueChange,
             height = height,
             hint = hint,
-            leadingIcon = { /* TODO: 검색 아이콘 추가 */ },
-//            trailingIcon = if (value.isNotEmpty()) /* TODO: 삭제 아이콘 추가 */ else null,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
             keyboardType = KeyboardType.Text,
             inputState = InputState.Idle,
             imeAction = ImeAction.Search,
