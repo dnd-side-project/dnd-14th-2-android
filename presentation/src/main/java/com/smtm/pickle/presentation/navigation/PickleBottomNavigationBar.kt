@@ -20,14 +20,14 @@ fun PickleBottomNavigationBar(
         BottomNavItem.entries.forEach { item ->
             // 현재 destination이 이 탭의 Graph에 속하는지 확인
             val isSelected = currentDestination?.hierarchy?.any {
-                it.hasRoute(item.graphRouteClass)
+                it.hasRoute(item.tabRouteClass)
             } == true
 
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
                     if (!isSelected) {
-                        onNavigate(item.graphRoute)
+                        onNavigate(item.tabRoute)
                     }
                 },
                 icon = {
