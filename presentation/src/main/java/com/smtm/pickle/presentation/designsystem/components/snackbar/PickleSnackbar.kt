@@ -117,35 +117,30 @@ fun PickleSnackbar(
  */
 object PickleSnackbar {
 
+    /** 토스트 메시지 - 성공 아이콘 */
     fun toastSuccess(
         message: String,
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
-        actionLabel: String? = null,
-        onActionClick: (() -> Unit)? = null,
         duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
     ) = SnackbarData(
         message = message,
         iconType = SnackbarIconType.SUCCESS,
         position = position,
-        actionLabel = actionLabel,
-        onActionClick = onActionClick,
         duration = duration,
     )
 
+    /** 토스트 메시지 - 실패 아이콘 */
     fun toastError(
         message: String,
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
-        actionLabel: String? = null,
-        onActionClick: (() -> Unit)? = null,
         duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
     ) = SnackbarData(
         message = message,
         iconType = SnackbarIconType.ERROR,
         position = position,
-        actionLabel = actionLabel,
-        onActionClick = onActionClick,
         duration = duration,
     )
+
 
     fun snackbarShort(
         message: String,

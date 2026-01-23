@@ -11,12 +11,33 @@ import androidx.compose.runtime.setValue
  * @property show 스낵바 보여주기
  * @property dismiss 스낵바 숨기기
  * ---
- * ``` kotlin
- * SnackbarState.show(
- *      PickleSnackbar.toastSuccess(
- *          message = "메시지에 마침표를 찍어요",
- *          position = SnackbarPosition.BOTTOM
- *      )
+ * ```
+ * val snackbarState = remember { SnackbarState() }
+ *
+ * // scaffold snackbarState 주입
+ * Box(modifier = Modifier.fillMaxSize()) {
+ *     Scaffold { padding ->
+ *         MainScreen(
+ *             modifier = Modifier.padding(padding),
+ *             snackbarState = snackbarState
+ *         )
+ *     }
+ *
+ *     SnackbarHost(
+ *         snackbarState = snackbarState
+ *     )
+ * }
+ *
+ * // Screen
+ * Button(
+ *     onClick = {
+ *         snackbarState.show(
+ *             PickleSnackbar.toastSuccess(
+ *                 message = "메시지에 마침표를 찍어요",
+ *                 actionLabel = "확인"
+ *             )
+ *         )
+ *     }
  * )
  * ```
  */

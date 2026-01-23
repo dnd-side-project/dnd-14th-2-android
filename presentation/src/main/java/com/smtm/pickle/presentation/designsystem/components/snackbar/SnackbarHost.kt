@@ -16,6 +16,37 @@ import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarPosition
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarState
 
+/**
+ * ```
+ * val snackbarState = remember { SnackbarState() }
+ *
+ * // scaffold snackbarState 주입
+ * Box(modifier = Modifier.fillMaxSize()) {
+ *     Scaffold { padding ->
+ *         MainScreen(
+ *             modifier = Modifier.padding(padding),
+ *             snackbarState = snackbarState
+ *         )
+ *     }
+ *
+ *     SnackbarHost(
+ *         snackbarState = snackbarState
+ *     )
+ * }
+ *
+ * // Screen
+ * Button(
+ *     onClick = {
+ *         snackbarState.show(
+ *             PickleSnackbar.toastSuccess(
+ *                 message = "메시지에 마침표를 찍어요",
+ *                 actionLabel = "확인"
+ *             )
+ *         )
+ *     }
+ * )
+ * ```
+ */
 @Composable
 fun SnackbarHost(
     snackbarState: SnackbarState,
