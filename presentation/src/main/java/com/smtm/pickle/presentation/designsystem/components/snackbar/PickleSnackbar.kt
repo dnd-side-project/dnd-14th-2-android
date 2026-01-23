@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData.Companion.toMillis
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarDuration
@@ -38,15 +40,13 @@ fun PickleSnackbar(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO: 아이콘 변경
-    val iconRes = when (snackbarData.iconType) {
-        SnackbarIconType.SUCCESS -> com.google.android.material.R.drawable.m3_split_button_chevron_avd
-        SnackbarIconType.ERROR -> com.google.android.material.R.drawable.m3_split_button_chevron_avd
-        is SnackbarIconType.CUSTOM -> {
-            snackbarData.iconType.iconRes
+    val iconRes = remember(snackbarData.iconType) {
+        when (snackbarData.iconType) {
+            SnackbarIconType.SUCCESS -> R.drawable.ic_snackbar_success
+            SnackbarIconType.ERROR -> R.drawable.ic_snackbar_fail
+            is SnackbarIconType.CUSTOM -> snackbarData.iconType.iconRes
+            SnackbarIconType.NONE -> null
         }
-
-        SnackbarIconType.NONE -> null
     }
 
     LaunchedEffect(snackbarData) {
