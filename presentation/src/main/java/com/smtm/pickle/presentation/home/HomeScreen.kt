@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +43,7 @@ import com.smtm.pickle.domain.model.ledger.DailyLedger
 import com.smtm.pickle.domain.model.ledger.Expense
 import com.smtm.pickle.domain.model.ledger.Income
 import com.smtm.pickle.presentation.designsystem.components.calendar.LedgerCalendar
+import com.smtm.pickle.presentation.model.calendar.CalendarMode
 import com.smtm.pickle.presentation.navigation.navigator.HomeNavigator
 import java.time.LocalDate
 import java.time.YearMonth
@@ -54,6 +56,21 @@ fun HomeScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
+    HomeContent(
+        uiState = uiState,
+        setCalendarMode = viewModel::setCalendarMode,
+        selectDate = viewModel::selectDate,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeContent(
+    modifier: Modifier = Modifier,
+    uiState: HomeUiState,
+    setCalendarMode: (CalendarMode) -> Unit,
+    selectDate: (LocalDate) -> Unit,
+) {
     val currentDate = remember { LocalDate.now() }
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(12) }
@@ -63,34 +80,36 @@ fun HomeScreen(
     val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
     val daysOfWeek = remember { daysOfWeek(firstDayOfWeek) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            LedgerCalendar(
-                currentDate = currentDate,
-                currentMonth = currentMonth,
-                startMonth = startMonth,
-                endMonth = endMonth,
-                startDate = startDate,
-                endDate = endDate,
-                firstDayOfWeek = firstDayOfWeek,
-                daysOfWeek = daysOfWeek,
-                dailyLedgerList = uiState.dailyLedgers,
-                calendarMode = uiState.calendarMode,
-                selectedDate = uiState.selectedDate,
-                onModeChange = viewModel::setCalendarMode,
-                onMonthArrowClick = { },
-                onDateClick = viewModel::selectDate
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                LedgerCalendar(
+                    currentDate = currentDate,
+                    currentMonth = currentMonth,
+                    startMonth = startMonth,
+                    endMonth = endMonth,
+                    startDate = startDate,
+                    endDate = endDate,
+                    firstDayOfWeek = firstDayOfWeek,
+                    daysOfWeek = daysOfWeek,
+                    dailyLedgerList = uiState.dailyLedgers,
+                    calendarMode = uiState.calendarMode,
+                    selectedDate = uiState.selectedDate,
+                    onModeChange = setCalendarMode,
+                    onMonthArrowClick = { },
+                    onDateClick = selectDate
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            detailLedgerDetailSection(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                date = uiState.selectedDate,
+                dailyLedger = uiState.selectedDailyLedger
             )
         }
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-
-        detailLedgerDetailSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            date = uiState.selectedDate,
-            dailyLedger = uiState.selectedDailyLedger
-        )
     }
 }
 
@@ -156,49 +175,6 @@ private fun LazyListScope.detailLedgerDetailSection(
         }
     }
 
-}
-
-@Composable
-private fun DailyLedgerHeader(
-    modifier: Modifier = Modifier,
-    date: LocalDate,
-    dailyLedger: DailyLedger?,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = "${date.year}년 ${date.monthValue}월",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        if (dailyLedger == null) {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .fillMaxWidth(),
-                text = "아직 지출 내역이 없어요",
-                textAlign = TextAlign.Center
-            )
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "수입")
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "${dailyLedger.totalIncome}")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "지출")
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "${dailyLedger.totalExpense}")
-            }
-        }
-    }
 }
 
 @Composable
