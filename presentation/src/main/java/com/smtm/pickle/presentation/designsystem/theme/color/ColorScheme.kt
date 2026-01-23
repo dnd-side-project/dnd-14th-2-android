@@ -26,7 +26,7 @@ val LightColorScheme = lightColorScheme(
     outline = ColorPalette.gray300, // 테두리
     outlineVariant = ColorPalette.gray300, // 테두리
 
-    scrim = ColorPalette.base0, // 다이얼로그 배경
+    scrim = ColorPalette.base100.copy(alpha = 0.45f), // 다이얼로그 배경
 )
 
 val DarkColorScheme = LightColorScheme
