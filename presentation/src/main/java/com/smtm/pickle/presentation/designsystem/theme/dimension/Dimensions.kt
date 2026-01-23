@@ -39,7 +39,7 @@ object Dimensions {
     val profileJudgement = 96.dp
 
     // Coner Radius
-    val radiusLogin = 10.dp
+    val radiusSmall = 10.dp
     val radius = 12.dp
     /** 컨텐츠를 포함하는 카드 */
     val radiusSurface = 16.dp
