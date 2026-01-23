@@ -28,8 +28,8 @@ fun PickleButton(
     text: String,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    containerColor: Color = PickleTheme.colors.primary400,
-    contentColor: Color = PickleTheme.colors.base0,
+    color: Color = PickleTheme.colors.primary400,
+    textColor: Color = PickleTheme.colors.base0,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -39,8 +39,7 @@ fun PickleButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
+            containerColor = color,
             disabledContainerColor = PickleTheme.colors.gray100,
             disabledContentColor = PickleTheme.colors.gray600,
         ),
@@ -49,7 +48,7 @@ fun PickleButton(
         Text(
             text = text,
             style = PickleTheme.typography.body2Medium,
-            color = PickleTheme.colors.base0
+            color = textColor
         )
     }
 }
@@ -133,7 +132,7 @@ private fun DefaultButtonPreview() {
             PickleButton(
                 text = "Buttons",
                 onClick = {},
-                containerColor = PickleTheme.colors.primary500,
+                color = PickleTheme.colors.primary500,
             )
         }
     }
