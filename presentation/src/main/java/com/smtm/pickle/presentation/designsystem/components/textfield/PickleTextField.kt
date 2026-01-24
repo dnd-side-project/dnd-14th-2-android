@@ -199,7 +199,7 @@ fun PickleTextField(
             ),
             singleLine = isSingleLine,
             minLines = minLines,
-            maxLines = if (isSingleLine) 1 else 8,
+            maxLines = if (isSingleLine) 1 else 8, // TODO: maxLine 조절 필요
         )
     }
 }

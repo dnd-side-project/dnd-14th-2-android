@@ -41,14 +41,13 @@ fun PickleButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             disabledContainerColor = PickleTheme.colors.gray100,
-            disabledContentColor = PickleTheme.colors.gray600,
         ),
         shape = RoundedCornerShape(Dimensions.radius)
     ) {
         Text(
             text = text,
             style = PickleTheme.typography.body2Medium,
-            color = textColor
+            color = if (enabled) textColor else PickleTheme.colors.gray600
         )
     }
 }
