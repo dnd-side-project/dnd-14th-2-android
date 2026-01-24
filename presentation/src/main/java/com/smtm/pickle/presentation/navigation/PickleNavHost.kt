@@ -31,8 +31,11 @@ import com.smtm.pickle.presentation.designsystem.components.picklenavhost.Pickle
 import com.smtm.pickle.presentation.navigation.graph.authNavGraph
 import com.smtm.pickle.presentation.navigation.graph.mainNavGraph
 import com.smtm.pickle.presentation.navigation.route.AuthGraphRoute
+import com.smtm.pickle.presentation.navigation.route.CreateLedgerRoute
 import com.smtm.pickle.presentation.navigation.route.HomeRoute
 import com.smtm.pickle.presentation.navigation.route.MainGraphRoute
+import com.smtm.pickle.presentation.navigation.route.MyPageRoute
+import com.smtm.pickle.presentation.navigation.route.VerdictRoute
 
 @Composable
 fun PickleNavHost(
@@ -79,20 +82,25 @@ fun PickleNavHost(
                     collapsedActionImageVector = Icons.Filled.Add,
                     isExpanded = isFabExpanded,
                     onExpandChanged = { isFabExpanded = it },
-                    onActionClick = { }
+                    onActionClick = {
+                        isFabExpanded = false
+                        navController.navigate(CreateLedgerRoute)
+                    }
                 )
             }
         }
     }
 }
 
-@Composable
 private fun NavDestination?.shouldShowBottomBar(): Boolean {
-    return this?.hierarchy?.any { destination ->
-        BottomNavItem.entries.any { item ->
-            destination.hasRoute(item.graphRouteClass)
-        }
-    } == true
+    val bottomBarRoutes = setOf(
+        HomeRoute::class,
+        VerdictRoute::class,
+        MyPageRoute::class,
+    )
+    return bottomBarRoutes.any { routeClass ->
+        this?.hasRoute(routeClass) == true
+    }
 }
 
 @Composable
@@ -124,7 +132,7 @@ private fun PickleScaffold(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AuthGraphRoute,
+            startDestination = MainGraphRoute,
             modifier = Modifier.padding(innerPadding)
         ) {
             authNavGraph(

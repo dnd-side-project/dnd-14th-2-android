@@ -7,3 +7,6 @@ data object HomeGraphRoute
 
 @Serializable
 data object HomeRoute
+
+@Serializable
+data object CreateLedgerRoute
