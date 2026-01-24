@@ -10,7 +10,6 @@ import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.navigation.GlobalNavEvent
 import com.smtm.pickle.presentation.navigation.PickleNavHost
 import com.smtm.pickle.presentation.navigation.route.LoginRoute
-import com.smtm.pickle.presentation.navigation.route.MainGraphRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
