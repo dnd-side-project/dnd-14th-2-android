@@ -3,10 +3,14 @@ package com.smtm.pickle.presentation.navigation.route
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object VerdictGraphRoute
+data object LedgerCreateRoute
 
 @Serializable
-data object VerdictRoute
+data class LedgerDetailRoute(
+    val ledgerId: Long
+)
 
 @Serializable
-data object VerdictDetailRoute
+data class LedgerEditRoute(
+    val ledgerId: Long
+)
