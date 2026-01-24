@@ -25,12 +25,12 @@ fun PickleCard(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(16.dp),
     color: Color = PickleTheme.colors.base0,
-    hasBoarder: Boolean = false,
+    hasBorder: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val colors = PickleTheme.colors
-    val border = remember(hasBoarder) {
-        if (hasBoarder) {
+    val border = remember(hasBorder) {
+        if (hasBorder) {
             BorderStroke(width = 2.dp, color = colors.primary300)
         } else {
             null
@@ -60,7 +60,7 @@ private fun PickleCardPreview() {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 50.dp)
                 .pickleShadow(),
-            hasBoarder = true,
+            hasBorder = true,
         ) {
             Button(
                 onClick = {},

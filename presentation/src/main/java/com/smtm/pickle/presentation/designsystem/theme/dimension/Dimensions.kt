@@ -40,7 +40,7 @@ object Dimensions {
     val profileMypage = 80.dp
     val profileJudgement = 96.dp
 
-    // Coner Radius
+    // Corner Radius
     val radiusSmall = 10.dp
     val radius = 12.dp
     /** 컨텐츠를 포함하는 카드 */
@@ -48,4 +48,5 @@ object Dimensions {
     /** 바텀시트, 다이얼로그 등 */
     val radiusModal = 24.dp
     val radiusFull = 999.dp
+
 }

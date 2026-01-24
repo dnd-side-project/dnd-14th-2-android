@@ -77,7 +77,7 @@ fun PickleButtonWithCancel(
         }
 
         Button(
-            modifier = modifier
+            modifier = Modifier
                 .then(widthModifier)
                 .height(Dimensions.buttonHeight),
             onClick = onCancelClick,
@@ -98,7 +98,7 @@ fun PickleButtonWithCancel(
         Spacer(modifier = Modifier.width(12.dp))
 
         Button(
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f)
                 .height(Dimensions.buttonHeight),
             onClick = onConfirmClick,

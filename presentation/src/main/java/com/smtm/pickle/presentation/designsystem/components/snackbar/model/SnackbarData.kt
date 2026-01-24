@@ -14,7 +14,7 @@ data class SnackbarData(
     val iconType: SnackbarIconType = SnackbarIconType.NONE,
     val position: SnackbarPosition = SnackbarPosition.BOTTOM,
     val actionLabel: String? = null,
-    val onActionClick: (() -> Unit)? = {},
+    val onActionClick: (() -> Unit)? = null,
     val duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT,
 ) {
     companion object {

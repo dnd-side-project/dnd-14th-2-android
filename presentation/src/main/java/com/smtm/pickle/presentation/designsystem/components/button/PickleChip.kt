@@ -60,10 +60,6 @@ fun PickleChip(
 ) {
     val colors = PickleTheme.colors
 
-    val clickEventModifier = remember(onClick) {
-        if (onClick == null) modifier else modifier.clickable(onClick = onClick)
-    }
-
     val iconSpace = remember(leadingIcon, trailingIcon) {
         if (leadingIcon != null && trailingIcon != null) 8.dp else 4.dp
     }
@@ -71,7 +67,9 @@ fun PickleChip(
     Surface(
         modifier = modifier
             .height(height)
-            .then(clickEventModifier),
+            .then(
+                if (onClick == null) Modifier else Modifier.clickable(onClick = onClick)
+            ),
         color = remember(selected) {
             if (selected) colors.gray700 else containerColor
         },

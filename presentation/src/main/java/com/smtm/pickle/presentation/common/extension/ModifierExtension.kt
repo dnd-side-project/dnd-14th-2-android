@@ -19,7 +19,7 @@ import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 @Composable
 fun Modifier.pickleShadow(
     shadowColor: Color = PickleTheme.colors.primary600,
-    elevation: Dp = 50.dp
+    elevation: Dp = 50.dp // TODO: 사이즈 고려
 ) = graphicsLayer {
 
     this.shadowElevation = elevation.toPx()

@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -428,7 +429,7 @@ object PickleTextField {
                         }
 
                         Text(
-                            text = "${value.length}/100",
+                            text = "${value.length}/$maxCount",
                             style = PickleTheme.typography.caption1Medium,
                             color = if (inputState is InputState.Error)
                                 PickleTheme.colors.error50
@@ -467,11 +468,13 @@ object PickleTextField {
         val trailingIcon = remember(hasText) {
             if (hasText) {
                 @Composable {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_search_close),
-                        contentDescription = null,
-                        modifier = Modifier.size(Dimensions.iconMedium)
-                    )
+                    IconButton(onClick = { onValueChange("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_search_close),
+                            contentDescription = null,
+                            modifier = Modifier.size(Dimensions.iconMedium)
+                        )
+                    }
                 }
             } else {
                 null

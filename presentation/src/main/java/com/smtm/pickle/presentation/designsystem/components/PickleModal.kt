@@ -62,7 +62,7 @@ fun PickleDialog(
 fun PickleBottomSheet(
     sheetState: SheetState,
     modifier: Modifier = Modifier,
-    gestureEnable: Boolean = true,
+    gesturesEnabled: Boolean = true,
     hasDragHandle: Boolean = true,
     onDismiss: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
@@ -71,22 +71,21 @@ fun PickleBottomSheet(
         onDismissRequest = onDismiss,
         modifier = modifier,
         sheetState = sheetState,
-        sheetGesturesEnabled = gestureEnable,
+        sheetGesturesEnabled = gesturesEnabled,
         containerColor = PickleTheme.colors.base0,
         shape = RoundedCornerShape(
             topStart = Dimensions.radiusModal,
             topEnd = Dimensions.radiusModal
         ),
         dragHandle = {
-            Surface(
-                modifier =
-                    modifier
-                        .padding(vertical = 10.dp)
-                        .padding(bottom = 10.dp),
-                color = PickleTheme.colors.gray200,
-                shape = RoundedCornerShape(Dimensions.radiusFull),
-            ) {
-                if (hasDragHandle) Box(Modifier.size(width = 48.dp, height = 4.dp))
+            if (hasDragHandle) {
+                Surface(
+                    modifier = Modifier.padding(top = 10.dp, bottom = 20.dp),
+                    color = PickleTheme.colors.gray200,
+                    shape = RoundedCornerShape(Dimensions.radiusFull),
+                ) {
+                    Box(Modifier.size(width = 48.dp, height = 4.dp))
+                }
             }
         },
     ) {
@@ -129,7 +128,8 @@ private fun PickleBottomSheetPreview() {
                 skipPartiallyExpanded = true,
                 confirmValueChange = { true },
             ),
-            onDismiss = {}
+            onDismiss = {},
+            hasDragHandle = true
         ) {
             Text("즐겨찾는 내역")
             Spacer(modifier = Modifier.height(12.dp))

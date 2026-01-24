@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -342,14 +343,17 @@ private fun getPopupAlignment(tailPosition: TailPosition): Alignment {
     }
 }
 
+@Composable
 private fun getPopupOffset(tailPosition: TailPosition): androidx.compose.ui.unit.IntOffset {
+    val offset = with(LocalDensity.current) { 8.dp.roundToPx() }
+
     return when (tailPosition) {
-        TailPosition.TOP -> androidx.compose.ui.unit.IntOffset(0, -8)
-        TailPosition.BOTTOM -> androidx.compose.ui.unit.IntOffset(0, 8)
-        TailPosition.LEFT -> androidx.compose.ui.unit.IntOffset(8, 0)
-        TailPosition.RIGHT -> androidx.compose.ui.unit.IntOffset(-8, 0)
-        TailPosition.LEFT_TOP -> androidx.compose.ui.unit.IntOffset(8, 0)
-        TailPosition.RIGHT_TOP -> androidx.compose.ui.unit.IntOffset(-8, 0)
+        TailPosition.TOP -> androidx.compose.ui.unit.IntOffset(0, -offset)
+        TailPosition.BOTTOM -> androidx.compose.ui.unit.IntOffset(0, offset)
+        TailPosition.LEFT -> androidx.compose.ui.unit.IntOffset(offset, 0)
+        TailPosition.RIGHT -> androidx.compose.ui.unit.IntOffset(-offset, 0)
+        TailPosition.LEFT_TOP -> androidx.compose.ui.unit.IntOffset(offset, 0)
+        TailPosition.RIGHT_TOP -> androidx.compose.ui.unit.IntOffset(-offset, 0)
     }
 }
 
@@ -360,7 +364,7 @@ private fun PickleTooltipPreview() {
         PickleTooltip(
             message = "메시지메시지",
             isVisible = true,
-            tailPosition = TailPosition.LEFT
+            tailPosition = TailPosition.BOTTOM
         )
     }
 }

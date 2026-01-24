@@ -7,7 +7,7 @@ import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 
 @Composable
 fun PickleSupportingText(
-    message: String ,
+    message: String,
     inputState: InputState,
 ) {
     val color = when (inputState) {
