@@ -19,9 +19,13 @@ class TokenAuthenticator @Inject constructor(
         // 순환 참조 방지
         if (response.priorResponse != null) return null
 
+        val failedToken = response.request.header("Authorization")
+            ?.removePrefix("Bearer ")
+            ?: return null
+
         // RefreshToken으로 새로운 Token 발급
         val newToken = runBlocking {
-            tokenRefresher.refreshTokenIfNeeded()
+            tokenRefresher.refreshTokenIfNeeded(failedToken)
         } ?: return null
 
         // 401 엑세스 토큰 만료로 실패한 요청에 새 토큰을 넣어 재시도
