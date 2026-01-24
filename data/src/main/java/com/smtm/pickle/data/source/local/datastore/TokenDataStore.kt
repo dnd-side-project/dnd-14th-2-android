@@ -1,17 +1,20 @@
 package com.smtm.pickle.data.source.local.datastore
 
 import android.content.Context
+import android.system.Os.access
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.smtm.pickle.data.source.local.security.TokenEncryption
 import com.smtm.pickle.domain.model.auth.AuthToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +23,8 @@ private val Context.dataStore by preferencesDataStore(name = "token")
 
 @Singleton
 class TokenDataStore @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val tokenEncryption: TokenEncryption
 ) {
     private val dataStore = context.dataStore
     private val dataStoreFlow = dataStore.data.catch { e ->
@@ -28,14 +32,26 @@ class TokenDataStore @Inject constructor(
 
     suspend fun saveToken(token: AuthToken) {
         dataStore.edit { preferences ->
+
+            val encryptedRefresh = tokenEncryption.encrypt(token.refresh)
+
             preferences[ACCESS_TOKEN_KEY] = token.access
-            preferences[REFRESH_TOKEN_KEY] = token.refresh
+
+            // 수명이 긴 refreshToken만 암호화
+            if (encryptedRefresh != null) {
+                preferences[REFRESH_TOKEN_KEY] = encryptedRefresh
+            } else {
+                Timber.e("토큰 암호화 실패")
+            }
         }
     }
 
     suspend fun getToken(): AuthToken? = dataStoreFlow.first().getAuthToken()
 
-    suspend fun getRefreshToken(): String? = dataStoreFlow.first()[REFRESH_TOKEN_KEY]
+    suspend fun getRefreshToken(): String? {
+        val encryptedToken = dataStoreFlow.first()[REFRESH_TOKEN_KEY]
+        return encryptedToken?.let { tokenEncryption.decrypt(it) }
+    }
 
     suspend fun clearToken() {
         dataStore.edit { preferences ->
@@ -57,11 +73,16 @@ class TokenDataStore @Inject constructor(
 
     private fun Preferences.getAuthToken(): AuthToken? {
         val accessToken = this[ACCESS_TOKEN_KEY]
-        val refreshToken = this[REFRESH_TOKEN_KEY]
+        val encryptedRefresh = this[REFRESH_TOKEN_KEY]
 
-        return if (accessToken != null && refreshToken != null) {
-            AuthToken(accessToken, refreshToken)
+        if (accessToken == null || encryptedRefresh == null) return null
+
+        val refresh = tokenEncryption.decrypt(encryptedRefresh)
+
+        return if (refresh != null) {
+            AuthToken(accessToken, refresh)
         } else {
+            Timber.e("토큰 복호화 실패")
             null
         }
     }
