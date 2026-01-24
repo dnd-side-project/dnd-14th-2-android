@@ -26,8 +26,10 @@ object Dimensions {
 
     // 칩
     /** 바텀시트, 다이얼로그 등 내부 칩 */
+    val chipHeightBadge = 24.dp
+    val chipHeight = 32.dp
     val chipHeightInModal= 36.dp
-    val chipHeight = 44.dp
+    val chipHeightWithClickable = 44.dp
 
     // 심판 물건 아이콘
     val judgementIcon = 40.dp
