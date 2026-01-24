@@ -6,7 +6,6 @@ import com.smtm.pickle.data.source.remote.datasource.GoogleAuthDataSource
 import com.smtm.pickle.data.source.remote.model.LoginRequest
 import com.smtm.pickle.domain.model.auth.AuthToken
 import com.smtm.pickle.domain.model.auth.SocialLoginType
-import com.smtm.pickle.domain.model.auth.User
 import com.smtm.pickle.domain.provider.TokenProvider
 import com.smtm.pickle.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -48,7 +47,4 @@ class AuthRepositoryImpl @Inject constructor(
             ).getOrThrow()
         }
 
-    override suspend fun getUserInfo(): Result<User> {
-        TODO("Not yet implemented")
-    }
 }

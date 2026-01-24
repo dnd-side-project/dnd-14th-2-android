@@ -16,9 +16,6 @@ composeBom = "2025.12.01"
 # Database
 room = "2.8.4"
 
-# Firebase
-googleGmsPlugin = "4.4.4"
-
 # Hilt
 hilt = "2.57.2"
 hiltNavigationCompose = "1.3.0"

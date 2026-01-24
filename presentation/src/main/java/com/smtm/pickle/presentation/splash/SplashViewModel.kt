@@ -1,7 +1,6 @@
 package com.smtm.pickle.presentation.splash
 
 import androidx.lifecycle.ViewModel
-import com.smtm.pickle.domain.usecase.auth.GetAccessTokenUseCase
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.usecase.auth.InitTokenUseCase
 import com.smtm.pickle.domain.usecase.auth.IsLoggedInUseCase
@@ -10,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +22,9 @@ class SplashViewModel @Inject constructor(
 
     init {
         checkInitialDestination()
-        initTokenUseCase
+        viewModelScope.launch {
+            initTokenUseCase()
+        }
     }
 
     private fun checkInitialDestination() {

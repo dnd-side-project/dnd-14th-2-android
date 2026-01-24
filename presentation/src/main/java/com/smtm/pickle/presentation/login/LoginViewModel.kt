@@ -26,9 +26,9 @@ class LoginViewModel @Inject constructor(
             _uiState.value = LoginUiState.Loading
 
             googleLoginUseCase()
-                .onSuccess { token ->
+                .onSuccess {
                     _uiState.value = LoginUiState.Success(isNewUser = false)
-                    Timber.d("Google 로그인 성공: ${token.access.take(50)}")
+                    Timber.d("Google 로그인 성공")
                 }
                 .onFailure { error ->
                     _uiState.value = LoginUiState.Error(error.message ?: "Google 로그인 실패")
@@ -42,9 +42,9 @@ class LoginViewModel @Inject constructor(
             _uiState.value = LoginUiState.Loading
 
             kakaoLoginUseCase(token = accessToken)
-                .onSuccess { token ->
+                .onSuccess {
                     _uiState.value = LoginUiState.Success(isNewUser = false)
-                    Timber.d("Kakao 로그인 성공: ${token.access.take(50)}")
+                    Timber.d("Kakao 로그인 성공")
                 }
                 .onFailure { error ->
                     _uiState.value = LoginUiState.Error(error.message ?: "Kakao 로그인 실패")

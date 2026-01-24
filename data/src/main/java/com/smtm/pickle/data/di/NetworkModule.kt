@@ -53,8 +53,7 @@ object NetworkModule {
         return Interceptor { chain ->
             val originalRequest = chain.request()
 
-            // TODO: 실제 엔드포인트에 맞춰 변경
-            if (originalRequest.url.encodedPath.contains("auth/login")) {
+            if (originalRequest.url.encodedPath.contains("oauth/login")) {
                 return@Interceptor chain.proceed(originalRequest)
             }
 
