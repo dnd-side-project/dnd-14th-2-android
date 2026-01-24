@@ -1,5 +1,4 @@
 import java.util.Properties
-import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.application)
@@ -32,9 +31,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // 키값이 없음을 빠르게 확인용
+        val kakaoKey = localProperties.getProperty("KAKAO_NATIVE_APP_KEY")
+            ?: throw GradleException("local.properties에 KAKAO_NATIVE_APP_KEY가 없습니다")
+
         // Manifest에 주입
-        manifestPlaceholders["NATIVE_APP_KEY"] = localProperties["KAKAO_NATIVE_APP_KEY"] ?: ""
-        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"${localProperties["KAKAO_NATIVE_APP_KEY"] ?: ""}\"")
+        manifestPlaceholders["NATIVE_APP_KEY"] = kakaoKey
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
     }
 
     buildTypes {
@@ -71,7 +74,7 @@ dependencies {
 
     // Logging
     implementation(libs.timber)
-    
+
     // Social SDK
     implementation(libs.kakao.user)
 

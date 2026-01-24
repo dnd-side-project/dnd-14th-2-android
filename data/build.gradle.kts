@@ -27,11 +27,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField(
-            type = "String",
-            name = "GOOGLE_WEB_CLIENT_ID",
-            value = "\"${localProperties.getProperty("GOOGLE_WEB_CLIENT_ID") ?: ""}\""
-        )
+        val googleClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
+            ?: error("local.properties에 GOOGLE_WEB_CLIENT_ID가 없습니다")
+
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClientId\"")
     }
 
     buildTypes {
