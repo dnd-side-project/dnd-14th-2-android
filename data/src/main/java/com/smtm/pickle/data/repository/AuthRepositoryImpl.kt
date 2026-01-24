@@ -27,8 +27,8 @@ class AuthRepositoryImpl @Inject constructor(
 
         val response = authService.socialLogin(
             request = LoginRequest(
-                token = token,
-                loginType = type.name
+                idToken = token,
+                provider = type.name
             )
         )
 

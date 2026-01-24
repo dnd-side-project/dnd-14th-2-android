@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-    @POST("auth/login")
+    @POST("oauth/login")
     suspend fun socialLogin(@Body request: LoginRequest): LoginResponse
 
 }
