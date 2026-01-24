@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +23,8 @@ class TokenDataStore @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val dataStore = context.dataStore
-    private val dataStoreFlow = dataStore.data.catch { emit(emptyPreferences()) }
+    private val dataStoreFlow = dataStore.data.catch { e ->
+        if (e is IOException) emit(emptyPreferences()) else throw e }
 
     suspend fun saveToken(token: AuthToken) {
         dataStore.edit { preferences ->
