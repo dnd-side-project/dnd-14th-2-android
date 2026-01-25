@@ -19,6 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.smtm.pickle.domain.model.ledger.DailyLedger
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.component.HomeTopBar
 import com.smtm.pickle.presentation.home.component.LedgerCalendar
 import com.smtm.pickle.presentation.home.model.CalendarMode
 import java.time.LocalDate
@@ -34,6 +35,8 @@ fun HomeScreen(
 
 
     HomeContent(
+        onStatisticsClick = {},
+        onAlarmClick = {},
         dailyLedgerList = uiState.dailyLedgers,
         calendarMode = uiState.calendarMode,
         selectedDate = uiState.selectedDate,
@@ -45,6 +48,8 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(
+    onStatisticsClick: () -> Unit,
+    onAlarmClick: () -> Unit,
     dailyLedgerList: List<DailyLedger>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
@@ -68,6 +73,12 @@ private fun HomeContent(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            item("top_bar") {
+                HomeTopBar(
+                    onStatisticsClick = {},
+                    onAlarmClick = {}
+                )
+            }
             item("ledger_calendar") {
                 LedgerCalendar(
                     modifier = Modifier.padding(horizontal = 12.dp),
