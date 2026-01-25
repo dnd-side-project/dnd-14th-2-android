@@ -11,7 +11,7 @@ package com.smtm.pickle.presentation.designsystem.components.snackbar.model
  */
 data class SnackbarData(
     val message: String,
-    val iconType: SnackbarIconType = SnackbarIconType.NONE,
+    val iconType: SnackbarIconType = SnackbarIconType.None,
     val position: SnackbarPosition = SnackbarPosition.BOTTOM,
     val actionLabel: String? = null,
     val onActionClick: (() -> Unit)? = null,

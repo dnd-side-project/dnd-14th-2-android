@@ -42,10 +42,10 @@ fun PickleSnackbar(
 ) {
     val iconRes = remember(snackbarData.iconType) {
         when (snackbarData.iconType) {
-            SnackbarIconType.SUCCESS -> R.drawable.ic_snackbar_success
-            SnackbarIconType.ERROR -> R.drawable.ic_snackbar_fail
-            is SnackbarIconType.CUSTOM -> snackbarData.iconType.iconRes
-            SnackbarIconType.NONE -> null
+            SnackbarIconType.Success -> R.drawable.ic_snackbar_success
+            SnackbarIconType.Error -> R.drawable.ic_snackbar_fail
+            is SnackbarIconType.Custom -> snackbarData.iconType.iconRes
+            SnackbarIconType.None -> null
         }
     }
 
@@ -124,7 +124,7 @@ object PickleSnackbar {
         duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
     ) = SnackbarData(
         message = message,
-        iconType = SnackbarIconType.SUCCESS,
+        iconType = SnackbarIconType.Success,
         position = position,
         duration = duration,
     )
@@ -136,7 +136,7 @@ object PickleSnackbar {
         duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
     ) = SnackbarData(
         message = message,
-        iconType = SnackbarIconType.ERROR,
+        iconType = SnackbarIconType.Error,
         position = position,
         duration = duration,
     )
@@ -150,7 +150,7 @@ object PickleSnackbar {
         duration: SnackbarDuration = SnackbarDuration.SNACKBAR_SHORT
     ) = SnackbarData(
         message = message,
-        iconType = SnackbarIconType.NONE,
+        iconType = SnackbarIconType.None,
         position = position,
         actionLabel = actionLabel,
         onActionClick = onActionClick,
@@ -159,7 +159,7 @@ object PickleSnackbar {
 
     fun custom(
         message: String,
-        iconType: SnackbarIconType = SnackbarIconType.NONE,
+        iconType: SnackbarIconType = SnackbarIconType.None,
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
         actionLabel: String? = null,
         onActionClick: (() -> Unit)? = null,
