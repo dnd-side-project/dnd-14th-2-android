@@ -43,14 +43,21 @@ import androidx.compose.runtime.setValue
  */
 @Stable
 class SnackbarState {
+
+    private val snackbarQueue = ArrayDeque<SnackbarData>()
+
     var currentSnackbar by mutableStateOf<SnackbarData?>(null)
         private set
 
     fun show(snackbarData: SnackbarData) {
-        currentSnackbar = snackbarData
+        if (currentSnackbar == null) {
+            currentSnackbar = snackbarData
+        } else {
+            snackbarQueue.add(snackbarData)
+        }
     }
 
     fun dismiss() {
-        currentSnackbar = null
+        currentSnackbar = snackbarQueue.removeFirstOrNull()
     }
 }
