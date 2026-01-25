@@ -1,57 +1,58 @@
 package com.smtm.pickle.presentation.designsystem.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import com.smtm.pickle.presentation.designsystem.theme.color.LightColorScheme
+import com.smtm.pickle.presentation.designsystem.theme.color.LightPickleColors
+import com.smtm.pickle.presentation.designsystem.theme.color.LightSemanticColors
+import com.smtm.pickle.presentation.designsystem.theme.color.LocalPickleColors
+import com.smtm.pickle.presentation.designsystem.theme.color.LocalSemanticColors
+import com.smtm.pickle.presentation.designsystem.theme.color.PickleColors
+import com.smtm.pickle.presentation.designsystem.theme.color.SemanticColors
+import com.smtm.pickle.presentation.designsystem.theme.typography.DefaultPickleTypography
+import com.smtm.pickle.presentation.designsystem.theme.typography.LocalPickleTypography
+import com.smtm.pickle.presentation.designsystem.theme.typography.PickleTypography
 
 @Composable
 fun PickleTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val pickleColors = LightPickleColors
+    val semanticColors = LightSemanticColors
+    val colorScheme = LightColorScheme
+    val typography = DefaultPickleTypography
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    CompositionLocalProvider(
+        LocalPickleColors provides pickleColors,
+        LocalSemanticColors provides semanticColors,
+        LocalPickleTypography provides typography,
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography(),
+            content = content
+        )
     }
+}
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+object PickleTheme {
+    val colors: PickleColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalPickleColors.current
+
+    val semantic: SemanticColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalSemanticColors.current
+
+    val typography: PickleTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalPickleTypography.current
 }
