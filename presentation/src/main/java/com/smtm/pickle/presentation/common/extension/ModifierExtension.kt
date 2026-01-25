@@ -1,6 +1,5 @@
 package com.smtm.pickle.presentation.common.extension
 
-import android.os.Build
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,9 +24,6 @@ fun Modifier.pickleShadow(
     this.shadowElevation = elevation.toPx()
     this.shape = RoundedCornerShape(Dimensions.radiusSurface)
     this.clip = false
-
-    if (Build.VERSION.SDK_INT >= 28) {
-        this.ambientShadowColor = shadowColor
-        this.spotShadowColor = shadowColor
-    }
+    this.ambientShadowColor = shadowColor
+    this.spotShadowColor = shadowColor
 }

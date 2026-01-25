@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData
-import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData.Companion.toMillis
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarDuration
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarIconType
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarPosition
@@ -50,7 +49,7 @@ fun PickleSnackbar(
     }
 
     LaunchedEffect(snackbarData) {
-        delay(snackbarData.duration.toMillis())
+        delay(snackbarData.duration)
         onDismiss()
     }
 
@@ -121,7 +120,7 @@ object PickleSnackbar {
     fun toastSuccess(
         message: String,
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
-        duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
+        duration: Long = SnackbarDuration.TOAST_SHORT.duration
     ) = SnackbarData(
         message = message,
         iconType = SnackbarIconType.Success,
@@ -133,7 +132,7 @@ object PickleSnackbar {
     fun toastError(
         message: String,
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
-        duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT
+        duration: Long = SnackbarDuration.TOAST_SHORT.duration
     ) = SnackbarData(
         message = message,
         iconType = SnackbarIconType.Error,
@@ -147,7 +146,7 @@ object PickleSnackbar {
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
         actionLabel: String? = null,
         onActionClick: (() -> Unit)? = null,
-        duration: SnackbarDuration = SnackbarDuration.SNACKBAR_SHORT
+        duration: Long = SnackbarDuration.SNACKBAR_SHORT.duration
     ) = SnackbarData(
         message = message,
         iconType = SnackbarIconType.None,
@@ -163,7 +162,7 @@ object PickleSnackbar {
         position: SnackbarPosition = SnackbarPosition.BOTTOM,
         actionLabel: String? = null,
         onActionClick: (() -> Unit)? = null,
-        duration: SnackbarDuration = SnackbarDuration.SNACKBAR_SHORT
+        duration: Long = SnackbarDuration.SNACKBAR_SHORT.duration
     ) = SnackbarData(
         message = message,
         iconType = iconType,

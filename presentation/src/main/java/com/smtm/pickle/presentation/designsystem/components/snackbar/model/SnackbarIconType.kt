@@ -9,9 +9,9 @@ package com.smtm.pickle.presentation.designsystem.components.snackbar.model
  * @property None 없음
  * @property Custom 커스텀 아이콘 (`iconRes: Int`)
  */
-sealed class SnackbarIconType() {
-    data object Success : SnackbarIconType()
-    data object Error : SnackbarIconType()
-    data object None : SnackbarIconType()
-    data class Custom(val iconRes: Int) : SnackbarIconType()
+sealed interface SnackbarIconType {
+    data object Success : SnackbarIconType
+    data object Error : SnackbarIconType
+    data object None : SnackbarIconType
+    data class Custom(val iconRes: Int) : SnackbarIconType
 }

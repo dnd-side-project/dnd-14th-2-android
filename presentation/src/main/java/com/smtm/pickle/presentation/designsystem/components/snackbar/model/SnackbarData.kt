@@ -15,15 +15,5 @@ data class SnackbarData(
     val position: SnackbarPosition = SnackbarPosition.BOTTOM,
     val actionLabel: String? = null,
     val onActionClick: (() -> Unit)? = null,
-    val duration: SnackbarDuration = SnackbarDuration.TOAST_SHORT,
-) {
-    companion object {
-        fun SnackbarDuration.toMillis(): Long = when (this) {
-            SnackbarDuration.TOAST_SHORT -> 2000L
-            SnackbarDuration.TOAST_LONG -> 3500L
-            SnackbarDuration.SNACKBAR_SHORT -> 4000L
-            SnackbarDuration.SNACKBAR_LONG -> 10000L
-            SnackbarDuration.SNACKBAR_INDEFINITE -> Long.MAX_VALUE
-        }
-    }
-}
+    val duration: Long = SnackbarDuration.TOAST_SHORT.duration,
+)

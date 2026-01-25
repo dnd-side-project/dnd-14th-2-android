@@ -8,10 +8,10 @@ package com.smtm.pickle.presentation.designsystem.components.snackbar.model
  * @param SNACKBAR_LONG 10초
  * @param SNACKBAR_INDEFINITE 무한
  */
-enum class SnackbarDuration {
-    TOAST_SHORT,
-    TOAST_LONG,
-    SNACKBAR_SHORT,
-    SNACKBAR_LONG,
-    SNACKBAR_INDEFINITE,
+enum class SnackbarDuration(val duration: Long) {
+    TOAST_SHORT(2000L),
+    TOAST_LONG(3500L),
+    SNACKBAR_SHORT(4000L),
+    SNACKBAR_LONG(10000L),
+    SNACKBAR_INDEFINITE(Long.MAX_VALUE),
 }

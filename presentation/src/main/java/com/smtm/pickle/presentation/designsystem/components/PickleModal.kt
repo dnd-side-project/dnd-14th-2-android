@@ -46,6 +46,7 @@ fun PickleDialog(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(Dimensions.radiusModal),
+            color = PickleTheme.colors.base0
         ) {
             Column(
                 modifier = Modifier.padding(contentPadding),
