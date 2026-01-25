@@ -1,15 +1,14 @@
 package com.smtm.pickle.presentation.home.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,10 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 import com.smtm.pickle.presentation.home.model.CalendarMode
 import java.time.YearMonth
 
@@ -50,15 +51,15 @@ fun MonthHeader(
             Text(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = "${yearMonth.year}년 ${yearMonth.monthValue}월",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = PickleTheme.typography.body1Bold,
+                color = PickleTheme.colors.gray700,
             )
             IconButton(onClick = onMonthArrowClick) {
-                Box(
-                    modifier
-                        .size(20.dp)
-                        .background(Color.Gray)
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_down),
+                    contentDescription = "arrow_down",
+                    modifier = Modifier.size(20.dp),
+                    tint = PickleTheme.colors.gray200
                 )
             }
         }
@@ -79,20 +80,24 @@ fun CalendarModeToggle(
     onModeChange: (CalendarMode) -> Unit,
 ) {
     val containerColor = when (calendarMode) {
-        CalendarMode.MONTHLY -> Color.White
-        CalendarMode.WEEKLY -> Color(0xFF3F4246)
+        CalendarMode.MONTHLY -> PickleTheme.colors.base0
+        CalendarMode.WEEKLY -> PickleTheme.colors.gray700
     }
     val contentColor = when (calendarMode) {
-        CalendarMode.MONTHLY -> Color(0xFF3F4246)
-        CalendarMode.WEEKLY -> Color.White
+        CalendarMode.MONTHLY -> PickleTheme.colors.gray700
+        CalendarMode.WEEKLY -> PickleTheme.colors.base0
     }
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(100.dp),
+        shape = RoundedCornerShape(Dimensions.radiusStadium),
         color = containerColor,
         contentColor = contentColor,
-        border = if (calendarMode == CalendarMode.MONTHLY) BorderStroke(1.dp, Color.Black) else null,
+        border = if (calendarMode == CalendarMode.MONTHLY) {
+            BorderStroke(width = 1.dp, color = PickleTheme.colors.gray200)
+        } else {
+            null
+        },
         onClick = {
             val newMode = if (calendarMode == CalendarMode.MONTHLY) {
                 CalendarMode.WEEKLY
@@ -107,15 +112,20 @@ fun CalendarModeToggle(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(contentColor)
+            Icon(
+                modifier = Modifier.size(width = 14.dp, height = 13.dp),
+                painter = if (calendarMode == CalendarMode.MONTHLY) {
+                    painterResource(R.drawable.ic_arrow_cross_gray)
+                } else {
+                    painterResource(R.drawable.ic_arrow_cross_white)
+                },
+                contentDescription = "arrow_cross"
             )
 
             Text(
                 modifier = Modifier.padding(horizontal = 4.dp),
-                text = "주간"
+                text = "주간",
+                style = PickleTheme.typography.body4Medium
             )
         }
     }

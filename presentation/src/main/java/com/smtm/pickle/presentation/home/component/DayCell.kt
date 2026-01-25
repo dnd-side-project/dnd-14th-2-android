@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,13 +25,8 @@ import com.smtm.pickle.domain.model.ledger.DailyLedger
 import com.smtm.pickle.domain.model.ledger.Expense
 import com.smtm.pickle.domain.model.ledger.Income
 import com.smtm.pickle.presentation.common.utils.toMoneyFormat
-import java.time.DayOfWeek
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import java.time.LocalDate
-
-private val IncomeColor = Color(0xFF2196F3)
-private val ExpenseColor = Color(0xFFF44336)
-private const val IncomePrefix = "+"
-private const val ExpensePrefix = "-"
 
 @Composable
 fun MonthlyDayCell(
@@ -85,39 +77,42 @@ private fun DayCell(
     onClick: () -> Unit,
 ) {
     val dateTextColor = when {
-        !isActiveDay -> Color.LightGray
-        isSelected -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.onSurface
+        !isActiveDay -> PickleTheme.colors.gray500
+        isSelected -> PickleTheme.colors.primary500
+        else -> PickleTheme.colors.gray800
     }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(80.dp)
-            .padding(1.dp)
-            .clip(RoundedCornerShape(6.dp))
+            .height(54.dp)
             .clickable(enabled = isActiveDay, onClick = onClick),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+            modifier = Modifier.padding(vertical = 2.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = date.dayOfMonth.toString(),
                 color = dateTextColor,
-                fontSize = 20.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                style = PickleTheme.typography.body2Medium,
             )
+
+            Spacer(modifier = Modifier.height(6.dp))
 
             if (dailyLedger != null) {
                 dailyLedger.totalExpense.takeIf { it > 0 }?.let { totalExpense ->
-                    Spacer(modifier = Modifier.height(2.dp))
-                    ExpenseItem(amount = totalExpense)
+                    AmountItem(
+                        amount = totalExpense,
+                        color = PickleTheme.colors.error50
+                    )
                 }
                 dailyLedger.totalIncome.takeIf { it > 0 }?.let { totalIncome ->
-                    Spacer(modifier = Modifier.height(2.dp))
-                    IncomeItem(amount = totalIncome)
+                    AmountItem(
+                        amount = totalIncome,
+                        color = PickleTheme.colors.primary500
+                    )
                 }
             }
         }
@@ -125,33 +120,18 @@ private fun DayCell(
 }
 
 @Composable
-private fun ExpenseItem(
+private fun AmountItem(
     modifier: Modifier = Modifier,
     amount: Long,
+    color: Color,
 ) {
     Text(
         modifier = modifier,
-        text = "$ExpensePrefix${amount.toMoneyFormat()}",
-        color = ExpenseColor,
-        fontSize = 9.sp,
-        fontWeight = FontWeight.Medium,
+        text = amount.toMoneyFormat(),
+        color = color,
+        fontSize = 8.sp,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
-}
-
-@Composable
-private fun IncomeItem(
-    modifier: Modifier = Modifier,
-    amount: Long,
-) {
-    Text(
-        modifier = modifier,
-        text = "$IncomePrefix${amount.toMoneyFormat()}",
-        color = IncomeColor,
-        fontSize = 9.sp,
-        fontWeight = FontWeight.Medium,
-        maxLines = 1,
+        lineHeight = 11.sp,
         overflow = TextOverflow.Ellipsis
     )
 }

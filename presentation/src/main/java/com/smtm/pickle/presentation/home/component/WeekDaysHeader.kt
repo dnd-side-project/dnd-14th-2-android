@@ -7,11 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
@@ -37,16 +36,15 @@ fun WeekDaysHeader(
     ) {
         DaysOfWeek.forEach { dayOfWeek ->
             val textColor = when (dayOfWeek) {
-                DayOfWeek.SUNDAY -> Color.Red.copy(alpha = 0.8f)
-                DayOfWeek.SATURDAY -> Color.Blue.copy(alpha = 0.8f)
-                else -> MaterialTheme.colorScheme.onSurface
+                DayOfWeek.SUNDAY -> PickleTheme.colors.error50
+                else -> PickleTheme.colors.gray700
             }
 
             Text(
                 text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Medium,
+                style = PickleTheme.typography.caption1Medium,
                 color = textColor
             )
         }
