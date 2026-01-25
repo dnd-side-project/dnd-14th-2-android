@@ -2,9 +2,10 @@ package com.smtm.pickle.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smtm.pickle.domain.model.ledger.DailyLedger
-import com.smtm.pickle.domain.usecase.home.GetDailyLedgersUseCase
+import com.smtm.pickle.domain.usecase.home.GetLedgersUseCase
 import com.smtm.pickle.presentation.home.model.CalendarMode
+import com.smtm.pickle.presentation.home.model.DailyLedgerModel
+import com.smtm.pickle.presentation.mapper.ledger.toDailyLedgerUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getDailyLedgersUseCase: GetDailyLedgersUseCase
+    private val getLedgersUseCase: GetLedgersUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState())
@@ -28,7 +29,7 @@ class HomeViewModel @Inject constructor(
 
     private fun loadInitialDailyLedgers() {
         viewModelScope.launch {
-            val dailyLedgers = getDailyLedgersUseCase()
+            val dailyLedgers = getLedgersUseCase().toDailyLedgerUiModel()
             _uiState.update { state ->
                 state.copy(dailyLedgers = dailyLedgers)
             }
@@ -50,7 +51,7 @@ class HomeViewModel @Inject constructor(
 }
 
 data class HomeUiState(
-    val dailyLedgers: List<DailyLedger> = emptyList(),
+    val dailyLedgers: List<DailyLedgerModel> = emptyList(),
     val selectedDate: LocalDate = LocalDate.now(),
     val calendarMode: CalendarMode = CalendarMode.MONTHLY,
 )

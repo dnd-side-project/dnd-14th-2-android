@@ -14,10 +14,8 @@ import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
-import com.smtm.pickle.domain.model.ledger.DailyLedger
-import com.smtm.pickle.domain.model.ledger.Expense
-import com.smtm.pickle.domain.model.ledger.Income
 import com.smtm.pickle.presentation.home.model.CalendarMode
+import com.smtm.pickle.presentation.home.model.DailyLedgerModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -31,7 +29,7 @@ fun LedgerCalendar(
     endMonth: YearMonth,
     startDate: LocalDate,
     endDate: LocalDate,
-    dailyLedgerList: List<DailyLedger>,
+    dailyLedgerList: List<DailyLedgerModel>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -115,18 +113,26 @@ private fun LedgerCalendarMonthlyPreview() {
     val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
-        DailyLedger(
+        DailyLedgerModel(
             date = currentDate,
-            incomes = listOf(Income(1L, "월급", 3000000L, "급여")),
-            expenses = listOf(Expense(1L, "점심", 10000L, "식비"))
+            dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
+            ledgers = emptyList(),
+            totalIncome = "3,000,000",
+            totalExpense = "10,000"
         ),
-        DailyLedger(
+        DailyLedgerModel(
             date = currentDate.minusDays(1),
-            expenses = listOf(Expense(2L, "커피", 5000L, "카페"))
+            dateText = "${currentDate.minusDays(1).monthValue}월 ${currentDate.minusDays(1).dayOfMonth}일",
+            ledgers = emptyList(),
+            totalIncome = null,
+            totalExpense = "5,000"
         ),
-        DailyLedger(
+        DailyLedgerModel(
             date = currentDate.plusDays(2),
-            incomes = listOf(Income(2L, "용돈", 100000L, "기타"))
+            dateText = "${currentDate.plusDays(2).monthValue}월 ${currentDate.plusDays(2).dayOfMonth}일",
+            ledgers = emptyList(),
+            totalIncome = "100,000",
+            totalExpense = null
         )
     )
 
@@ -157,10 +163,12 @@ private fun LedgerCalendarWeeklyPreview() {
     val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
-        DailyLedger(
+        DailyLedgerModel(
             date = currentDate,
-            incomes = listOf(Income(1L, "월급", 3000000L, "급여")),
-            expenses = listOf(Expense(1L, "점심", 10000L, "식비"))
+            dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
+            ledgers = emptyList(),
+            totalIncome = "3,000,000",
+            totalExpense = "10,000"
         )
     )
 

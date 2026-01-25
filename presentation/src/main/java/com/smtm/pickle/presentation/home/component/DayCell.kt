@@ -21,11 +21,8 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.WeekDayPosition
-import com.smtm.pickle.domain.model.ledger.DailyLedger
-import com.smtm.pickle.domain.model.ledger.Expense
-import com.smtm.pickle.domain.model.ledger.Income
-import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.model.DailyLedgerModel
 import java.time.LocalDate
 
 @Composable
@@ -33,7 +30,7 @@ fun MonthlyDayCell(
     modifier: Modifier = Modifier,
     day: CalendarDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedger?,
+    dailyLedger: DailyLedgerModel?,
     onClick: (CalendarDay) -> Unit,
 ) {
     val isActiveDay = day.position == DayPosition.MonthDate
@@ -52,7 +49,7 @@ fun WeeklyDayCell(
     modifier: Modifier = Modifier,
     day: WeekDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedger?,
+    dailyLedger: DailyLedgerModel?,
     onclick: (WeekDay) -> Unit,
 ) {
     val isActiveDay = day.position == WeekDayPosition.RangeDate
@@ -73,7 +70,7 @@ private fun DayCell(
     date: LocalDate,
     isActiveDay: Boolean,
     isSelected: Boolean,
-    dailyLedger: DailyLedger?,
+    dailyLedger: DailyLedgerModel?,
     onClick: () -> Unit,
 ) {
     val dateTextColor = when {
@@ -102,13 +99,13 @@ private fun DayCell(
             Spacer(modifier = Modifier.height(6.dp))
 
             if (dailyLedger != null) {
-                dailyLedger.totalExpense.takeIf { it > 0 }?.let { totalExpense ->
+                dailyLedger.totalExpense?.let { totalExpense ->
                     AmountItem(
                         amount = totalExpense,
                         color = PickleTheme.colors.error50
                     )
                 }
-                dailyLedger.totalIncome.takeIf { it > 0 }?.let { totalIncome ->
+                dailyLedger.totalIncome?.let { totalIncome ->
                     AmountItem(
                         amount = totalIncome,
                         color = PickleTheme.colors.primary500
@@ -122,12 +119,12 @@ private fun DayCell(
 @Composable
 private fun AmountItem(
     modifier: Modifier = Modifier,
-    amount: Long,
+    amount: String,
     color: Color,
 ) {
     Text(
         modifier = modifier,
-        text = amount.toMoneyFormat(),
+        text = amount,
         color = color,
         fontSize = 8.sp,
         maxLines = 1,
@@ -139,7 +136,7 @@ private fun AmountItem(
 @Preview(showBackground = true, name = "Default")
 @Composable
 private fun DayCellPreview() {
-    MaterialTheme {
+    PickleTheme {
         DayCell(
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
@@ -153,7 +150,7 @@ private fun DayCellPreview() {
 @Preview(showBackground = true, name = "Selected")
 @Composable
 private fun DayCellSelectedPreview() {
-    MaterialTheme {
+    PickleTheme {
         DayCell(
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
@@ -167,15 +164,17 @@ private fun DayCellSelectedPreview() {
 @Preview(showBackground = true, name = "With Finance")
 @Composable
 private fun DayCellWithFinancePreview() {
-    MaterialTheme {
+    PickleTheme {
         DayCell(
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
             isSelected = false,
-            dailyLedger = DailyLedger(
+            dailyLedger = DailyLedgerModel(
                 date = LocalDate.of(2024, 1, 15),
-                incomes = listOf(Income(id = 1, title = "월급", amount = 3000000, category = "급여")),
-                expenses = listOf(Expense(id = 1, title = "점심", amount = 12000, category = "식비"))
+                dateText = "1월 15일",
+                ledgers = emptyList(),
+                totalIncome = "3,000,000",
+                totalExpense = "12,000"
             ),
             onClick = {}
         )
@@ -185,7 +184,7 @@ private fun DayCellWithFinancePreview() {
 @Preview(showBackground = true, name = "Inactive")
 @Composable
 private fun DayCellInactivePreview() {
-    MaterialTheme {
+    PickleTheme {
         DayCell(
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = false,

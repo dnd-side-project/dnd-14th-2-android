@@ -2,27 +2,24 @@ package com.smtm.pickle.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kizitonwose.calendar.core.atStartOfMonth
-import com.smtm.pickle.domain.model.ledger.DailyLedger
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.component.HomeProfile
 import com.smtm.pickle.presentation.home.component.HomeTopBar
 import com.smtm.pickle.presentation.home.component.LedgerCalendar
 import com.smtm.pickle.presentation.home.model.CalendarMode
+import com.smtm.pickle.presentation.home.model.DailyLedgerModel
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -51,7 +48,7 @@ fun HomeScreen(
 private fun HomeContent(
     onStatisticsClick: () -> Unit,
     onAlarmClick: () -> Unit,
-    dailyLedgerList: List<DailyLedger>,
+    dailyLedgerList: List<DailyLedgerModel>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -105,26 +102,8 @@ private fun HomeContent(
                     onDateClick = onDateClick,
                 )
             }
-            item {
-                SelectedDate(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    date = selectedDate
-                )
-            }
+
         }
     }
 }
 
-@Composable
-private fun SelectedDate(
-    modifier: Modifier = Modifier,
-    date: LocalDate
-) {
-    Text(
-        modifier = modifier.fillMaxWidth(),
-        text = "${date.monthValue}월 ${date.dayOfMonth}일",
-        textAlign = TextAlign.Start,
-        style = PickleTheme.typography.body1Bold,
-        color = PickleTheme.colors.gray700
-    )
-}

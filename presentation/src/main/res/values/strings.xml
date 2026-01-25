@@ -4,4 +4,26 @@
     <string name="nav_home">홈</string>
     <string name="nav_verdict">판결</string>
     <string name="nav_mypage">마이페이지</string>
+
+    <!-- Ledger Category -->
+    <string name="ledger_category_food">식비</string>
+    <string name="ledger_category_transport">교통비</string>
+    <string name="ledger_category_housing">주거비</string>
+    <string name="ledger_category_shopping">쇼핑</string>
+    <string name="ledger_category_health_medical">의료/건강</string>
+    <string name="ledger_category_education_self_development">교육/자기계발</string>
+    <string name="ledger_category_leisure_hobby">여가/취미</string>
+    <string name="ledger_category_saving_finance">저축/금융</string>
+    <string name="ledger_category_other">기타</string>
+
+    <!-- Ledger Payment Method -->
+    <string name="ledger_payment_method_bank_transfer">계좌이체</string>
+    <string name="ledger_payment_method_card">카드</string>
+    <string name="ledger_payment_method_cash">현금</string>
+    <string name="ledger_payment_method_other">기타</string>
+
+    <!-- Ledger Type -->
+    <string name="ledger_type_income">수입</string>
+    <string name="ledger_type_expense">지출</string>
+
 </resources>
