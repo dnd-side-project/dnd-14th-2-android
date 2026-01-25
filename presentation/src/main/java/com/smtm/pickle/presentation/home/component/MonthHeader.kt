@@ -1,6 +1,7 @@
 package com.smtm.pickle.presentation.home.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,12 +53,14 @@ fun MonthHeader(
                 style = PickleTheme.typography.body1Bold,
                 color = PickleTheme.colors.gray700,
             )
-            IconButton(onClick = onMonthArrowClick) {
-                Icon(
+            IconButton(
+                modifier = Modifier.size(20.dp),
+                onClick = onMonthArrowClick
+            ) {
+                Image(
                     painter = painterResource(R.drawable.ic_arrow_down),
                     contentDescription = "arrow_down",
                     modifier = Modifier.size(20.dp),
-                    tint = PickleTheme.colors.gray200
                 )
             }
         }
@@ -112,7 +113,7 @@ fun CalendarModeToggle(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            Icon(
+            Image(
                 modifier = Modifier.size(width = 14.dp, height = 13.dp),
                 painter = if (calendarMode == CalendarMode.MONTHLY) {
                     painterResource(R.drawable.ic_arrow_cross_gray)
@@ -140,7 +141,7 @@ fun CalendarModeToggle(
 fun MonthHeaderMonthlyPreview() {
     var mode by remember { mutableStateOf(CalendarMode.MONTHLY) }
 
-    MaterialTheme {
+    PickleTheme {
         MonthHeader(
             yearMonth = YearMonth.of(2026, 1),
             calendarMode = mode,
@@ -159,7 +160,7 @@ fun MonthHeaderMonthlyPreview() {
 fun MonthHeaderWeeklyPreview() {
     var mode by remember { mutableStateOf(CalendarMode.WEEKLY) }
 
-    MaterialTheme {
+    PickleTheme {
         MonthHeader(
             yearMonth = YearMonth.of(2026, 1),
             calendarMode = mode,

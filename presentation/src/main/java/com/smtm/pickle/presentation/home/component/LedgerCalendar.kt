@@ -1,10 +1,14 @@
 package com.smtm.pickle.presentation.home.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.ContentHeightMode
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -48,13 +52,18 @@ fun LedgerCalendar(
         firstDayOfWeek = DayOfWeek.SATURDAY,
     )
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+    ) {
         MonthHeader(
             yearMonth = currentMonth,
             calendarMode = calendarMode,
             onModeChange = onModeChange,
             onMonthArrowClick = onMonthArrowClick
         )
+        Spacer(modifier = Modifier.height(20.dp))
         WeekDaysHeader()
         when (calendarMode) {
             CalendarMode.MONTHLY -> {

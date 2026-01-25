@@ -19,6 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.smtm.pickle.domain.model.ledger.DailyLedger
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.component.HomeProfile
 import com.smtm.pickle.presentation.home.component.HomeTopBar
 import com.smtm.pickle.presentation.home.component.LedgerCalendar
 import com.smtm.pickle.presentation.home.model.CalendarMode
@@ -77,6 +78,14 @@ private fun HomeContent(
                 HomeTopBar(
                     onStatisticsClick = {},
                     onAlarmClick = {}
+                )
+            }
+            item("profile") {
+                HomeProfile(
+                    badge = "뱃지명",
+                    nickname = "나의닉네임",
+                    income = 1000000,
+                    expense = 500000,
                 )
             }
             item("ledger_calendar") {
