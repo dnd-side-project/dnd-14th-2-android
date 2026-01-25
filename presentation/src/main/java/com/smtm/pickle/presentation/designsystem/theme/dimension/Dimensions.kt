@@ -36,9 +36,16 @@ object Dimensions {
     val judgementIconSmall = 32.dp
 
     // 프로필 이미지
-    val profile = 60.dp
-    val profileMypage = 80.dp
-    val profileJudgement = 96.dp
+    val profileSizeSmall = 40.dp
+    val profileSizeCircle = 50.dp
+    val profileSize = 60.dp
+    val profileSizeLarge = 80.dp
+    val profileSizeInSetting = 96.dp
+
+    val profileRadiusSmall = 14.dp
+    val profileRadius = 20.dp
+    val profileRadiusLarge = 24.dp
+    val profileRadiusInSetting = 32.dp
 
     // Corner Radius
     val radiusSmall = 10.dp
