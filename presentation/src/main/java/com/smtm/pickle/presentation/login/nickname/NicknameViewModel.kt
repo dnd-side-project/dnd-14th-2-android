@@ -1,15 +1,13 @@
-package com.smtm.pickle.presentation.nickname
+package com.smtm.pickle.presentation.login.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.usecase.nickname.CheckNicknameAvailableUseCase
 import com.smtm.pickle.domain.usecase.nickname.SaveNicknameUseCase
+import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,16 +22,14 @@ class NicknameViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NicknameUiState())
     val uiState: StateFlow<NicknameUiState> = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<NicknameEvent>(replay = 0)
-    val events: SharedFlow<NicknameEvent> = _events.asSharedFlow()
-
-
     /** onValueChange 콜백 함수 */
     fun onNicknameChanged(nickname: String) {
+        val correctNickname = nickname.take(MAX_NICKNAME_LENGTH)
+
         _uiState.update {
             it.copy(
-                nickname = nickname,
-                isValidFormat = validateFormat(nickname),
+                nickname = correctNickname,
+                inputState = validateFormat(correctNickname),
                 isCheckingDuplicate = false,
                 isAvailable = null
             )
@@ -41,8 +37,8 @@ class NicknameViewModel @Inject constructor(
     }
 
     fun checkDuplicate() {
-        val nickname = uiState.value.nickname
-        if (!uiState.value.isValidFormat) return
+        val state = uiState.value
+        if (state.inputState !is InputState.Success) return
 
         viewModelScope.launch {
             _uiState.update {
@@ -52,12 +48,16 @@ class NicknameViewModel @Inject constructor(
                 )
             }
 
-            val isAvailable = checkNicknameAvailableUseCase(nickname)
-
+            val isAvailable = checkNicknameAvailableUseCase(state.nickname)
             _uiState.update {
                 it.copy(
-                    isCheckingDuplicate = true,
+                    isCheckingDuplicate = false,
                     isAvailable = isAvailable,
+                    inputState = if (isAvailable) {
+                        InputState.Success("사용 가능한 닉네임이에요!")
+                    } else {
+                        InputState.Error("이미 사용중인 닉네임이에요.")
+                    }
                 )
             }
         }
@@ -65,25 +65,19 @@ class NicknameViewModel @Inject constructor(
 
     fun saveNickname() {
         viewModelScope.launch {
-
-            runCatching {
-                saveNicknameUseCase(uiState.value.nickname)
-            }.onSuccess {
-                _events.emit(NicknameEvent.NavigateToMain)
-            }.onFailure {
-
-            }
+            saveNicknameUseCase(uiState.value.nickname)
         }
     }
 
-    private fun validateFormat(nickname: String): Boolean {
-        if (nickname.isBlank()) return false
-        if (nickname.length > 5) return false
-        if (!nickname.matches(Regex("^[a-z0-9]+$"))) return false
-        return true
+    private fun validateFormat(nickname: String): InputState {
+        if (nickname.isBlank()) return InputState.Idle
+        if (nickname.length > AVAILABLE_LENGTH) return InputState.Error("최대 5자 이내로 설정해주세요.")
+        if (!nickname.matches(Regex("^[a-z0-9]+$"))) return InputState.Error("특수 문자 및 영어 대문자는 사용할 수 없어요.")
+        return InputState.Success("사용 가능한 닉네임이에요!")
     }
-}
 
-sealed class NicknameEvent() {
-    data object NavigateToMain : NicknameEvent()
+    private companion object {
+        const val MAX_NICKNAME_LENGTH = 30
+        const val AVAILABLE_LENGTH = 5
+    }
 }
