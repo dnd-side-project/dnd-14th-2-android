@@ -9,12 +9,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.kizitonwose.calendar.core.atStartOfMonth
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.component.HomeProfile
 import com.smtm.pickle.presentation.home.component.HomeTopBar
@@ -61,12 +59,6 @@ private fun HomeContent(
     onMonthChanged: (YearMonth) -> Unit,
     onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
-    val currentDate = remember { LocalDate.now() }
-    val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(12) }
-    val endMonth = remember { currentMonth.plusMonths(12) }
-    val startDate = remember { startMonth.atStartOfMonth() }
-    val endDate = remember { endMonth.atEndOfMonth() }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -98,12 +90,6 @@ private fun HomeContent(
                     modifier = Modifier
                         .background(PickleTheme.colors.base0)
                         .padding(horizontal = 12.dp),
-                    currentDate = currentDate,
-                    currentMonth = currentMonth,
-                    startMonth = startMonth,
-                    endMonth = endMonth,
-                    startDate = startDate,
-                    endDate = endDate,
                     dailyLedgerList = dailyLedgerList,
                     calendarMode = calendarMode,
                     selectedDate = selectedDate,

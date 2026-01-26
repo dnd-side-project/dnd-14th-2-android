@@ -17,6 +17,7 @@ import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.kizitonwose.calendar.core.atStartOfMonth
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CalendarMode
 import com.smtm.pickle.presentation.home.model.DailyLedgerUi
@@ -27,12 +28,6 @@ import java.time.YearMonth
 @Composable
 fun LedgerCalendar(
     modifier: Modifier = Modifier,
-    currentDate: LocalDate,
-    currentMonth: YearMonth,
-    startMonth: YearMonth,
-    endMonth: YearMonth,
-    startDate: LocalDate,
-    endDate: LocalDate,
     dailyLedgerList: List<DailyLedgerUi>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
@@ -42,6 +37,11 @@ fun LedgerCalendar(
     onMonthChanged: (YearMonth) -> Unit,
     onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
+    val currentDate = LocalDate.now()
+    val currentMonth = YearMonth.now()
+    val startMonth = currentMonth.minusMonths(12)
+    val endMonth = currentMonth.plusMonths(12)
+
     val monthlyCalendarState = rememberCalendarState(
         startMonth = startMonth,
         endMonth = endMonth,
@@ -50,8 +50,8 @@ fun LedgerCalendar(
     )
 
     val weeklyCalendarState = rememberWeekCalendarState(
-        startDate = startDate,
-        endDate = endDate,
+        startDate = startMonth.atStartOfMonth(),
+        endDate = endMonth.atEndOfMonth(),
         firstVisibleWeekDate = currentDate,
         firstDayOfWeek = DayOfWeek.SATURDAY,
     )
@@ -77,7 +77,10 @@ fun LedgerCalendar(
             .padding(vertical = 16.dp)
     ) {
         MonthHeader(
-            yearMonth = currentMonth,
+            yearMonth = when (calendarMode) {
+                CalendarMode.MONTHLY -> monthlyCalendarState.firstVisibleMonth.yearMonth
+                CalendarMode.WEEKLY -> YearMonth.from(weeklyCalendarState.firstVisibleWeek.days.first().date)
+            },
             calendarMode = calendarMode,
             onModeChange = onModeChange,
             onMonthArrowClick = onMonthArrowClick
@@ -131,7 +134,6 @@ fun LedgerCalendar(
 @Composable
 private fun LedgerCalendarMonthlyPreview() {
     val currentDate = LocalDate.now()
-    val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
         DailyLedgerUi(
@@ -158,12 +160,6 @@ private fun LedgerCalendarMonthlyPreview() {
     )
 
     LedgerCalendar(
-        currentDate = currentDate,
-        currentMonth = currentMonth,
-        startMonth = currentMonth.minusMonths(12),
-        endMonth = currentMonth.plusMonths(12),
-        startDate = currentDate.minusMonths(12),
-        endDate = currentDate.plusMonths(12),
         dailyLedgerList = sampleLedgerList,
         calendarMode = CalendarMode.MONTHLY,
         selectedDate = currentDate,
@@ -183,7 +179,6 @@ private fun LedgerCalendarMonthlyPreview() {
 @Composable
 private fun LedgerCalendarWeeklyPreview() {
     val currentDate = LocalDate.now()
-    val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
         DailyLedgerUi(
@@ -196,12 +191,6 @@ private fun LedgerCalendarWeeklyPreview() {
     )
 
     LedgerCalendar(
-        currentDate = currentDate,
-        currentMonth = currentMonth,
-        startMonth = currentMonth.minusMonths(12),
-        endMonth = currentMonth.plusMonths(12),
-        startDate = currentDate.minusMonths(12),
-        endDate = currentDate.plusMonths(12),
         dailyLedgerList = sampleLedgerList,
         calendarMode = CalendarMode.WEEKLY,
         selectedDate = currentDate,
