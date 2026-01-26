@@ -22,6 +22,8 @@ import com.smtm.pickle.presentation.main.component.HomeExpandableFab
 import com.smtm.pickle.presentation.main.component.MainContent
 import com.smtm.pickle.presentation.navigation.GlobalNavEvent
 import com.smtm.pickle.presentation.navigation.route.HomeTabRoute
+import com.smtm.pickle.presentation.navigation.route.LedgerCreateRoute
+import java.time.LocalDate
 
 @Composable
 fun MainScreen(
@@ -31,11 +33,11 @@ fun MainScreen(
     val tabNavController = rememberNavController()
     val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
     val isHomeScreen = currentDestination?.hasRoute(HomeTabRoute::class) == true
 
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     val density = LocalDensity.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -45,6 +47,9 @@ fun MainScreen(
             currentDestination = currentDestination,
             onBottomBarHeightChange = { height ->
                 bottomBarHeight = with(density) { height.toDp() }
+            },
+            onSelectedDateChange = { date ->
+                selectedDate = date
             }
         )
 
@@ -65,7 +70,10 @@ fun MainScreen(
                     isExpanded = isFabExpanded,
                     onOpenClick = { isFabExpanded = true },
                     onCloseClick = { isFabExpanded = false },
-                    onCreateClick = { isFabExpanded = false },
+                    onCreateClick = {
+                        isFabExpanded = false
+                        rootNavController.navigate(LedgerCreateRoute.from(selectedDate))
+                    },
                 )
             }
         }

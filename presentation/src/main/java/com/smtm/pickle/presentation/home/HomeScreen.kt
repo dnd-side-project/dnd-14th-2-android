@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -26,11 +27,14 @@ import java.time.YearMonth
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToLedgerCreate: () -> Unit,
+    onSelectedDateChange: (LocalDate) -> Unit,
     onNavigateToLedgerDetail: (Long) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(uiState.selectedDate) {
+        onSelectedDateChange(uiState.selectedDate)
+    }
 
     HomeContent(
         onStatisticsClick = {},

@@ -16,7 +16,6 @@ import com.smtm.pickle.presentation.navigation.route.AlarmSettingRoute
 import com.smtm.pickle.presentation.navigation.route.HomeTabRoute
 import com.smtm.pickle.presentation.navigation.route.JurorDetailRoute
 import com.smtm.pickle.presentation.navigation.route.JurorListRoute
-import com.smtm.pickle.presentation.navigation.route.LedgerCreateRoute
 import com.smtm.pickle.presentation.navigation.route.LedgerDetailRoute
 import com.smtm.pickle.presentation.navigation.route.MyLedgerRoute
 import com.smtm.pickle.presentation.navigation.route.MyPageTabRoute
@@ -26,6 +25,7 @@ import com.smtm.pickle.presentation.navigation.route.VerdictRequestRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictResultRoute
 import com.smtm.pickle.presentation.navigation.route.VerdictTabRoute
 import com.smtm.pickle.presentation.verdict.VerdictScreen
+import java.time.LocalDate
 
 @Composable
 fun MainContent(
@@ -33,6 +33,7 @@ fun MainContent(
     tabNavController: NavHostController,
     currentDestination: NavDestination?,
     onBottomBarHeightChange: (Int) -> Unit,
+    onSelectedDateChange: (LocalDate) -> Unit,
 ) {
     Scaffold(
         bottomBar = {
@@ -60,9 +61,7 @@ fun MainContent(
             builder = {
                 composable<HomeTabRoute> {
                     HomeScreen(
-                        onNavigateToLedgerCreate = {
-                            rootNavController.navigate(LedgerCreateRoute)
-                        },
+                        onSelectedDateChange = onSelectedDateChange,
                         onNavigateToLedgerDetail = { id ->
                             rootNavController.navigate(LedgerDetailRoute(id))
                         }
