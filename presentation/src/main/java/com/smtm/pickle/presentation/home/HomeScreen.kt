@@ -42,7 +42,9 @@ fun HomeScreen(
         selectedDate = uiState.selectedDate,
         onModeChange = viewModel::changeCalendarMode,
         onMonthArrowClick = { },
-        onDateClick = viewModel::selectDate
+        onDateClick = viewModel::selectDate,
+        onMonthChanged = viewModel::onMonthChanged,
+        onWeekChanged = viewModel::onWeekChanged
     )
 }
 
@@ -56,6 +58,8 @@ private fun HomeContent(
     onModeChange: (CalendarMode) -> Unit,
     onMonthArrowClick: () -> Unit,
     onDateClick: (LocalDate) -> Unit,
+    onMonthChanged: (YearMonth) -> Unit,
+    onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
     val currentDate = remember { LocalDate.now() }
     val currentMonth = remember { YearMonth.now() }
@@ -106,6 +110,8 @@ private fun HomeContent(
                     onModeChange = onModeChange,
                     onMonthArrowClick = onMonthArrowClick,
                     onDateClick = onDateClick,
+                    onMonthChanged = onMonthChanged,
+                    onWeekChanged = onWeekChanged
                 )
             }
 

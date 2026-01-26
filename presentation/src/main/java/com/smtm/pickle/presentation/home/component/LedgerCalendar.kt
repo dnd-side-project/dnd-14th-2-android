@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +39,8 @@ fun LedgerCalendar(
     onModeChange: (CalendarMode) -> Unit,
     onMonthArrowClick: () -> Unit,
     onDateClick: (LocalDate) -> Unit,
+    onMonthChanged: (YearMonth) -> Unit,
+    onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
     val monthlyCalendarState = rememberCalendarState(
         startMonth = startMonth,
@@ -51,6 +55,20 @@ fun LedgerCalendar(
         firstVisibleWeekDate = currentDate,
         firstDayOfWeek = DayOfWeek.SATURDAY,
     )
+
+    LaunchedEffect(monthlyCalendarState) {
+        snapshotFlow { monthlyCalendarState.firstVisibleMonth.yearMonth }
+            .collect { visibleMonth -> onMonthChanged(visibleMonth) }
+    }
+
+    LaunchedEffect(weeklyCalendarState) {
+        snapshotFlow { weeklyCalendarState.firstVisibleWeek }
+            .collect { visibleWeek ->
+                val weekStartDate = visibleWeek.days.first().date
+                val weekEndDate = visibleWeek.days.last().date
+                onWeekChanged(weekStartDate, weekEndDate)
+            }
+    }
 
     Column(
         modifier = modifier
@@ -151,7 +169,9 @@ private fun LedgerCalendarMonthlyPreview() {
         selectedDate = currentDate,
         onModeChange = {},
         onMonthArrowClick = {},
-        onDateClick = {}
+        onDateClick = {},
+        onMonthChanged = {},
+        onWeekChanged = { _, _ -> },
     )
 }
 
@@ -187,6 +207,8 @@ private fun LedgerCalendarWeeklyPreview() {
         selectedDate = currentDate,
         onModeChange = {},
         onMonthArrowClick = {},
-        onDateClick = {}
+        onDateClick = {},
+        onMonthChanged = {},
+        onWeekChanged = { _, _ -> },
     )
 }
