@@ -105,7 +105,6 @@ private fun HomeContent(
             }
 
             dailyLedgerInfoSection(
-                modifier = Modifier.padding(horizontal = 16.dp),
                 date = selectedDate,
                 dailyLedger = dailyLedgerList.firstOrNull { it.date == selectedDate }
             )

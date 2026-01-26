@@ -3,6 +3,7 @@ package com.smtm.pickle.presentation.home.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -29,8 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
+import com.smtm.pickle.presentation.home.model.LedgerUi
+import com.smtm.pickle.presentation.home.model.PaymentMethodUi
 import java.time.LocalDate
 
 fun LazyListScope.dailyLedgerInfoSection(
@@ -40,31 +45,40 @@ fun LazyListScope.dailyLedgerInfoSection(
 ) {
     item("selected_date") {
         SelectedDate(
-            modifier = modifier,
+            modifier = modifier
+                .background(color = PickleTheme.colors.background50)
+                .padding(horizontal = 16.dp)
+                .padding(top = 20.dp, bottom = 6.dp),
             date = date
         )
-
-        Spacer(modifier = Modifier.height(6.dp))
     }
     if (dailyLedger == null) {
         item("empty_notice") {
-            EmptyNotice(modifier = modifier)
+            EmptyNotice(modifier = modifier.background(color = PickleTheme.colors.background50))
         }
     } else {
         item {
             SelectedDateAmount(
-                modifier = modifier,
+                modifier = modifier
+                    .background(color = PickleTheme.colors.background50)
+                    .padding(horizontal = 16.dp),
                 totalIncome = dailyLedger.totalIncome ?: "0",
                 totalExpense = dailyLedger.totalExpense ?: "0"
             )
         }
 
-        items(
+        itemsIndexed(
             items = dailyLedger.ledgers,
-            key = { it.id }
-        ) { item ->
+            key = { _, item -> item.id }
+        ) { index, item ->
+            val paddingTop = if (index == 0) 16.dp else 10.dp
+            val paddingBottom = if (index == dailyLedger.ledgers.size - 1) 90.dp else 0.dp
+
             LedgerCard(
-                modifier = modifier,
+                modifier = modifier
+                    .background(color = PickleTheme.colors.background50)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = paddingTop, bottom = paddingBottom),
                 title = stringResource(item.category.stringResId),
                 description = stringResource(item.category.stringResId),
                 amount = if (item.type == LedgerTypeUi.Income) {
@@ -260,60 +274,82 @@ fun LedgerCard(
 }
 
 @Preview(
-    name = "LedgerCardPreview",
+    name = "DailyLedgerInfoSection - Empty",
     showBackground = true,
     widthDp = 360
 )
 @Composable
-private fun LedgerCardPreview() {
+private fun DailyLedgerInfoSectionEmptyPreview() {
     PickleTheme {
-        LedgerCard(
-            title = "여가/취미",
-            description = "가계부 내역명 15자 입력",
-            amount = "-000,000,000",
-            amountColor = PickleTheme.colors.error100,
-            mainIconResId = R.drawable.ic_ledger_category_leisure_hoby_activated,
-            subIconResId = R.drawable.ic_ledger_payment_method_cash_activated,
-            onClick = { }
+        LazyColumn {
+            dailyLedgerInfoSection(
+                date = LocalDate.now(),
+                dailyLedger = null
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "DailyLedgerInfoSection - With Data",
+    showBackground = true,
+    widthDp = 360
+)
+@Composable
+private fun DailyLedgerInfoSectionWithDataPreview() {
+    val sampleLedgers = listOf(
+        LedgerUi(
+            id = 1L,
+            type = LedgerTypeUi.Income,
+            amount = "2,500,000",
+            amountValue = 2500000L,
+            category = CategoryUi.SavingFinance,
+            description = "월급",
+            occurredOn = LocalDate.now(),
+            dateText = "1월 26일",
+            paymentMethod = PaymentMethodUi.BankTransfer,
+            memo = null
+        ),
+        LedgerUi(
+            id = 2L,
+            type = LedgerTypeUi.Expense,
+            amount = "12,000",
+            amountValue = 12000L,
+            category = CategoryUi.Food,
+            description = "점심",
+            occurredOn = LocalDate.now(),
+            dateText = "1월 26일",
+            paymentMethod = PaymentMethodUi.CreditCard,
+            memo = null
+        ),
+        LedgerUi(
+            id = 3L,
+            type = LedgerTypeUi.Expense,
+            amount = "4,500",
+            amountValue = 4500L,
+            category = CategoryUi.Food,
+            description = "커피",
+            occurredOn = LocalDate.now(),
+            dateText = "1월 26일",
+            paymentMethod = PaymentMethodUi.CreditCard,
+            memo = null
         )
-    }
-}
+    )
 
-@Preview(
-    name = "SelectedDatePreview",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun SelectedDatePreview() {
-    PickleTheme {
-        SelectedDate(date = LocalDate.now())
-    }
-}
+    val sampleDailyLedger = DailyLedgerUi(
+        date = LocalDate.now(),
+        dateText = "1월 26일",
+        ledgers = sampleLedgers,
+        totalIncome = "2,500,000",
+        totalExpense = "16,500"
+    )
 
-@Preview(
-    name = "SelectedDateAmountPreview",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun SelectedDateAmountPreview() {
     PickleTheme {
-        SelectedDateAmount(
-            totalIncome = "1,000,000",
-            totalExpense = "500,000"
-        )
-    }
-}
-
-@Preview(
-    name = "SelectedDateAmountPreview",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun EmptyNoticePreview() {
-    PickleTheme {
-        EmptyNotice()
+        LazyColumn {
+            dailyLedgerInfoSection(
+                date = LocalDate.now(),
+                dailyLedger = sampleDailyLedger
+            )
+        }
     }
 }
