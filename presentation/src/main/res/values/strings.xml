@@ -29,4 +29,7 @@
     <!-- Ledger -->
     <string name="ledger_empty_notice">가계부 내역을 작성해주세요</string>
 
+    <!-- Home -->
+    <string name="home_fab_create_ledger">가계부 작성하기</string>
+
 </resources>
