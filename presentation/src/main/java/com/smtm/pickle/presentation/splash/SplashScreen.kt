@@ -2,7 +2,6 @@ package com.smtm.pickle.presentation.splash
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -11,6 +10,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.smtm.pickle.presentation.designsystem.components.PickleIcon
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
 @Composable
@@ -19,6 +19,7 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.navigationEvent.collect { event ->
@@ -40,6 +41,6 @@ private fun SplashContent(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Splash Screen")
+        PickleIcon()
     }
 }
