@@ -151,10 +151,12 @@ private fun SelectedDateAmount(
             color = PickleTheme.colors.black,
         )
 
+        Spacer(modifier = Modifier.width(4.dp))
+
         Text(
             modifier = Modifier.width(110.dp),
             text = "+$totalIncome",
-            textAlign = TextAlign.End,
+            textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.primary400
         )
@@ -167,10 +169,12 @@ private fun SelectedDateAmount(
             color = PickleTheme.colors.black,
         )
 
+        Spacer(modifier = Modifier.width(4.dp))
+
         Text(
             modifier = Modifier.width(110.dp),
             text = "-$totalExpense",
-            textAlign = TextAlign.End,
+            textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.error100
         )

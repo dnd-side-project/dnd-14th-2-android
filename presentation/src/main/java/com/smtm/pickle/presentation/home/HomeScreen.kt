@@ -35,6 +35,8 @@ fun HomeScreen(
     HomeContent(
         onStatisticsClick = {},
         onAlarmClick = {},
+        monthlyTotalIncome = uiState.monthlyTotalIncome,
+        monthlyTotalExpense = uiState.monthlyTotalExpense,
         dailyLedgerList = uiState.dailyLedgers,
         calendarMode = uiState.calendarMode,
         selectedDate = uiState.selectedDate,
@@ -50,6 +52,8 @@ fun HomeScreen(
 private fun HomeContent(
     onStatisticsClick: () -> Unit,
     onAlarmClick: () -> Unit,
+    monthlyTotalIncome: Long,
+    monthlyTotalExpense: Long,
     dailyLedgerList: List<DailyLedgerUi>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
@@ -81,8 +85,8 @@ private fun HomeContent(
                     modifier = Modifier.background(PickleTheme.colors.base0),
                     badge = "뱃지명",
                     nickname = "나의닉네임",
-                    income = 1000000,
-                    expense = 500000,
+                    income = monthlyTotalIncome,
+                    expense = monthlyTotalExpense,
                 )
             }
             item("ledger_calendar") {

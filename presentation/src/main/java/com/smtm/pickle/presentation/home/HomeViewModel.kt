@@ -3,6 +3,7 @@ package com.smtm.pickle.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.usecase.home.GetInitialLedgersUseCase
 import com.smtm.pickle.domain.usecase.home.GetLedgersByMonthUseCase
 import com.smtm.pickle.presentation.home.model.CalendarMode
@@ -31,8 +32,8 @@ class HomeViewModel @Inject constructor(
 
     private val loadingMonths = mutableSetOf<YearMonth>()
     private val ledgerCache = mutableMapOf<YearMonth, List<LedgerEntry>>()
-
     private var previousMonth: YearMonth? = null
+    private var currentActiveMonth: YearMonth? = null
 
     init {
         loadInitialLedgers()
@@ -64,6 +65,8 @@ class HomeViewModel @Inject constructor(
         val direction = detectDirection(yearMonth)
         previousMonth = yearMonth
 
+        updateActiveMonth(yearMonth)
+
         val monthsToLoad = when (direction) {
             Direction.PAST -> listOf(
                 yearMonth,
@@ -80,6 +83,33 @@ class HomeViewModel @Inject constructor(
             Direction.NONE -> listOf(yearMonth)
         }
 
+        loadMonthsLedgers(monthsToLoad)
+    }
+
+    fun onWeekChanged(startDate: LocalDate, endDate: LocalDate) {
+        val weekMonth = YearMonth.from(startDate)
+        if (weekMonth != currentActiveMonth) {
+            updateActiveMonth(weekMonth)
+        }
+
+        val startMonth = YearMonth.from(startDate)
+        val endMonth = YearMonth.from(endDate)
+
+        val monthsToLoad = mutableListOf<YearMonth>()
+        var current = startMonth
+        while (current <= endMonth) {
+            monthsToLoad.add(current)
+            current = current.plusMonths(1)
+        }
+
+        val direction = detectDirection(startMonth)
+        when (direction) {
+            Direction.PAST -> monthsToLoad.add(startMonth.minusMonths(1))
+            Direction.FUTURE -> monthsToLoad.add(startMonth.plusMonths(1))
+            Direction.NONE -> {}
+        }
+
+        previousMonth = startMonth
         loadMonthsLedgers(monthsToLoad)
     }
 
@@ -107,28 +137,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onWeekChanged(startDate: LocalDate, endDate: LocalDate) {
-        val startMonth = YearMonth.from(startDate)
-        val endMonth = YearMonth.from(endDate)
-
-        val monthsToLoad = mutableListOf<YearMonth>()
-        var current = startMonth
-        while (current <= endMonth) {
-            monthsToLoad.add(current)
-            current = current.plusMonths(1)
-        }
-
-        val direction = detectDirection(startMonth)
-        when (direction) {
-            Direction.PAST -> monthsToLoad.add(startMonth.minusMonths(1))
-            Direction.FUTURE -> monthsToLoad.add(startMonth.plusMonths(1))
-            Direction.NONE -> {}
-        }
-
-        previousMonth = startMonth
-        loadMonthsLedgers(monthsToLoad)
-    }
-
     private fun detectDirection(current: YearMonth): Direction {
         val prev = previousMonth ?: return Direction.NONE
         return when {
@@ -150,11 +158,37 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun updateActiveMonth(yearMonth: YearMonth) {
+        currentActiveMonth = yearMonth
+
+        val monthlyLedgers = ledgerCache[yearMonth] ?: emptyList()
+        updateMonthlyAmount(monthlyLedgers)
+    }
+
+    private fun updateMonthlyAmount(monthlyLedgers: List<LedgerEntry>) {
+        val totalIncome = monthlyLedgers
+            .filter { it.type == LedgerType.INCOME }
+            .sumOf { it.amount.value }
+
+        val totalExpense = monthlyLedgers
+            .filter { it.type == LedgerType.EXPENSE }
+            .sumOf { it.amount.value }
+
+        _uiState.update { state ->
+            state.copy(
+                monthlyTotalIncome = totalIncome,
+                monthlyTotalExpense = totalExpense
+            )
+        }
+    }
+
     private enum class Direction { PAST, NONE, FUTURE }
 }
 
 data class HomeUiState(
     val dailyLedgers: List<DailyLedgerUi> = emptyList(),
+    val monthlyTotalIncome: Long = 0L,
+    val monthlyTotalExpense: Long = 0L,
     val selectedDate: LocalDate = LocalDate.now(),
     val calendarMode: CalendarMode = CalendarMode.MONTHLY,
 )
