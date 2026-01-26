@@ -246,7 +246,7 @@ fun LedgerCard(
                 Text(
                     text = description,
                     style = PickleTheme.typography.caption2Regular,
-                    color = PickleTheme.colors.gray200
+                    color = PickleTheme.colors.gray500
                 )
             }
 

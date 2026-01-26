@@ -59,7 +59,7 @@ sealed class CategoryUi(
 
     data object Other : CategoryUi(
         stringResId = R.string.ledger_category_other,
-        activatedIconResId = null,
-        inactivatedIconResId = null,
+        activatedIconResId = R.drawable.ic_ledger_category_other_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_other_inactivated,
     )
 }
