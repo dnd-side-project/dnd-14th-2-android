@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.designsystem.components.appbar.PickleAppBar
+import com.smtm.pickle.presentation.designsystem.components.appbar.model.NavigationItem
 import com.smtm.pickle.presentation.designsystem.components.button.PickleButton
 import com.smtm.pickle.presentation.designsystem.components.textfield.PickleTextFieldWithSupporting
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
@@ -36,7 +39,8 @@ fun NicknameScreen(
         onNicknameChanged = viewModel::onNicknameChanged,
         onCheckDuplicate = viewModel::checkDuplicate,
         onSaveNickname = viewModel::saveNickname,
-        onNavigateToMain = navigator::navigateToMain
+        onNavigateToMain = navigator::navigateToMain,
+        onBack = navigator::back
     )
 }
 
@@ -48,62 +52,72 @@ fun NicknameContent(
     onCheckDuplicate: () -> Unit = {},
     onSaveNickname: () -> Unit = {},
     onNavigateToMain: () -> Unit,
+    onBack: () -> Unit,
 ) {
+    Scaffold(
+        topBar = {
+            PickleAppBar(
+                title = "닉네임 입력",
+                navigationItem = NavigationItem.Back(onBack),
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .imePadding(),
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = "닉네임을 설정해주세요",
+                style = PickleTheme.typography.body1Bold,
+                color = PickleTheme.colors.gray800
+            )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .imePadding(),
-    ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "닉네임을 설정해주세요",
-            style = PickleTheme.typography.body1Bold,
-            color = PickleTheme.colors.gray800
-        )
+            Spacer(modifier = Modifier.height(16.dp))
+            PickleTextFieldWithSupporting(
+                inputState = uiState.inputState,
+                value = uiState.nickname,
+                onValueChange = { newNickname ->
+                    onNicknameChanged(newNickname)
+                },
+                hint = "최대 5자까지 입력 가능해요",
+                defaultSupportingText = "특수 문자 및 영어 대문자는 사용할 수 없어요.",
+                trailingIcon = {
+                    when {
+                        uiState.isAvailable == true -> {
+                            trailingIcon(R.drawable.ic_textfield_success)
+                        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        PickleTextFieldWithSupporting(
-            inputState = uiState.inputState,
-            value = uiState.nickname,
-            onValueChange = { newNickname ->
-                onNicknameChanged(newNickname)
-            },
-            hint = "최대 5자까지 입력 가능해요",
-            defaultSupportingText = "특수 문자 및 영어 대문자는 사용할 수 없어요.",
-            trailingIcon = {
-                when {
-                    uiState.isAvailable == true -> {
-                        trailingIcon(R.drawable.ic_textfield_success)
+                        uiState.inputState is InputState.Error -> {
+                            trailingIcon(R.drawable.ic_snackbar_fail)
+                        }
+
+                        uiState.inputState is InputState.Success -> {
+                            CheckDuplicateButton(
+                                modifier = Modifier.offset(x = (-12).dp),
+                                onClick = onCheckDuplicate,
+                                enabled = !uiState.isCheckingDuplicate && uiState.isAvailable == null
+                            )
+                        }
                     }
+                },
+            )
 
-                    uiState.inputState is InputState.Error -> {
-                        trailingIcon(R.drawable.ic_snackbar_fail)
-                    }
-
-                    uiState.inputState is InputState.Success -> {
-                        CheckDuplicateButton(
-                            modifier = Modifier.offset(x = (-12).dp),
-                            onClick = onCheckDuplicate,
-                            enabled = !uiState.isCheckingDuplicate && uiState.isAvailable == null
-                        )
-                    }
-                }
-            },
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-        PickleButton(
-            text = "다음",
-            onClick = {
-                onSaveNickname()
-                onNavigateToMain()
-            },
-            enabled = uiState.canSubmit,
-            textColor = PickleTheme.colors.base0
-        )
-        Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            PickleButton(
+                text = "다음",
+                onClick = {
+                    onSaveNickname()
+                    onNavigateToMain()
+                },
+                enabled = uiState.canSubmit,
+                textColor = PickleTheme.colors.base0
+            )
+            Spacer(modifier = Modifier.height(14.dp))
+        }
     }
 }
 
@@ -119,7 +133,8 @@ private fun NicknamePreview() {
             onNicknameChanged = {},
             onCheckDuplicate = {},
             onSaveNickname = {},
-            onNavigateToMain = {}
+            onNavigateToMain = {},
+            onBack = {}
         )
     }
 }

@@ -9,4 +9,6 @@ interface AuthNavigator {
     fun navigateToNickname()
 
     fun navigateToMain()
+
+    fun back()
 }
