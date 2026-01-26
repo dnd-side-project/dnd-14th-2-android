@@ -1,49 +1,63 @@
 package com.smtm.pickle.presentation.mypage
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.smtm.pickle.presentation.navigation.navigator.MyPageNavigator
 
 @Composable
 fun MyPageScreen(
-    navigator: MyPageNavigator,
     viewModel: MyPageViewModel = hiltViewModel(),
+    onNavigateMyLedger: () -> Unit,
+    onNavigateSetting: () -> Unit,
+    onNavigateAlarmSetting: () -> Unit,
 ) {
     MyPageContent(
-        onSettingClick = navigator::navigateToSetting,
-        onAlarmSettingClick = navigator::navigateToAlarmSetting,
-        onLogoutClick = navigator::logout
+        onNavigateMyLedger = onNavigateMyLedger,
+        onNavigateSetting = onNavigateSetting,
+        onNavigateAlarmSetting = onNavigateAlarmSetting,
     )
 }
 
 @Composable
 private fun MyPageContent(
-    modifier: Modifier = Modifier,
-    onSettingClick: () -> Unit,
-    onAlarmSettingClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onNavigateMyLedger: () -> Unit,
+    onNavigateSetting: () -> Unit,
+    onNavigateAlarmSetting: () -> Unit,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.Green.copy(0.5f)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "MyPage Screen")
-            Button(onClick = onSettingClick) {
-                Text("세팅 이동")
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(onClick = onNavigateMyLedger) {
+                Text("내 가계부")
             }
-            Button(onClick = onAlarmSettingClick) {
-                Text("알람 세팅 이동")
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(onClick = onNavigateSetting) {
+                Text("설정 이동")
             }
-            Button(onClick = onLogoutClick) {
-                Text("로그아웃")
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(onClick = onNavigateAlarmSetting) {
+                Text("알림 설정 이동")
             }
         }
     }
