@@ -1,5 +1,6 @@
 package com.smtm.pickle.presentation.home.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CalendarMode
 import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import java.time.DayOfWeek
@@ -53,6 +55,7 @@ fun LedgerCalendar(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .background(PickleTheme.colors.base0)
             .padding(vertical = 16.dp)
     ) {
         MonthHeader(

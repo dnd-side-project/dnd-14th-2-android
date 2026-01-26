@@ -1,5 +1,6 @@
 package com.smtm.pickle.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -65,7 +66,7 @@ private fun HomeContent(
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = PickleTheme.colors.base0
+        color = PickleTheme.colors.background50
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -74,12 +75,14 @@ private fun HomeContent(
         ) {
             item("top_bar") {
                 HomeTopBar(
+                    modifier = Modifier.background(PickleTheme.colors.base0),
                     onStatisticsClick = {},
                     onAlarmClick = {}
                 )
             }
             item("profile") {
                 HomeProfile(
+                    modifier = Modifier.background(PickleTheme.colors.base0),
                     badge = "뱃지명",
                     nickname = "나의닉네임",
                     income = 1000000,
@@ -88,7 +91,9 @@ private fun HomeContent(
             }
             item("ledger_calendar") {
                 LedgerCalendar(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier
+                        .background(PickleTheme.colors.base0)
+                        .padding(horizontal = 12.dp),
                     currentDate = currentDate,
                     currentMonth = currentMonth,
                     startMonth = startMonth,

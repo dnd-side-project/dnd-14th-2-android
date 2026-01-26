@@ -3,7 +3,6 @@ package com.smtm.pickle.presentation.home.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +45,6 @@ fun LazyListScope.dailyLedgerInfoSection(
     item("selected_date") {
         SelectedDate(
             modifier = modifier
-                .background(color = PickleTheme.colors.background50)
                 .padding(horizontal = 16.dp)
                 .padding(top = 20.dp, bottom = 6.dp),
             date = date
@@ -54,13 +52,12 @@ fun LazyListScope.dailyLedgerInfoSection(
     }
     if (dailyLedger == null) {
         item("empty_notice") {
-            EmptyNotice(modifier = modifier.background(color = PickleTheme.colors.background50))
+            EmptyNotice(modifier = modifier)
         }
     } else {
         item {
             SelectedDateAmount(
                 modifier = modifier
-                    .background(color = PickleTheme.colors.background50)
                     .padding(horizontal = 16.dp),
                 totalIncome = dailyLedger.totalIncome ?: "0",
                 totalExpense = dailyLedger.totalExpense ?: "0"
@@ -76,7 +73,6 @@ fun LazyListScope.dailyLedgerInfoSection(
 
             LedgerCard(
                 modifier = modifier
-                    .background(color = PickleTheme.colors.background50)
                     .padding(horizontal = 16.dp)
                     .padding(top = paddingTop, bottom = paddingBottom),
                 title = stringResource(item.category.stringResId),
