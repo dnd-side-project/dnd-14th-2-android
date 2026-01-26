@@ -18,8 +18,9 @@ import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.component.HomeProfile
 import com.smtm.pickle.presentation.home.component.HomeTopBar
 import com.smtm.pickle.presentation.home.component.LedgerCalendar
+import com.smtm.pickle.presentation.home.component.dailyLedgerInfoSection
 import com.smtm.pickle.presentation.home.model.CalendarMode
-import com.smtm.pickle.presentation.home.model.DailyLedgerModel
+import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -48,7 +49,7 @@ fun HomeScreen(
 private fun HomeContent(
     onStatisticsClick: () -> Unit,
     onAlarmClick: () -> Unit,
-    dailyLedgerList: List<DailyLedgerModel>,
+    dailyLedgerList: List<DailyLedgerUi>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -103,6 +104,11 @@ private fun HomeContent(
                 )
             }
 
+            dailyLedgerInfoSection(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                date = selectedDate,
+                dailyLedger = dailyLedgerList.firstOrNull { it.date == selectedDate }
+            )
         }
     }
 }

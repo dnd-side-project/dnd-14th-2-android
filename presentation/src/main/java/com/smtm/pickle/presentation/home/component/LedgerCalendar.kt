@@ -15,7 +15,7 @@ import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.smtm.pickle.presentation.home.model.CalendarMode
-import com.smtm.pickle.presentation.home.model.DailyLedgerModel
+import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -29,7 +29,7 @@ fun LedgerCalendar(
     endMonth: YearMonth,
     startDate: LocalDate,
     endDate: LocalDate,
-    dailyLedgerList: List<DailyLedgerModel>,
+    dailyLedgerList: List<DailyLedgerUi>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -113,21 +113,21 @@ private fun LedgerCalendarMonthlyPreview() {
     val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
-        DailyLedgerModel(
+        DailyLedgerUi(
             date = currentDate,
             dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
             ledgers = emptyList(),
             totalIncome = "3,000,000",
             totalExpense = "10,000"
         ),
-        DailyLedgerModel(
+        DailyLedgerUi(
             date = currentDate.minusDays(1),
             dateText = "${currentDate.minusDays(1).monthValue}월 ${currentDate.minusDays(1).dayOfMonth}일",
             ledgers = emptyList(),
             totalIncome = null,
             totalExpense = "5,000"
         ),
-        DailyLedgerModel(
+        DailyLedgerUi(
             date = currentDate.plusDays(2),
             dateText = "${currentDate.plusDays(2).monthValue}월 ${currentDate.plusDays(2).dayOfMonth}일",
             ledgers = emptyList(),
@@ -163,7 +163,7 @@ private fun LedgerCalendarWeeklyPreview() {
     val currentMonth = YearMonth.now()
 
     val sampleLedgerList = listOf(
-        DailyLedgerModel(
+        DailyLedgerUi(
             date = currentDate,
             dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
             ledgers = emptyList(),

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +21,7 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.WeekDayPosition
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
-import com.smtm.pickle.presentation.home.model.DailyLedgerModel
+import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import java.time.LocalDate
 
 @Composable
@@ -30,7 +29,7 @@ fun MonthlyDayCell(
     modifier: Modifier = Modifier,
     day: CalendarDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerModel?,
+    dailyLedger: DailyLedgerUi?,
     onClick: (CalendarDay) -> Unit,
 ) {
     val isActiveDay = day.position == DayPosition.MonthDate
@@ -49,7 +48,7 @@ fun WeeklyDayCell(
     modifier: Modifier = Modifier,
     day: WeekDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerModel?,
+    dailyLedger: DailyLedgerUi?,
     onclick: (WeekDay) -> Unit,
 ) {
     val isActiveDay = day.position == WeekDayPosition.RangeDate
@@ -70,7 +69,7 @@ private fun DayCell(
     date: LocalDate,
     isActiveDay: Boolean,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerModel?,
+    dailyLedger: DailyLedgerUi?,
     onClick: () -> Unit,
 ) {
     val dateTextColor = when {
@@ -169,7 +168,7 @@ private fun DayCellWithFinancePreview() {
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
             isSelected = false,
-            dailyLedger = DailyLedgerModel(
+            dailyLedger = DailyLedgerUi(
                 date = LocalDate.of(2024, 1, 15),
                 dateText = "1월 15일",
                 ledgers = emptyList(),

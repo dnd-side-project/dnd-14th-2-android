@@ -6,13 +6,13 @@ import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
 import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.home.model.CategoryUi
-import com.smtm.pickle.presentation.home.model.DailyLedgerModel
-import com.smtm.pickle.presentation.home.model.LedgerModel
+import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
+import com.smtm.pickle.presentation.home.model.LedgerUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
 import java.time.LocalDate
 
-fun LedgerEntry.toUiModel(): LedgerModel = LedgerModel(
+fun LedgerEntry.toUiModel(): LedgerUi = LedgerUi(
     id = id.value,
     type = type.toUiModel(),
     amount = amount.value.toMoneyFormat(),
@@ -21,14 +21,14 @@ fun LedgerEntry.toUiModel(): LedgerModel = LedgerModel(
     description = description,
     occurredOn = occurredOn,
     dateText = occurredOn.toDisplayYMDDate(),
-    paymentMethod = paymentMethod?.toUiModel() ?: PaymentMethodUi.Other,
+    paymentMethod = paymentMethod?.toUiModel() ?: PaymentMethodUi.Cash,
     memo = memo
 )
 
-fun List<LedgerEntry>.toDailyLedgerUiModel(): List<DailyLedgerModel> =
+fun List<LedgerEntry>.toDailyLedgerUiModel(): List<DailyLedgerUi> =
     groupBy { it.occurredOn }
         .map { (date, entries) ->
-            DailyLedgerModel(
+            DailyLedgerUi(
                 date = date,
                 dateText = date.toDisplayMDDate(),
                 ledgers = entries.map { it.toUiModel() },
@@ -63,9 +63,9 @@ private fun Category.toUiModel(): CategoryUi = when (this) {
 
 private fun PaymentMethod.toUiModel(): PaymentMethodUi = when (this) {
     PaymentMethod.BANK_TRANSFER -> PaymentMethodUi.BankTransfer
-    PaymentMethod.CARD -> PaymentMethodUi.Card
+    PaymentMethod.CREDIT_CARD -> PaymentMethodUi.CreditCard
+    PaymentMethod.DEBIT_CARD -> PaymentMethodUi.DebitCard
     PaymentMethod.CASH -> PaymentMethodUi.Cash
-    PaymentMethod.OTHER -> PaymentMethodUi.Other
 }
 
 private fun LocalDate.toDisplayMDDate(): String = "${monthValue}월 ${dayOfMonth}일"

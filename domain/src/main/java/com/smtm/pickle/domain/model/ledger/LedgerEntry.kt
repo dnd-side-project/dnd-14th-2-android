@@ -26,7 +26,7 @@ data class LedgerEntry(
 enum class LedgerType { INCOME, EXPENSE }
 
 enum class PaymentMethod {
-    BANK_TRANSFER, CARD, CASH, OTHER
+    BANK_TRANSFER, CREDIT_CARD, CASH, DEBIT_CARD
 }
 
 enum class Category {

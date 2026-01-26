@@ -18,12 +18,15 @@
 
     <!-- Ledger Payment Method -->
     <string name="ledger_payment_method_bank_transfer">계좌이체</string>
-    <string name="ledger_payment_method_card">카드</string>
+    <string name="ledger_payment_method_credit_card">신용카드</string>
+    <string name="ledger_payment_method_debit_card">체크카트</string>
     <string name="ledger_payment_method_cash">현금</string>
-    <string name="ledger_payment_method_other">기타</string>
 
     <!-- Ledger Type -->
     <string name="ledger_type_income">수입</string>
     <string name="ledger_type_expense">지출</string>
+
+    <!-- Ledger -->
+    <string name="ledger_empty_notice">가계부 내역을 작성해주세요</string>
 
 </resources>

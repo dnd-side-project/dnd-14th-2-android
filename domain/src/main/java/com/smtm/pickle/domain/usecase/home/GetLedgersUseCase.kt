@@ -31,7 +31,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.FOOD,
                 description = "점심",
                 occurredOn = LocalDate.now(),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
             LedgerEntry(
                 id = LedgerId(3L),
@@ -40,7 +40,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.FOOD,
                 description = "커피",
                 occurredOn = LocalDate.now(),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 어제
@@ -51,7 +51,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.FOOD,
                 description = "저녁 외식",
                 occurredOn = LocalDate.now().minusDays(1),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
             LedgerEntry(
                 id = LedgerId(5L),
@@ -60,7 +60,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.TRANSPORT,
                 description = "택시비",
                 occurredOn = LocalDate.now().minusDays(1),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 2일 전
@@ -71,7 +71,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.LEISURE_HOBBY,
                 description = "넷플릭스",
                 occurredOn = LocalDate.now().minusDays(2),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
             LedgerEntry(
                 id = LedgerId(7L),
@@ -80,7 +80,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.SHOPPING,
                 description = "온라인 쇼핑",
                 occurredOn = LocalDate.now().minusDays(2),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 3일 전
@@ -100,7 +100,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.HEALTH_MEDICAL,
                 description = "병원비",
                 occurredOn = LocalDate.now().minusDays(3),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 5일 전
@@ -111,7 +111,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.TRANSPORT,
                 description = "지하철 정기권",
                 occurredOn = LocalDate.now().minusDays(5),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
             LedgerEntry(
                 id = LedgerId(11L),
@@ -140,7 +140,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.EDUCATION_SELF_DEVELOPMENT,
                 description = "온라인 강의",
                 occurredOn = LocalDate.now().minusDays(7),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 10일 전
@@ -171,7 +171,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.HEALTH_MEDICAL,
                 description = "헬스장",
                 occurredOn = LocalDate.now().minusDays(14),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
             LedgerEntry(
                 id = LedgerId(17L),
@@ -180,7 +180,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.FOOD,
                 description = "마트 장보기",
                 occurredOn = LocalDate.now().minusDays(14),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 20일 전
@@ -200,7 +200,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.LEISURE_HOBBY,
                 description = "영화",
                 occurredOn = LocalDate.now().minusDays(20),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 내일
@@ -211,7 +211,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.FOOD,
                 description = "예약 식당",
                 occurredOn = LocalDate.now().plusDays(1),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             ),
 
             // 3일 후
@@ -222,7 +222,7 @@ class GetLedgersUseCase @Inject constructor(
                 category = Category.LEISURE_HOBBY,
                 description = "콘서트 티켓",
                 occurredOn = LocalDate.now().plusDays(3),
-                paymentMethod = PaymentMethod.CARD
+                paymentMethod = PaymentMethod.CREDIT_CARD
             )
         )
     }
