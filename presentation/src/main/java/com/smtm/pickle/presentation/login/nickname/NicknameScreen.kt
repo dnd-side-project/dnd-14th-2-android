@@ -73,6 +73,17 @@ fun NicknameContent(
                 title = "닉네임 입력",
                 navigationItem = NavigationItem.Back(onBackClick),
             )
+        },
+        bottomBar = {
+            PickleButton(
+                modifier = Modifier
+                    .padding(bottom = 14.dp)
+                    .padding(horizontal = 16.dp),
+                text = "다음",
+                onClick = onSaveNickname,
+                enabled = uiState.canSubmit,
+                textColor = PickleTheme.colors.base0
+            )
         }
     ) { innerPadding ->
         Column(
@@ -118,15 +129,7 @@ fun NicknameContent(
                     }
                 },
             )
-
             Spacer(modifier = Modifier.weight(1f))
-            PickleButton(
-                text = "다음",
-                onClick = onSaveNickname,
-                enabled = uiState.canSubmit,
-                textColor = PickleTheme.colors.base0
-            )
-            Spacer(modifier = Modifier.height(14.dp))
         }
     }
 }
