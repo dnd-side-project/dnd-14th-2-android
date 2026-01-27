@@ -29,9 +29,6 @@ import com.smtm.pickle.presentation.designsystem.components.textfield.PickleText
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 
-// 중앙 정렬, 왼쪽 정렬, 투명
-// 업버튼: 지우기 or 로고
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickleAppBar(
@@ -53,7 +50,6 @@ fun PickleAppBar(
                 .height(Dimensions.barHeight)
                 .statusBarsPadding()
                 .background(color = color)
-                .padding(end = 16.dp),
         ) {
             when (alignment) {
                 AppBarAlignment.Start -> {
@@ -82,7 +78,9 @@ fun PickleAppBar(
                 }
             }
             Row(
-                modifier = Modifier.align(Alignment.CenterEnd),
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 content = actions
@@ -94,10 +92,10 @@ fun PickleAppBar(
 
 @Composable
 fun PickleSearchAppBar(
+    modifier: Modifier = Modifier,
     searchValue: String,
     onSearchValueChange: (String) -> Unit,
     hint: String = "",
-    modifier: Modifier = Modifier,
     onSearch: (() -> Unit)? = null,
     onBackClick: () -> Unit,
 ) {
@@ -156,7 +154,7 @@ private fun PickleAppBarPreview() {
     PickleTheme {
         Column {
             PickleAppBar(
-                title = "가나다라",
+                title = "1",
                 navigationItem = NavigationItem.Back {},
                 actions = {
                     Icon(

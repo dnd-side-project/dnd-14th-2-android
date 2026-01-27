@@ -24,7 +24,7 @@ import com.smtm.pickle.presentation.designsystem.components.textfield.PickleText
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.login.nickname.components.CheckDuplicateButton
-import com.smtm.pickle.presentation.login.nickname.components.trailingIcon
+import com.smtm.pickle.presentation.login.nickname.components.TrailingIcon
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
 @Composable
@@ -88,11 +88,11 @@ fun NicknameContent(
                 trailingIcon = {
                     when {
                         uiState.isAvailable == true -> {
-                            trailingIcon(R.drawable.ic_textfield_success)
+                            TrailingIcon(R.drawable.ic_textfield_success)
                         }
 
                         uiState.inputState is InputState.Error -> {
-                            trailingIcon(R.drawable.ic_snackbar_fail)
+                            TrailingIcon(R.drawable.ic_snackbar_fail)
                         }
 
                         uiState.inputState is InputState.Success -> {

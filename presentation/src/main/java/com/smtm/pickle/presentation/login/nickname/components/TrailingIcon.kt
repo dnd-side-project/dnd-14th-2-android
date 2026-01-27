@@ -9,7 +9,7 @@ import androidx.compose.ui.res.painterResource
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 
 @Composable
-fun trailingIcon(iconRes: Int) {
+fun TrailingIcon(iconRes: Int) {
     Icon(
         painter = painterResource(iconRes),
         contentDescription = null,
