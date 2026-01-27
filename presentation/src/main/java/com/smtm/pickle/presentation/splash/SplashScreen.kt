@@ -10,7 +10,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
-import com.smtm.pickle.presentation.designsystem.components.PickleIcon
+import com.smtm.pickle.presentation.designsystem.components.PickleLogo
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
 @Composable
@@ -41,6 +41,6 @@ private fun SplashContent(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        PickleIcon()
+        PickleLogo()
     }
 }

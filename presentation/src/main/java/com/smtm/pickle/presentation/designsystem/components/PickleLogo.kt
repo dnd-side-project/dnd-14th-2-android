@@ -18,7 +18,7 @@ import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 
 @Composable
-fun PickleIcon(
+fun PickleLogo(
     modifier: Modifier = Modifier,
     size: Dp = 200.dp
 ) {
@@ -42,14 +42,14 @@ fun PickleIcon(
 
 @Preview
 @Composable
-private fun PickleIconPreview() {
+private fun PickleLogoPreview() {
     PickleTheme {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PickleIcon()
+            PickleLogo()
         }
     }
 }

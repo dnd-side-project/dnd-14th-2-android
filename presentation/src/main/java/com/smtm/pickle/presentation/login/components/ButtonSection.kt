@@ -20,12 +20,11 @@ import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 
-// TODO: 디자인시스템 적용 필요
 @Composable
 fun ButtonSection(
     modifier: Modifier = Modifier,
+    onKakaoLogin: () -> Unit,
     onGoogleLogin: () -> Unit,
-    onKakaoLogin: () -> Unit
 ) {
     Column(modifier = modifier) {
         Button(
@@ -34,7 +33,7 @@ fun ButtonSection(
                 .fillMaxWidth()
                 .height(48.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFEE500))
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFE812))
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_kakao),
@@ -42,7 +41,11 @@ fun ButtonSection(
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text("카카오톡으로 시작하기", color = Color(0xFF202020))
+            Text(
+                text = "카카오톡으로 시작하기",
+                style = PickleTheme.typography.body4Medium,
+                color = PickleTheme.colors.gray800
+            )
         }
 
         Spacer(modifier = Modifier.height(11.dp))
@@ -55,8 +58,7 @@ fun ButtonSection(
             shape = RoundedCornerShape(10.dp),
             border = ButtonDefaults.outlinedButtonBorder().copy(width = 1.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = Color.White,
-                contentColor = Color(0xFF4C4E51)
+                containerColor = Color.White
             )
         ) {
             Icon(
@@ -65,7 +67,11 @@ fun ButtonSection(
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text("구글 계정으로 시작하기")
+            Text(
+                text = "구글 계정으로 시작하기",
+                style = PickleTheme.typography.body4Medium,
+                color = PickleTheme.colors.gray700
+            )
         }
     }
 }
