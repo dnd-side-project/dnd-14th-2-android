@@ -27,6 +27,7 @@ private const val MEMO_MAX_LENGTH = 100
 @Composable
 fun LedgerCreateMemo(
     modifier: Modifier = Modifier,
+    inputModifier: Modifier = Modifier,
     memo: String,
     onMemoChange: (String) -> Unit,
 ) {
@@ -41,7 +42,7 @@ fun LedgerCreateMemo(
         )
 
         BasicTextField(
-            modifier = Modifier
+            modifier = inputModifier
                 .padding(horizontal = 16.dp, vertical = 10.dp)
                 .fillMaxWidth()
                 .height(160.dp)

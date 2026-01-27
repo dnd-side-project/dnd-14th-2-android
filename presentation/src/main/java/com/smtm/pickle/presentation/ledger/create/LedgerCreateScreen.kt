@@ -2,9 +2,13 @@ package com.smtm.pickle.presentation.ledger.create
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -21,6 +25,7 @@ import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
+import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateBottomBar
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateTopBar
 import com.smtm.pickle.presentation.ledger.create.component.firststep.LedgerCreateFirstStepContent
 import com.smtm.pickle.presentation.ledger.create.component.secondStep.LedgerCreateSecondContent
@@ -69,21 +74,39 @@ private fun LedgerCreateContent(
         modifier = Modifier
             .fillMaxSize()
             .clearFocusOnBackgroundTab(focusManager),
-        containerColor = PickleTheme.colors.base0
+        containerColor = PickleTheme.colors.base0,
+        topBar = {
+            LedgerCreateTopBar(
+                text = stringResource(R.string.ledger_create_date_format, date.year, date.monthValue, date.dayOfMonth),
+                onNavigationClick = onNavigateBack,
+                step = uiState.step
+            )
+        },
+        bottomBar = {
+            LedgerCreateBottomBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                step = uiState.step,
+                enableNext = with(uiState) {
+                    amount.toLongOrNull()?.takeIf { it > 0 } != null &&
+                            selectedLedgerType != null &&
+                            selectedCategory != null
+                },
+                enabledSuccess = uiState.selectedPaymentMethod != null,
+                onNextClick = { setStep(LedgerCreateStep.SECOND) },
+                onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
+                onSuccessClick = { },
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            LedgerCreateTopBar(
-                text = stringResource(R.string.ledger_create_date_format, date.year, date.monthValue, date.dayOfMonth),
-                onNavigationClick = onNavigateBack,
-                step = uiState.step
-            )
-
             Spacer(modifier = Modifier.height(32.dp))
-
             when (uiState.step) {
                 LedgerCreateStep.FIRST -> {
                     LedgerCreateFirstStepContent(
@@ -95,18 +118,15 @@ private fun LedgerCreateContent(
                         onLedgerTypeClick = selectLedgerType,
                         onCategoryClick = selectCategory,
                         onDescriptionChange = setDescription,
-                        onNextClick = { setStep(LedgerCreateStep.SECOND) },
                     )
                 }
 
                 LedgerCreateStep.SECOND -> {
                     LedgerCreateSecondContent(
-                        selectedPaymentMethod = uiState.paymentMethod,
+                        selectedPaymentMethod = uiState.selectedPaymentMethod,
                         memo = uiState.memo,
                         onSelectedPaymentMethod = selectPaymentMethod,
                         onMemoChange = setMemo,
-                        onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
-                        onSuccessClick = {},
                     )
                 }
             }

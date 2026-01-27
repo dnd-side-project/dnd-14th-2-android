@@ -40,7 +40,7 @@ class LedgerCreateViewModel @Inject constructor(
     }
 
     fun selectPaymentMethod(method: PaymentMethodUi) {
-        _uiState.update { state -> state.copy(paymentMethod = method)}
+        _uiState.update { state -> state.copy(selectedPaymentMethod = method) }
     }
 
     fun setMemo(memo: String) {
@@ -54,7 +54,7 @@ data class LedgerCreateUiSate(
     val selectedLedgerType: LedgerTypeUi? = null,
     val selectedCategory: CategoryUi? = null,
     val description: String = "",
-    val paymentMethod: PaymentMethodUi? = null,
+    val selectedPaymentMethod: PaymentMethodUi? = null,
     val memo: String = "",
 )
 

@@ -1,22 +1,28 @@
 package com.smtm.pickle.presentation.ledger.create.component.secondStep
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.smtm.pickle.presentation.R
-import com.smtm.pickle.presentation.designsystem.components.button.PickleButton
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.launch
 
 @Composable
 fun LedgerCreateSecondContent(
@@ -25,13 +31,18 @@ fun LedgerCreateSecondContent(
     memo: String,
     onSelectedPaymentMethod: (PaymentMethodUi) -> Unit,
     onMemoChange: (String) -> Unit,
-    onPreviousClick: () -> Unit,
-    onSuccessClick: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val memoScrollExtraPx = with(LocalDensity.current) { 40.dp.toPx() }
 
-    val enabledSuccess = selectedPaymentMethod != null
-
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .imePadding()
+    ) {
         LedgerPaymentMethodSelectors(
             selectedPaymentMethod = selectedPaymentMethod,
             onPaymentMethodClick = onSelectedPaymentMethod
@@ -40,36 +51,21 @@ fun LedgerCreateSecondContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         LedgerCreateMemo(
+            modifier = Modifier.padding(bottom = 40.dp),
+            inputModifier = Modifier
+                .bringIntoViewRequester(bringIntoViewRequester)
+                .onFocusEvent { state ->
+                    if (state.isFocused) {
+                        scope.launch {
+                            awaitFrame()
+                            bringIntoViewRequester.bringIntoView()
+                            scrollState.animateScrollBy(memoScrollExtraPx)
+                        }
+                    }
+                },
             memo = memo,
             onMemoChange = onMemoChange
         )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            PickleButton(
-                modifier = Modifier.width(96.dp),
-                text = stringResource(R.string.common_previous),
-                color = PickleTheme.colors.gray100,
-                textColor = PickleTheme.colors.gray600,
-                onClick = onPreviousClick,
-            )
-
-            PickleButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.common_input_success),
-                color = if (enabledSuccess) PickleTheme.colors.primary400 else PickleTheme.colors.gray100,
-                textColor = if (enabledSuccess) PickleTheme.colors.base0 else PickleTheme.colors.gray600,
-                onClick = onSuccessClick,
-                enabled = enabledSuccess,
-            )
-        }
     }
 }
 
@@ -86,8 +82,6 @@ private fun LedgerCreateSecondContentPreview() {
             memo = "",
             onSelectedPaymentMethod = {},
             onMemoChange = {},
-            onPreviousClick = {},
-            onSuccessClick = {}
         )
     }
 }
