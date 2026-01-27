@@ -6,8 +6,8 @@ import com.smtm.pickle.presentation.R
 
 sealed class CategoryUi(
     @StringRes val stringResId: Int,
-    @DrawableRes val activatedIconResId: Int?,
-    @DrawableRes val inactivatedIconResId: Int?,
+    @DrawableRes val activatedIconResId: Int,
+    @DrawableRes val inactivatedIconResId: Int,
 ) {
     data object Food : CategoryUi(
         stringResId = R.string.ledger_category_food,
