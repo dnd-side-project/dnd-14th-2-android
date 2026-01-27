@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,25 +19,27 @@ import com.smtm.pickle.presentation.home.model.PaymentMethodUi
 @Composable
 fun LedgerCreateSecondContent(
     modifier: Modifier = Modifier,
+    selectedPaymentMethod: PaymentMethodUi?,
+    memo: String,
+    onSelectedPaymentMethod: (PaymentMethodUi) -> Unit,
+    onMemoChange: (String) -> Unit,
     onPreviousClick: () -> Unit,
     onSuccessClick: () -> Unit,
 ) {
 
-    var selectedPaymentMethod by remember { mutableStateOf<PaymentMethodUi?>(null) }
-    var memo by remember { mutableStateOf("") }
     val enabledSuccess = selectedPaymentMethod != null
 
     Column(modifier = modifier) {
         LedgerPaymentMethodSelectors(
             selectedPaymentMethod = selectedPaymentMethod,
-            onPaymentMethodClick = { it -> selectedPaymentMethod = it }
+            onPaymentMethodClick = onSelectedPaymentMethod
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         LedgerCreateMemo(
             memo = memo,
-            onMemoChange = { memo = it }
+            onMemoChange = onMemoChange
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -82,6 +80,10 @@ fun LedgerCreateSecondContent(
 private fun LedgerCreateSecondContentPreview() {
     PickleTheme {
         LedgerCreateSecondContent(
+            selectedPaymentMethod = null,
+            memo = "",
+            onSelectedPaymentMethod = {},
+            onMemoChange = {},
             onPreviousClick = {},
             onSuccessClick = {}
         )

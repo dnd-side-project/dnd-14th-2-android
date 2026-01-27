@@ -16,6 +16,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
+import com.smtm.pickle.presentation.home.model.PaymentMethodUi
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateTopBar
 import com.smtm.pickle.presentation.ledger.create.component.firststep.LedgerCreateFirstStepContent
 import com.smtm.pickle.presentation.ledger.create.component.secondStep.LedgerCreateSecondContent
@@ -38,6 +39,8 @@ fun LedgerCreateScreen(
         selectCategory = viewModel::selectCategory,
         setDescription = viewModel::setDescription,
         setStep = viewModel::setStep,
+        selectPaymentMethod = viewModel::selectPaymentMethod,
+        setMemo = viewModel::setMemo,
         onNavigateBack = onNavigateBack,
     )
 }
@@ -52,6 +55,8 @@ private fun LedgerCreateContent(
     selectCategory: (CategoryUi) -> Unit,
     setDescription: (String) -> Unit,
     setStep: (LedgerCreateStep) -> Unit,
+    selectPaymentMethod: (PaymentMethodUi) -> Unit,
+    setMemo: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
 
@@ -89,6 +94,10 @@ private fun LedgerCreateContent(
 
                 LedgerCreateStep.SECOND -> {
                     LedgerCreateSecondContent(
+                        selectedPaymentMethod = uiState.paymentMethod,
+                        memo = uiState.memo,
+                        onSelectedPaymentMethod = selectPaymentMethod,
+                        onMemoChange = setMemo,
                         onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
                         onSuccessClick = {},
                     )
