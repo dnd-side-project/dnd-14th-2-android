@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.ledger.create.LedgerCreateStep
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +27,7 @@ fun LedgerCreateTopBar(
     modifier: Modifier = Modifier,
     text: String,
     onNavigationClick: () -> Unit,
+    step: LedgerCreateStep = LedgerCreateStep.FIRST
 ) {
     Column(
         modifier = modifier
@@ -56,33 +58,64 @@ fun LedgerCreateTopBar(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Box(
-                modifier
-                    .weight(1f)
-                    .height(2.dp)
-                    .background(PickleTheme.colors.primary400)
-            )
-            Box(
-                modifier
-                    .weight(1f)
-                    .height(2.dp)
-                    .background(PickleTheme.colors.gray100)
-            )
+            when (step) {
+                LedgerCreateStep.FIRST -> {
+                    Box(
+                        modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(PickleTheme.colors.primary400)
+                    )
+                    Box(
+                        modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(PickleTheme.colors.gray100)
+                    )
+                }
+
+                LedgerCreateStep.SECOND -> {
+                    Box(
+                        modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(PickleTheme.colors.primary400)
+                    )
+                }
+            }
         }
     }
 
 }
 
 @Preview(
+    name = "LedgerCreateTopBarPreview - FirstStep",
     showBackground = true,
     widthDp = 360
 )
 @Composable
-private fun LedgerCreateTopBarPreview() {
+private fun LedgerCreateTopBarFirstStepPreview() {
     PickleTheme {
         LedgerCreateTopBar(
             text = "2026년 2월 19일",
-            onNavigationClick = {}
+            onNavigationClick = {},
+            step = LedgerCreateStep.FIRST
+        )
+    }
+}
+
+@Preview(
+    name = "LedgerCreateTopBarPreview - SecondStep",
+    showBackground = true,
+    widthDp = 360
+)
+@Composable
+private fun LedgerCreateTopBarSecondStepPreview() {
+    PickleTheme {
+        LedgerCreateTopBar(
+            text = "2026년 2월 19일",
+            onNavigationClick = {},
+            step = LedgerCreateStep.SECOND
         )
     }
 }

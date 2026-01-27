@@ -18,6 +18,7 @@ import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateTopBar
 import com.smtm.pickle.presentation.ledger.create.component.firststep.LedgerCreateFirstStepContent
+import com.smtm.pickle.presentation.ledger.create.component.secondStep.LedgerCreateSecondContent
 import java.time.LocalDate
 
 @Composable
@@ -65,7 +66,8 @@ private fun LedgerCreateContent(
         ) {
             LedgerCreateTopBar(
                 text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일",
-                onNavigationClick = onNavigateBack
+                onNavigationClick = onNavigateBack,
+                step = uiState.step
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -86,7 +88,10 @@ private fun LedgerCreateContent(
                 }
 
                 LedgerCreateStep.SECOND -> {
-
+                    LedgerCreateSecondContent(
+                        onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
+                        onSuccessClick = {},
+                    )
                 }
             }
         }
