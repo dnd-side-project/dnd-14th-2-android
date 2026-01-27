@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderText
@@ -35,7 +37,7 @@ fun LedgerCreateMemo(
     ) {
         LedgerCreateHeaderText(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            text = "메모할 내용이 있나요?"
+            text = stringResource(R.string.ledger_create_memo_header),
         )
 
         BasicTextField(
@@ -61,7 +63,7 @@ fun LedgerCreateMemo(
                     ) {
                         if (memo.isEmpty()) {
                             Text(
-                                text = "메모를 작성해주세요",
+                                text = stringResource(R.string.ledger_create_memo_hint),
                                 style = PickleTheme.typography.body3Regular,
                                 color = PickleTheme.colors.gray600,
                             )

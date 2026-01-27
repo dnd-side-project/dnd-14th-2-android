@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.components.button.PickleButton
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
@@ -58,7 +60,7 @@ fun LedgerCreateFirstStepContent(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp),
-            text = "다음",
+            text = stringResource(R.string.common_next),
             onClick = onNextClick,
             enabled = enableNext,
             color = if (enableNext) PickleTheme.colors.primary400 else PickleTheme.colors.gray100,

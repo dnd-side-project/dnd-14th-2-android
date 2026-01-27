@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.common.extension.clearFocusOnTapOutside
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
@@ -70,7 +73,7 @@ private fun LedgerCreateContent(
                 .padding(paddingValues)
         ) {
             LedgerCreateTopBar(
-                text = "${date.year}년 ${date.monthValue}월 ${date.dayOfMonth}일",
+                text = stringResource(R.string.ledger_create_date_format, date.year, date.monthValue, date.dayOfMonth),
                 onNavigationClick = onNavigateBack,
                 step = uiState.step
             )

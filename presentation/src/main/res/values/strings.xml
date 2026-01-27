@@ -29,7 +29,23 @@
     <!-- Ledger -->
     <string name="ledger_empty_notice">가계부 내역을 작성해주세요</string>
 
+    <!-- Ledger Create -->
+    <string name="ledger_create_date_format">%d년 %d월 %d일</string>
+    <string name="ledger_create_category_header">카테고리를 선택해주세요.*</string>
+    <string name="ledger_create_category_header_highlight">*</string>
+    <string name="ledger_create_description_header">가계부 내용을 입력해주세요.</string>
+    <string name="ledger_create_description_hint">공백 포함 15자 이내로 입력해주세요.</string>
+    <string name="ledger_create_payment_method_header">결제 유형을 선택해주세요.*</string>
+    <string name="ledger_create_payment_method_header_highlight">*</string>
+    <string name="ledger_create_memo_header">메모할 내용이 있나요?</string>
+    <string name="ledger_create_memo_hint">메모를 작성해주세요</string>
+
     <!-- Home -->
     <string name="home_fab_create_ledger">가계부 작성하기</string>
+
+    <!-- Common -->
+    <string name="common_previous">이전</string>
+    <string name="common_next">다음</string>
+    <string name="common_input_success">선택완료</string>
 
 </resources>

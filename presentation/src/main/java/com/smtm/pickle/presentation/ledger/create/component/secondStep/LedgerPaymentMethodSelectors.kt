@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
@@ -33,8 +34,8 @@ fun LedgerPaymentMethodSelectors(
     Column(modifier = modifier) {
         LedgerCreateHeaderText(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            text = "결제 유형을 선택해주세요.*",
-            highlightText = "*"
+            text = stringResource(R.string.ledger_create_payment_method_header),
+            highlightText = stringResource(R.string.ledger_create_payment_method_header_highlight)
         )
 
         PaymentMethodGrid(
@@ -77,7 +78,6 @@ private fun PaymentMethodGrid(
             }
         }
     }
-
 }
 
 @Composable

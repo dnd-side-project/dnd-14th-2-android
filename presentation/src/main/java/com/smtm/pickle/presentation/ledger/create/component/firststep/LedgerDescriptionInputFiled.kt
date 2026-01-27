@@ -20,11 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
+import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderText
 
 @Composable
 fun LedgerDescriptionInputFiled(
@@ -43,10 +45,8 @@ fun LedgerDescriptionInputFiled(
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = "가계부 내용을 입력해주세요.",
-            style = PickleTheme.typography.head4SemiBold,
-            color = PickleTheme.colors.gray800
+        LedgerCreateHeaderText(
+            text = stringResource(R.string.ledger_create_description_header),
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -77,7 +77,7 @@ fun LedgerDescriptionInputFiled(
                     ) {
                         if (value.isEmpty()) {
                             Text(
-                                text = "공백 포함 15자 이내로 입력해주세요.",
+                                text = stringResource(R.string.ledger_create_description_hint),
                                 style = PickleTheme.typography.body3Regular,
                                 color = PickleTheme.colors.gray600,
                             )

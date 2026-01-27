@@ -85,7 +85,6 @@ fun LedgerCreateTopBar(
             }
         }
     }
-
 }
 
 @Preview(
