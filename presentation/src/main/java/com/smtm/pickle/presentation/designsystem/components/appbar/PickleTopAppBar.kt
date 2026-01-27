@@ -41,15 +41,12 @@ fun PickleAppBar(
     bottomContent: (@Composable () -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-
-        Spacer(modifier = Modifier.statusBarsPadding())
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(Dimensions.barHeight)
-                .statusBarsPadding()
                 .background(color = color)
+                .statusBarsPadding()
+                .height(Dimensions.barHeight)
         ) {
             when (alignment) {
                 AppBarAlignment.Start -> {
@@ -102,9 +99,9 @@ fun PickleSearchAppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimensions.barHeight)
-            .statusBarsPadding()
             .background(PickleTheme.colors.base0)
+            .statusBarsPadding()
+            .height(Dimensions.barHeight)
             .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

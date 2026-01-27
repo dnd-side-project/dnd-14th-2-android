@@ -47,6 +47,7 @@ class NicknameViewModel @Inject constructor(
     fun checkDuplicate() {
         val state = uiState.value
         if (state.inputState !is InputState.Success) return
+        val requestedNickname = state.nickname
 
         viewModelScope.launch {
             _uiState.update {
@@ -56,8 +57,10 @@ class NicknameViewModel @Inject constructor(
                 )
             }
 
-            val isAvailable = checkNicknameAvailableUseCase(state.nickname)
+            val isAvailable = checkNicknameAvailableUseCase(requestedNickname)
             _uiState.update {
+                if (it.nickname != requestedNickname) return@update it
+
                 it.copy(
                     isCheckingDuplicate = false,
                     isAvailable = isAvailable,
@@ -91,7 +94,7 @@ class NicknameViewModel @Inject constructor(
         if (nickname.isBlank()) return InputState.Idle
         if (nickname.length > AVAILABLE_LENGTH) return InputState.Error("최대 5자 이내로 설정해주세요.")
         if (!nickname.matches(Regex("^[a-z0-9]+$"))) return InputState.Error("특수 문자 및 영어 대문자는 사용할 수 없어요.")
-        return InputState.Success("사용 가능한 닉네임이에요!")
+        return InputState.Success(null)
     }
 
     private companion object {
