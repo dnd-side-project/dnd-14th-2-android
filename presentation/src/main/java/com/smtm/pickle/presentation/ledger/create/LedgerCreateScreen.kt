@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
@@ -24,12 +22,21 @@ import java.time.LocalDate
 
 @Composable
 fun LedgerCreateScreen(
+    viewModel: LedgerCreateViewModel = hiltViewModel(),
     date: LocalDate,
     onNavigateBack: () -> Unit,
 ) {
 
+    val uiState by viewModel.uiState.collectAsState()
+
     LedgerCreateContent(
         date = date,
+        uiState = uiState,
+        setAmount = viewModel::setAmount,
+        selectLedgerType = viewModel::selectLedgerType,
+        selectCategory = viewModel::selectCategory,
+        setDescription = viewModel::setDescription,
+        setStep = viewModel::setStep,
         onNavigateBack = onNavigateBack,
     )
 }
@@ -38,13 +45,14 @@ fun LedgerCreateScreen(
 @Composable
 private fun LedgerCreateContent(
     date: LocalDate,
+    uiState: LedgerCreateUiSate,
+    setAmount: (String) -> Unit,
+    selectLedgerType: (LedgerTypeUi) -> Unit,
+    selectCategory: (CategoryUi) -> Unit,
+    setDescription: (String) -> Unit,
+    setStep: (LedgerCreateStep) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
-    var amount by remember { mutableStateOf("0") }
-    var selectedLedgerType by remember { mutableStateOf<LedgerTypeUi?>(null) }
-    var selectedCategory by remember { mutableStateOf<CategoryUi?>(null) }
-    var content by remember { mutableStateOf("") }
-    val enableNext = amount.takeIf { it.toLong() > 0 }.isNullOrEmpty().not() && selectedLedgerType != null && selectedCategory != null
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -62,31 +70,25 @@ private fun LedgerCreateContent(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            LedgerCreateFirstStepContent(
-                amount = amount,
-                selectedLedgerType = selectedLedgerType,
-                selectedCategory = selectedCategory,
-                content = content,
-                amountChange = {},
-                onLedgerTypeClick = {},
-                onCategoryClick = {},
-                onContentChange = {},
-                onNextClick = {},
-            )
-        }
-    }
-}
+            when (uiState.step) {
+                LedgerCreateStep.FIRST -> {
+                    LedgerCreateFirstStepContent(
+                        amount = uiState.amount,
+                        selectedLedgerType = uiState.selectedLedgerType,
+                        selectedCategory = uiState.selectedCategory,
+                        description = uiState.description,
+                        amountChange = setAmount,
+                        onLedgerTypeClick = selectLedgerType,
+                        onCategoryClick = selectCategory,
+                        onDescriptionChange = setDescription,
+                        onNextClick = { setStep(LedgerCreateStep.SECOND) },
+                    )
+                }
 
-@Preview(
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun LedgerCreateContentPreview() {
-    PickleTheme {
-        LedgerCreateContent(
-            date = LocalDate.now(),
-            onNavigateBack = {}
-        )
+                LedgerCreateStep.SECOND -> {
+
+                }
+            }
+        }
     }
 }

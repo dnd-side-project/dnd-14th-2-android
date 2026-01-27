@@ -19,14 +19,16 @@ fun LedgerCreateFirstStepContent(
     amount: String,
     selectedLedgerType: LedgerTypeUi?,
     selectedCategory: CategoryUi?,
-    content: String,
+    description: String,
     amountChange: (String) -> Unit,
     onLedgerTypeClick: (LedgerTypeUi) -> Unit,
     onCategoryClick: (CategoryUi) -> Unit,
-    onContentChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
     onNextClick: () -> Unit
 ) {
-    val enableNext = amount.takeIf { it.toLong() > 0 }.isNullOrEmpty().not() && selectedLedgerType != null && selectedCategory != null
+    val enableNext = amount.toLongOrNull()?.takeIf { it > 0 } != null &&
+            selectedLedgerType != null &&
+            selectedCategory != null
 
     Column(modifier = modifier) {
         LedgerAmountInputField(
@@ -46,9 +48,9 @@ fun LedgerCreateFirstStepContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        LedgerContentInputFiled(
-            value = content,
-            onValueChange = onContentChange,
+        LedgerDescriptionInputFiled(
+            value = description,
+            onValueChange = onDescriptionChange,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -76,12 +78,12 @@ private fun LedgerCreateFirstStepContentPreview() {
         LedgerCreateFirstStepContent(
             amount = "0",
             selectedLedgerType = null,
-            content = "",
+            description = "",
             amountChange = {},
             onLedgerTypeClick = {},
             selectedCategory = null,
             onCategoryClick = {},
-            onContentChange = {},
+            onDescriptionChange = {},
             onNextClick = {},
         )
     }

@@ -27,7 +27,7 @@ import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 
 @Composable
-fun LedgerContentInputFiled(
+fun LedgerDescriptionInputFiled(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -104,14 +104,14 @@ fun LedgerContentInputFiled(
 }
 
 @Preview(
-    name = "LedgerContentInputFiledPreview - Value Empty",
+    name = "LedgerDescriptionInputFiledPreview - Value Empty",
     showBackground = true,
     widthDp = 360
 )
 @Composable
-private fun LedgerContentInputFiledEmptyPreview() {
+private fun LedgerDescriptionInputFiledEmptyPreview() {
     PickleTheme {
-        LedgerContentInputFiled(
+        LedgerDescriptionInputFiled(
             value = "",
             onValueChange = {}
         )
@@ -119,14 +119,14 @@ private fun LedgerContentInputFiledEmptyPreview() {
 }
 
 @Preview(
-    name = "LedgerContentInputFiledPreview - Value Non Empty",
+    name = "LedgerDescriptionInputFiledPreview - Value Non Empty",
     showBackground = true,
     widthDp = 360
 )
 @Composable
-private fun LedgerContentInputFiledPreview() {
+private fun LedgerDescriptionInputFiledPreview() {
     PickleTheme {
-        LedgerContentInputFiled(
+        LedgerDescriptionInputFiled(
             value = "가나다라마바사아자차카타파하.",
             onValueChange = {}
         )
