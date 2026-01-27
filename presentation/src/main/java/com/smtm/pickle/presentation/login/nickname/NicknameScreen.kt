@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,13 +35,26 @@ fun NicknameScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                NicknameViewModel.NavEvent.NavigateToMain -> {
+                    navigator.navigateToMain()
+                }
+
+                NicknameViewModel.NavEvent.Back -> {
+                    navigator.back()
+                }
+            }
+        }
+    }
+
     NicknameContent(
         uiState = uiState,
         onNicknameChanged = viewModel::onNicknameChanged,
         onCheckDuplicate = viewModel::checkDuplicate,
         onSaveNickname = viewModel::saveNickname,
-        onNavigateToMain = navigator::navigateToMain,
-        onBack = navigator::back
+        onBackClick = viewModel::onBackClick,
     )
 }
 
@@ -51,14 +65,13 @@ fun NicknameContent(
     onNicknameChanged: (String) -> Unit = {},
     onCheckDuplicate: () -> Unit = {},
     onSaveNickname: () -> Unit = {},
-    onNavigateToMain: () -> Unit,
-    onBack: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             PickleAppBar(
                 title = "닉네임 입력",
-                navigationItem = NavigationItem.Back(onBack),
+                navigationItem = NavigationItem.Back(onBackClick),
             )
         }
     ) { innerPadding ->
@@ -109,10 +122,7 @@ fun NicknameContent(
             Spacer(modifier = Modifier.weight(1f))
             PickleButton(
                 text = "다음",
-                onClick = {
-                    onSaveNickname()
-                    onNavigateToMain()
-                },
+                onClick = onSaveNickname,
                 enabled = uiState.canSubmit,
                 textColor = PickleTheme.colors.base0
             )
@@ -133,8 +143,7 @@ private fun NicknamePreview() {
             onNicknameChanged = {},
             onCheckDuplicate = {},
             onSaveNickname = {},
-            onNavigateToMain = {},
-            onBack = {}
+            onBackClick = {}
         )
     }
 }

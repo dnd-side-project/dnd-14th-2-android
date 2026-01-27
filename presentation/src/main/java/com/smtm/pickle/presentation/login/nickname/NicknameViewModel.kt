@@ -5,9 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.usecase.nickname.CheckNicknameAvailableUseCase
 import com.smtm.pickle.domain.usecase.nickname.SaveNicknameUseCase
 import com.smtm.pickle.presentation.designsystem.components.textfield.model.InputState
+import com.smtm.pickle.presentation.splash.SplashViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,6 +25,10 @@ class NicknameViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(NicknameUiState())
     val uiState: StateFlow<NicknameUiState> = _uiState.asStateFlow()
+
+    private val _navigationEvent = MutableSharedFlow<NavEvent>(replay = 0)
+    val navigationEvent: SharedFlow<NavEvent> = _navigationEvent.asSharedFlow()
+
 
     /** onValueChange 콜백 함수 */
     fun onNicknameChanged(nickname: String) {
@@ -65,7 +73,17 @@ class NicknameViewModel @Inject constructor(
 
     fun saveNickname() {
         viewModelScope.launch {
-            saveNicknameUseCase(uiState.value.nickname)
+            runCatching {
+                saveNicknameUseCase(uiState.value.nickname)
+            }.onSuccess {
+                _navigationEvent.emit(NavEvent.NavigateToMain)
+            }
+        }
+    }
+
+    fun onBackClick() {
+        viewModelScope.launch {
+            _navigationEvent.emit(NavEvent.Back)
         }
     }
 
@@ -79,5 +97,10 @@ class NicknameViewModel @Inject constructor(
     private companion object {
         const val MAX_NICKNAME_LENGTH = 30
         const val AVAILABLE_LENGTH = 5
+    }
+
+    sealed interface NavEvent {
+        data object NavigateToMain : NavEvent
+        data object Back : NavEvent
     }
 }
