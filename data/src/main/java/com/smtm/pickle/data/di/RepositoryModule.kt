@@ -2,6 +2,8 @@ package com.smtm.pickle.data.di
 
 import com.smtm.pickle.data.repository.UserRepositoryImpl
 import com.smtm.pickle.domain.repository.UserRepository
+import com.smtm.pickle.data.repository.FakeNicknameRepository
+import com.smtm.pickle.domain.repository.NicknameRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    abstract fun bindNicknameRepository(impl: FakeNicknameRepository): NicknameRepository
 }
