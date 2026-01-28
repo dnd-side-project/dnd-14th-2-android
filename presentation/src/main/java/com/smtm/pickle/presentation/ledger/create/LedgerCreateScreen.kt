@@ -40,7 +40,7 @@ fun LedgerCreateScreen(
 
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.uiEffect.collect { effect ->
+            viewModel.sideEffect.collect { effect ->
                 when (effect) {
                     LedgerCreateEffect.NavigateToHome -> {
                         onNavigateToHome()

@@ -29,8 +29,8 @@ class LedgerCreateViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LedgerCreateUiSate())
     val uiState: StateFlow<LedgerCreateUiSate> = _uiState.asStateFlow()
 
-    private val _uiEffect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
-    val uiEffect: SharedFlow<LedgerCreateEffect> = _uiEffect.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
+    val sideEffect: SharedFlow<LedgerCreateEffect> = _sideEffect.asSharedFlow()
 
     fun createLedger(date: LocalDate) {
         viewModelScope.launch {
@@ -46,12 +46,26 @@ class LedgerCreateViewModel @Inject constructor(
 
             val ledgerId = createLedgerUseCase(newLedgerEntry)
 
-            _uiEffect.emit(LedgerCreateEffect.NavigateToHome)
+            _sideEffect.emit(LedgerCreateEffect.NavigateToHome)
         }
     }
 
     fun setStep(step: LedgerCreateStep) {
-        _uiState.update { state -> state.copy(step = step) }
+        _uiState.update { state ->
+            when (step) {
+                LedgerCreateStep.FIRST -> {
+                    state.copy(step = step)
+                }
+
+                LedgerCreateStep.SECOND -> {
+                    state.copy(
+                        step = step,
+                        selectedPaymentMethod = null,
+                        memo = ""
+                    )
+                }
+            }
+        }
     }
 
     fun setAmount(amount: String) {
