@@ -28,9 +28,7 @@ fun OnboardingPagerSection(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HorizontalPager(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(420.dp),
+            modifier = Modifier.fillMaxWidth(),
             state = pagerState,
         ) {
             // TODO: 컨텐츠 변경

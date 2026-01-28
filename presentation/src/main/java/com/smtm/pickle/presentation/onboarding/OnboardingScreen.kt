@@ -57,6 +57,9 @@ private fun OnboardingContent(
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
 
+    val onPrevPage: () -> Unit = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } }
+    val onNextPage: () -> Unit = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } }
+
     Scaffold(
         topBar = {
             PickleAppBar(
@@ -64,7 +67,7 @@ private fun OnboardingContent(
                     NavigationItem.None
                 } else {
                     NavigationItem.Back(
-                        onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } }
+                        onClick = onPrevPage
                     )
                 },
                 actions = {
@@ -82,9 +85,9 @@ private fun OnboardingContent(
             Box(modifier = Modifier.navigationBarsPadding()) {
                 OnboardingBottomButton(
                     currentPage = pagerState.currentPage,
-                    lastPageIndex = 2,
-                    onPrev = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
-                    onNext = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
+                    lastPageIndex = pagerState.pageCount - 1,
+                    onPrev = onPrevPage,
+                    onNext = onNextPage,
                     onFinish = onSkipOrFinish
                 )
             }
