@@ -1,40 +1,44 @@
 package com.smtm.pickle.presentation.onboarding
 
-import android.widget.Toast
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.smtm.pickle.presentation.designsystem.components.appbar.PickleAppBar
+import com.smtm.pickle.presentation.designsystem.components.appbar.model.NavigationItem
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 import com.smtm.pickle.presentation.onboarding.components.OnboardingBottomButton
 import com.smtm.pickle.presentation.onboarding.components.OnboardingPagerSection
-import com.smtm.pickle.presentation.onboarding.components.OnboardingScaffold
-import com.smtm.pickle.presentation.onboarding.components.OnboardingTopBar
 import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
     navigator: AuthNavigator,
-    onCompleted: () -> Unit = {},
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
 
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.events.collect { effect ->
                 when (effect) {
                     is OnboardingEvent.NavigateToLogin -> {
-                        Toast.makeText(context, "온보딩 완료\n로그인 화면으로 이동 구현 필요", Toast.LENGTH_SHORT).show()
-                        onCompleted()
+                        navigator.navigateToLogin()
                     }
                 }
             }
@@ -42,32 +46,61 @@ fun OnboardingScreen(
     }
 
     OnboardingContent(
-        onBack = {},
         onSkipOrFinish = viewModel::completeOnboarding
     )
 }
 
 @Composable
 private fun OnboardingContent(
-    onBack: () -> Unit,
     onSkipOrFinish: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
 
-    OnboardingScaffold(
-        topContent = { OnboardingTopBar(onBack, onSkipOrFinish) },
-        content = { OnboardingPagerSection(pagerState) },
-        bottomContent = {
-            OnboardingBottomButton(
-                currentPage = pagerState.currentPage,
-                lastPageIndex = 3,
-                onPrev = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
-                onNext = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
-                onFinish = onSkipOrFinish
+    Scaffold(
+        topBar = {
+            PickleAppBar(
+                navigationItem = if (pagerState.currentPage == 0) {
+                    NavigationItem.None
+                } else {
+                    NavigationItem.Back(
+                        onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } }
+                    )
+                },
+                actions = {
+                    TextButton(onClick = onSkipOrFinish) {
+                        Text(
+                            text = "건너뛰기",
+                            style = PickleTheme.typography.body1Bold,
+                            color = PickleTheme.colors.primary500
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            Box(modifier = Modifier.navigationBarsPadding()) {
+                OnboardingBottomButton(
+                    currentPage = pagerState.currentPage,
+                    lastPageIndex = 2,
+                    onPrev = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
+                    onNext = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
+                    onFinish = onSkipOrFinish
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            OnboardingPagerSection(
+                modifier = Modifier.align(Alignment.Center),
+                pagerState = pagerState
             )
         }
-    )
+    }
 }
 
 @Preview
@@ -75,7 +108,6 @@ private fun OnboardingContent(
 private fun OnboardingPreview() {
     PickleTheme {
         OnboardingContent(
-            onBack = {},
             onSkipOrFinish = {}
         )
     }
