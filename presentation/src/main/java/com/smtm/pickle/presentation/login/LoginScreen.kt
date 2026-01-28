@@ -17,7 +17,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     LoginContent(
-        onLoginClick = navigator::navigateToMain
+        onLoginClick = navigator::navigateToNickname
     )
 }
 
