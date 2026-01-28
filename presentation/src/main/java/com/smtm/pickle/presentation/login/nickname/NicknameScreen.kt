@@ -37,13 +37,13 @@ fun NicknameScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.navigationEvent.collect { event ->
+        viewModel.nicknameEffect.collect { event ->
             when (event) {
-                NicknameViewModel.NavEffect.NavigateToMain -> {
+                NicknameViewModel.NicknameEffect.NavigateToMain -> {
                     navigator.navigateToMain()
                 }
 
-                NicknameViewModel.NavEffect.Back -> {
+                NicknameViewModel.NicknameEffect.Back -> {
                     navigator.back()
                 }
             }
