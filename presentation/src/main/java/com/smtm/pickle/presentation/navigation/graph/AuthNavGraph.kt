@@ -67,9 +67,5 @@ private fun rememberAuthNavigator(
         override fun navigateToMain() {
             onNavigateToMain()
         }
-
-        override fun back() {
-            navController.popBackStack()
-        }
     }
 }
