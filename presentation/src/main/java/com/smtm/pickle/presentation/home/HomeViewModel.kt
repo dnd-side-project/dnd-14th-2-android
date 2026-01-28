@@ -35,11 +35,7 @@ class HomeViewModel @Inject constructor(
     private var previousMonth: YearMonth? = null
     private var currentActiveMonth: YearMonth? = null
 
-    init {
-        loadInitialLedgers()
-    }
-
-    private fun loadInitialLedgers() {
+    fun loadInitialLedgers() {
         viewModelScope.launch {
             val entries = getInitialLedgersUseCase()
 

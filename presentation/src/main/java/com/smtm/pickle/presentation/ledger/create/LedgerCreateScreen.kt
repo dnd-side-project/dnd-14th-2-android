@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,6 +20,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.common.extension.clearFocusOnBackgroundTab
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
@@ -36,9 +40,23 @@ fun LedgerCreateScreen(
     viewModel: LedgerCreateViewModel = hiltViewModel(),
     date: LocalDate,
     onNavigateBack: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
 
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(viewModel, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.uiEffect.collect { effect ->
+                when (effect) {
+                    LedgerCreateEffect.NavigateToHome -> {
+                        onNavigateToHome()
+                    }
+                }
+            }
+        }
+    }
 
     LedgerCreateContent(
         date = date,
@@ -50,6 +68,7 @@ fun LedgerCreateScreen(
         setStep = viewModel::setStep,
         selectPaymentMethod = viewModel::selectPaymentMethod,
         setMemo = viewModel::setMemo,
+        createLedger = viewModel::createLedger,
         onNavigateBack = onNavigateBack,
     )
 }
@@ -66,6 +85,7 @@ private fun LedgerCreateContent(
     setStep: (LedgerCreateStep) -> Unit,
     selectPaymentMethod: (PaymentMethodUi) -> Unit,
     setMemo: (String) -> Unit,
+    createLedger: (LocalDate) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -78,7 +98,12 @@ private fun LedgerCreateContent(
         topBar = {
             LedgerCreateTopBar(
                 text = stringResource(R.string.ledger_create_date_format, date.year, date.monthValue, date.dayOfMonth),
-                onNavigationClick = onNavigateBack,
+                onNavigationClick = {
+                    when (uiState.step) {
+                        LedgerCreateStep.FIRST -> onNavigateBack()
+                        LedgerCreateStep.SECOND -> setStep(LedgerCreateStep.FIRST)
+                    }
+                },
                 step = uiState.step
             )
         },
@@ -97,7 +122,7 @@ private fun LedgerCreateContent(
                 enabledSuccess = uiState.selectedPaymentMethod != null,
                 onNextClick = { setStep(LedgerCreateStep.SECOND) },
                 onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
-                onSuccessClick = { },
+                onSuccessClick = { createLedger(date) },
             )
         }
     ) { paddingValues ->

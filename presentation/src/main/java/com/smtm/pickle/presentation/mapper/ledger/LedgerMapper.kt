@@ -44,6 +44,30 @@ fun List<LedgerEntry>.toDailyLedgerUiModel(): List<DailyLedgerUi> =
         }
         .sortedByDescending { it.date }
 
+fun LedgerTypeUi.toDomain(): LedgerType = when (this) {
+    LedgerTypeUi.Income -> LedgerType.INCOME
+    LedgerTypeUi.Expense -> LedgerType.EXPENSE
+}
+
+fun CategoryUi.toDomain(): Category = when (this) {
+    CategoryUi.Food -> Category.FOOD
+    CategoryUi.Transport -> Category.TRANSPORT
+    CategoryUi.Housing -> Category.HOUSING
+    CategoryUi.Shopping -> Category.SHOPPING
+    CategoryUi.HealthMedical -> Category.HEALTH_MEDICAL
+    CategoryUi.EducationSelfDevelopment -> Category.EDUCATION_SELF_DEVELOPMENT
+    CategoryUi.LeisureHobby -> Category.LEISURE_HOBBY
+    CategoryUi.SavingFinance -> Category.SAVING_FINANCE
+    CategoryUi.Other -> Category.OTHER
+}
+
+fun PaymentMethodUi.toDomain(): PaymentMethod = when (this) {
+    PaymentMethodUi.CreditCard -> PaymentMethod.CREDIT_CARD
+    PaymentMethodUi.DebitCard -> PaymentMethod.DEBIT_CARD
+    PaymentMethodUi.Cash -> PaymentMethod.CASH
+    PaymentMethodUi.BankTransfer -> PaymentMethod.BANK_TRANSFER
+}
+
 private fun LedgerType.toUiModel(): LedgerTypeUi = when (this) {
     LedgerType.INCOME -> LedgerTypeUi.Income
     LedgerType.EXPENSE -> LedgerTypeUi.Expense

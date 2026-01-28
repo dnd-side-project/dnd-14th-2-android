@@ -5,19 +5,45 @@ import com.smtm.pickle.domain.model.ledger.LedgerEntry
 import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.Money
+import com.smtm.pickle.domain.model.ledger.NewLedgerEntry
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
 import com.smtm.pickle.domain.repository.ledger.LedgerRepository
 import java.time.LocalDate
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FakeLedgerRepository @Inject constructor() : LedgerRepository {
 
-    private val fakeLedgers: List<LedgerEntry> = generateFakeLedgers()
+    private val idGenerator = AtomicLong(1000L)
+
+    private val fakeLedgers: MutableList<LedgerEntry> = mutableListOf<LedgerEntry>().apply {
+        addAll(generateFakeLedgers())
+    }
 
     override fun getLedgers(from: LocalDate, to: LocalDate): List<LedgerEntry> {
         return fakeLedgers.filter { entry ->
             entry.occurredOn in from..to
         }
+    }
+
+    override suspend fun createLedger(newLedger: NewLedgerEntry): LedgerId {
+        val newId = idGenerator.incrementAndGet()
+
+        val entry = LedgerEntry(
+            id = LedgerId(newId),
+            type = newLedger.type,
+            amount = newLedger.amount,
+            category = newLedger.category,
+            description = newLedger.description ?: newLedger.category.name,
+            occurredOn = newLedger.occurredOn,
+            paymentMethod = newLedger.paymentMethod,
+            memo = newLedger.memo
+        )
+        fakeLedgers.add(entry)
+
+        return LedgerId(newId)
     }
 
     private fun generateFakeLedgers(): List<LedgerEntry> {

@@ -1,23 +1,54 @@
 package com.smtm.pickle.presentation.ledger.create
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.smtm.pickle.domain.model.ledger.Money
+import com.smtm.pickle.domain.model.ledger.NewLedgerEntry
+import com.smtm.pickle.domain.usecase.ledger.create.CreateLedgerUseCase
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
+import com.smtm.pickle.presentation.mapper.ledger.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class LedgerCreateViewModel @Inject constructor(
-
+    private val createLedgerUseCase: CreateLedgerUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LedgerCreateUiSate())
     val uiState: StateFlow<LedgerCreateUiSate> = _uiState.asStateFlow()
+
+    private val _uiEffect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
+    val uiEffect: SharedFlow<LedgerCreateEffect> = _uiEffect.asSharedFlow()
+
+    fun createLedger(date: LocalDate) {
+        viewModelScope.launch {
+            val newLedgerEntry = NewLedgerEntry(
+                type = _uiState.value.selectedLedgerType!!.toDomain(),
+                amount = Money(_uiState.value.amount.toLong()),
+                category = _uiState.value.selectedCategory!!.toDomain(),
+                description = _uiState.value.description,
+                occurredOn = date,
+                paymentMethod = _uiState.value.selectedPaymentMethod!!.toDomain(),
+                memo = _uiState.value.memo.takeIf { it.isNotEmpty() }
+            )
+
+            val ledgerId = createLedgerUseCase(newLedgerEntry)
+
+            _uiEffect.emit(LedgerCreateEffect.NavigateToHome)
+        }
+    }
 
     fun setStep(step: LedgerCreateStep) {
         _uiState.update { state -> state.copy(step = step) }
@@ -57,5 +88,9 @@ data class LedgerCreateUiSate(
     val selectedPaymentMethod: PaymentMethodUi? = null,
     val memo: String = "",
 )
+
+sealed interface LedgerCreateEffect {
+    data object NavigateToHome : LedgerCreateEffect
+}
 
 enum class LedgerCreateStep { FIRST, SECOND }

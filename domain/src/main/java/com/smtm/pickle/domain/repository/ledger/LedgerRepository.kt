@@ -1,6 +1,8 @@
 package com.smtm.pickle.domain.repository.ledger
 
 import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.LedgerId
+import com.smtm.pickle.domain.model.ledger.NewLedgerEntry
 import java.time.LocalDate
 
 interface LedgerRepository {
@@ -11,4 +13,6 @@ interface LedgerRepository {
      * @param to 종료일
      */
     fun getLedgers(from: LocalDate, to: LocalDate): List<LedgerEntry>
+
+    suspend fun createLedger(newLedger: NewLedgerEntry): LedgerId
 }
