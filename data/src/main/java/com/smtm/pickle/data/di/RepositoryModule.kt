@@ -18,5 +18,6 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 
+    @Binds
     abstract fun bindNicknameRepository(impl: FakeNicknameRepository): NicknameRepository
 }
