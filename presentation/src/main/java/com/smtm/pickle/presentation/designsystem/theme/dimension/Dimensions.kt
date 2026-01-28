@@ -21,8 +21,11 @@ object Dimensions {
     val iconMedium = 24.dp
     val iconSmall = 20.dp
 
-    // 스낵바, 앱바
-    val barHeight = 56.dp
+    // 스낵바
+    val snackbarHeight = 56.dp
+
+    // 앱바
+    val appbarHeight = 56.dp
 
     // 칩
     /** 바텀시트, 다이얼로그 등 내부 칩 */

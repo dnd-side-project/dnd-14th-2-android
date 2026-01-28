@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -38,11 +39,11 @@ fun NicknameScreen(
     LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect { event ->
             when (event) {
-                NicknameViewModel.NavEvent.NavigateToMain -> {
+                NicknameViewModel.NavEffect.NavigateToMain -> {
                     navigator.navigateToMain()
                 }
 
-                NicknameViewModel.NavEvent.Back -> {
+                NicknameViewModel.NavEffect.Back -> {
                     navigator.back()
                 }
             }
@@ -77,6 +78,8 @@ fun NicknameContent(
         bottomBar = {
             PickleButton(
                 modifier = Modifier
+                    .navigationBarsPadding()
+                    .imePadding()
                     .padding(bottom = 14.dp)
                     .padding(horizontal = 16.dp),
                 text = "다음",
@@ -90,8 +93,7 @@ fun NicknameContent(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .imePadding(),
+                .padding(horizontal = 16.dp),
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
