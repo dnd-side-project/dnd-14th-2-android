@@ -21,8 +21,11 @@ class OnboardingViewModel @Inject constructor(
 
     fun completeOnboarding() {
         viewModelScope.launch {
-            setOnboardingCompleteUseCase()
-            _events.emit(OnboardingEvent.NavigateToLogin)
+            runCatching {
+                setOnboardingCompleteUseCase()
+            }.onSuccess {
+                _events.emit(OnboardingEvent.NavigateToLogin)
+            }
         }
     }
 
