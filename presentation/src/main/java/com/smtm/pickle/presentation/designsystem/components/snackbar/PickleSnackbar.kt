@@ -57,7 +57,7 @@ fun PickleSnackbar(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .height(Dimensions.barHeight)
+            .height(Dimensions.snackbarHeight)
             .clip(RoundedCornerShape(Dimensions.radius))
             .background(PickleTheme.colors.base60)
             .padding(16.dp),

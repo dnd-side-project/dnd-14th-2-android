@@ -46,7 +46,7 @@ fun PickleAppBar(
                 .fillMaxWidth()
                 .background(color = color)
                 .statusBarsPadding()
-                .height(Dimensions.barHeight)
+                .height(Dimensions.appbarHeight)
         ) {
             when (alignment) {
                 AppBarAlignment.Start -> {
@@ -101,7 +101,7 @@ fun PickleSearchAppBar(
             .fillMaxWidth()
             .background(PickleTheme.colors.base0)
             .statusBarsPadding()
-            .height(Dimensions.barHeight)
+            .height(Dimensions.appbarHeight)
             .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
