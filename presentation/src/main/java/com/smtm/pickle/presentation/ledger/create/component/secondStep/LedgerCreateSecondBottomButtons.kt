@@ -1,4 +1,4 @@
-package com.smtm.pickle.presentation.ledger.create.component
+package com.smtm.pickle.presentation.ledger.create.component.secondStep
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,56 +11,9 @@ import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.components.button.PickleButton
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
-import com.smtm.pickle.presentation.ledger.create.LedgerCreateStep
 
 @Composable
-fun LedgerCreateBottomBar(
-    modifier: Modifier = Modifier,
-    step: LedgerCreateStep,
-    enableNext: Boolean,
-    enabledSuccess: Boolean,
-    onNextClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    onSuccessClick: () -> Unit,
-) {
-    when (step) {
-        LedgerCreateStep.FIRST -> {
-            LedgerCreateFirstBottomButton(
-                modifier = modifier,
-                enableNext = enableNext,
-                onNextClick = onNextClick
-            )
-        }
-
-        LedgerCreateStep.SECOND -> {
-            LedgerCreateSecondBottomButtons(
-                modifier = modifier,
-                enabledSuccess = enabledSuccess,
-                onPreviousClick = onPreviousClick,
-                onSuccessClick = onSuccessClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun LedgerCreateFirstBottomButton(
-    modifier: Modifier = Modifier,
-    enableNext: Boolean,
-    onNextClick: () -> Unit
-) {
-    PickleButton(
-        modifier = modifier,
-        text = stringResource(R.string.common_next),
-        onClick = onNextClick,
-        enabled = enableNext,
-        color = if (enableNext) PickleTheme.colors.primary400 else PickleTheme.colors.gray100,
-        textColor = if (enableNext) PickleTheme.colors.base0 else PickleTheme.colors.gray600,
-    )
-}
-
-@Composable
-private fun LedgerCreateSecondBottomButtons(
+fun LedgerCreateSecondBottomButtons(
     modifier: Modifier = Modifier,
     enabledSuccess: Boolean,
     onPreviousClick: () -> Unit,
@@ -85,36 +38,6 @@ private fun LedgerCreateSecondBottomButtons(
             textColor = if (enabledSuccess) PickleTheme.colors.base0 else PickleTheme.colors.gray600,
             onClick = onSuccessClick,
             enabled = enabledSuccess,
-        )
-    }
-}
-
-@Preview(
-    name = "LedgerCreateFirstBottomButtonPreview - Disable",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun LedgerCreateFirstBottomButtonDisablePreview() {
-    PickleTheme {
-        LedgerCreateFirstBottomButton(
-            enableNext = false,
-            onNextClick = {}
-        )
-    }
-}
-
-@Preview(
-    name = "LedgerCreateFirstBottomButtonPreview - Enable",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun LedgerCreateFirstBottomButtonEnablePreview() {
-    PickleTheme {
-        LedgerCreateFirstBottomButton(
-            enableNext = true,
-            onNextClick = {}
         )
     }
 }

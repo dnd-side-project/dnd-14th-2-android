@@ -31,7 +31,6 @@ import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderTe
 @Composable
 fun LedgerDescriptionInputFiled(
     modifier: Modifier = Modifier,
-    inputModifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
 ) {
@@ -53,7 +52,7 @@ fun LedgerDescriptionInputFiled(
         Spacer(modifier = Modifier.height(10.dp))
 
         BasicTextField(
-            modifier = inputModifier
+            modifier = Modifier
                 .border(
                     shape = RoundedCornerShape(Dimensions.radius),
                     width = borderWidth,
