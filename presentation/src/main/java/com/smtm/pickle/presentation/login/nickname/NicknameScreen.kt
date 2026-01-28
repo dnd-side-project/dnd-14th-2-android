@@ -42,10 +42,6 @@ fun NicknameScreen(
                 NicknameViewModel.NicknameEffect.NavigateToMain -> {
                     navigator.navigateToMain()
                 }
-
-                NicknameViewModel.NicknameEffect.Back -> {
-                    navigator.back()
-                }
             }
         }
     }

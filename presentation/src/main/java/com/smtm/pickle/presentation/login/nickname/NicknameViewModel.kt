@@ -103,6 +103,5 @@ class NicknameViewModel @Inject constructor(
 
     sealed interface NicknameEffect {
         data object NavigateToMain : NicknameEffect
-        data object Back : NicknameEffect
     }
 }
