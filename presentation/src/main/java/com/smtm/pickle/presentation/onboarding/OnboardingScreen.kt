@@ -35,9 +35,9 @@ fun OnboardingScreen(
 
     LaunchedEffect(viewModel, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.events.collect { effect ->
+            viewModel.effect.collect { effect ->
                 when (effect) {
-                    is OnboardingEvent.NavigateToLogin -> {
+                    is OnboardingEffect.NavigateToLogin -> {
                         navigator.navigateToLogin()
                     }
                 }

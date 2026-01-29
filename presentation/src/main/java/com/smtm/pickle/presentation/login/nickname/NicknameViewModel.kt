@@ -25,8 +25,8 @@ class NicknameViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NicknameUiState())
     val uiState: StateFlow<NicknameUiState> = _uiState.asStateFlow()
 
-    private val _nicknameEffect = MutableSharedFlow<NicknameEffect>(replay = 0)
-    val nicknameEffect: SharedFlow<NicknameEffect> = _nicknameEffect.asSharedFlow()
+    private val _effect = MutableSharedFlow<NicknameEffect>(replay = 0)
+    val effect: SharedFlow<NicknameEffect> = _effect.asSharedFlow()
 
 
     /** onValueChange 콜백 함수 */
@@ -78,14 +78,14 @@ class NicknameViewModel @Inject constructor(
             runCatching {
                 saveNicknameUseCase(uiState.value.nickname)
             }.onSuccess {
-                _nicknameEffect.emit(NicknameEffect.NavigateToMain)
+                _effect.emit(NicknameEffect.NavigateToMain)
             }
         }
     }
 
     fun onBackClick() {
         viewModelScope.launch {
-            _nicknameEffect.emit(NicknameEffect.NavigateToMain)
+            _effect.emit(NicknameEffect.NavigateToMain)
         }
     }
 

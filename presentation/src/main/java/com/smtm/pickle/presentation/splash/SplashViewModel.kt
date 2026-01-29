@@ -16,8 +16,8 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase
 ) : ViewModel() {
-    private val _splashEffect = MutableSharedFlow<SplashEffect>(replay = 0)
-    val splashEffect: SharedFlow<SplashEffect> = _splashEffect.asSharedFlow()
+    private val _effect = MutableSharedFlow<SplashEffect>(replay = 0)
+    val effect: SharedFlow<SplashEffect> = _effect.asSharedFlow()
 
     init {
         checkInitialDestination()
@@ -30,11 +30,11 @@ class SplashViewModel @Inject constructor(
             val isOnboardingCompleted = getOnboardingStatusUseCase().first()
 
             when {
-                !isOnboardingCompleted -> _splashEffect.emit(SplashEffect.NavigateToOnboarding)
+                !isOnboardingCompleted -> _effect.emit(SplashEffect.NavigateToOnboarding)
 
                 // TODO: 로그인 상태 확인 후 로그인 화면 이동 이벤트 발행
 
-                else -> _splashEffect.emit(SplashEffect.NavigateToMain)
+                else -> _effect.emit(SplashEffect.NavigateToMain)
             }
         }
     }

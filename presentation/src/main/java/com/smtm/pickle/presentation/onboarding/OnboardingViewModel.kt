@@ -15,8 +15,8 @@ class OnboardingViewModel @Inject constructor(
     private val setOnboardingCompleteUseCase: SetOnboardingCompleteUseCase,
 ) : ViewModel() {
 
-    private val _events = MutableSharedFlow<OnboardingEvent>(replay = 0)
-    val events: SharedFlow<OnboardingEvent> = _events.asSharedFlow()
+    private val _effect = MutableSharedFlow<OnboardingEffect>(replay = 0)
+    val effect: SharedFlow<OnboardingEffect> = _effect.asSharedFlow()
 
 
     fun completeOnboarding() {
@@ -24,13 +24,13 @@ class OnboardingViewModel @Inject constructor(
             runCatching {
                 setOnboardingCompleteUseCase()
             }.onSuccess {
-                _events.emit(OnboardingEvent.NavigateToLogin)
+                _effect.emit(OnboardingEffect.NavigateToLogin)
             }
         }
     }
 
 }
 
-sealed interface OnboardingEvent {
-    object NavigateToLogin : OnboardingEvent
+sealed interface OnboardingEffect {
+    object NavigateToLogin : OnboardingEffect
 }

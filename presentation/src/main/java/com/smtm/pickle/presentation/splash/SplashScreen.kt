@@ -16,7 +16,7 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        viewModel.splashEffect.collect { event ->
+        viewModel.effect.collect { event ->
             when (event) {
                 SplashViewModel.SplashEffect.NavigateToOnboarding -> navigator.navigateToOnboarding()
                 SplashViewModel.SplashEffect.NavigateToLogin -> navigator.navigateToLogin()
