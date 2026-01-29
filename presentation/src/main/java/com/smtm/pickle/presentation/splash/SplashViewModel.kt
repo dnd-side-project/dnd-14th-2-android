@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.usecase.onboarding.GetOnboardingStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,17 +26,19 @@ class SplashViewModel @Inject constructor(
 
     private fun checkInitialDestination() {
         viewModelScope.launch {
+            val isOnboardingCompletedDeferred = async { getOnboardingStatusUseCase().first() }
+
             delay(1500L)
 
-            val isOnboardingCompleted = getOnboardingStatusUseCase().first()
-
-            when {
-                !isOnboardingCompleted -> _effect.emit(SplashEffect.NavigateToOnboarding)
+            val navEffect = when {
+                !isOnboardingCompletedDeferred.await() -> SplashEffect.NavigateToOnboarding
 
                 // TODO: 로그인 상태 확인 후 로그인 화면 이동 이벤트 발행
 
-                else -> _effect.emit(SplashEffect.NavigateToMain)
+                else -> SplashEffect.NavigateToMain
             }
+
+            _effect.emit(navEffect)
         }
     }
 

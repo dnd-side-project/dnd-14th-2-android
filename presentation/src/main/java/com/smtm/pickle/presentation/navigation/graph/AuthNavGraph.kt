@@ -51,7 +51,9 @@ private fun rememberAuthNavigator(
 ): AuthNavigator = remember(navController) {
     object : AuthNavigator {
         override fun navigateToOnboarding() {
-            navController.navigate(OnboardingRoute)
+            navController.navigate(OnboardingRoute) {
+                popUpTo(SplashRoute) { inclusive = true }
+            }
         }
 
         override fun navigateToLogin() {
