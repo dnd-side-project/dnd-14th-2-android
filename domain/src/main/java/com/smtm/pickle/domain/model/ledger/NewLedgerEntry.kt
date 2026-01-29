@@ -5,7 +5,7 @@ import java.time.LocalDate
 data class NewLedgerEntry(
     val type: LedgerType,
     val amount: Money,
-    val category: Category,
+    val category: LedgerCategory,
     val description: String?,
     val occurredOn: LocalDate,
     val paymentMethod: PaymentMethod,

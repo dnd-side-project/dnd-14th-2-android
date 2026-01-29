@@ -1,6 +1,6 @@
 package com.smtm.pickle.presentation.mapper.ledger
 
-import com.smtm.pickle.domain.model.ledger.Category
+import com.smtm.pickle.domain.model.ledger.LedgerCategory
 import com.smtm.pickle.domain.model.ledger.LedgerEntry
 import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
@@ -49,16 +49,16 @@ fun LedgerTypeUi.toDomain(): LedgerType = when (this) {
     LedgerTypeUi.Expense -> LedgerType.EXPENSE
 }
 
-fun CategoryUi.toDomain(): Category = when (this) {
-    CategoryUi.Food -> Category.FOOD
-    CategoryUi.Transport -> Category.TRANSPORT
-    CategoryUi.Housing -> Category.HOUSING
-    CategoryUi.Shopping -> Category.SHOPPING
-    CategoryUi.HealthMedical -> Category.HEALTH_MEDICAL
-    CategoryUi.EducationSelfDevelopment -> Category.EDUCATION_SELF_DEVELOPMENT
-    CategoryUi.LeisureHobby -> Category.LEISURE_HOBBY
-    CategoryUi.SavingFinance -> Category.SAVING_FINANCE
-    CategoryUi.Other -> Category.OTHER
+fun CategoryUi.toDomain(): LedgerCategory = when (this) {
+    CategoryUi.Food -> LedgerCategory.FOOD
+    CategoryUi.Transport -> LedgerCategory.TRANSPORT
+    CategoryUi.Housing -> LedgerCategory.HOUSING
+    CategoryUi.Shopping -> LedgerCategory.SHOPPING
+    CategoryUi.HealthMedical -> LedgerCategory.HEALTH_MEDICAL
+    CategoryUi.EducationSelfDevelopment -> LedgerCategory.EDUCATION_SELF_DEVELOPMENT
+    CategoryUi.LeisureHobby -> LedgerCategory.LEISURE_HOBBY
+    CategoryUi.SavingFinance -> LedgerCategory.SAVING_FINANCE
+    CategoryUi.Other -> LedgerCategory.OTHER
 }
 
 fun PaymentMethodUi.toDomain(): PaymentMethod = when (this) {
@@ -73,16 +73,16 @@ private fun LedgerType.toUiModel(): LedgerTypeUi = when (this) {
     LedgerType.EXPENSE -> LedgerTypeUi.Expense
 }
 
-private fun Category.toUiModel(): CategoryUi = when (this) {
-    Category.FOOD -> CategoryUi.Food
-    Category.TRANSPORT -> CategoryUi.Transport
-    Category.HOUSING -> CategoryUi.Housing
-    Category.SHOPPING -> CategoryUi.Shopping
-    Category.HEALTH_MEDICAL -> CategoryUi.HealthMedical
-    Category.EDUCATION_SELF_DEVELOPMENT -> CategoryUi.EducationSelfDevelopment
-    Category.LEISURE_HOBBY -> CategoryUi.LeisureHobby
-    Category.SAVING_FINANCE -> CategoryUi.SavingFinance
-    Category.OTHER -> CategoryUi.Other
+private fun LedgerCategory.toUiModel(): CategoryUi = when (this) {
+    LedgerCategory.FOOD -> CategoryUi.Food
+    LedgerCategory.TRANSPORT -> CategoryUi.Transport
+    LedgerCategory.HOUSING -> CategoryUi.Housing
+    LedgerCategory.SHOPPING -> CategoryUi.Shopping
+    LedgerCategory.HEALTH_MEDICAL -> CategoryUi.HealthMedical
+    LedgerCategory.EDUCATION_SELF_DEVELOPMENT -> CategoryUi.EducationSelfDevelopment
+    LedgerCategory.LEISURE_HOBBY -> CategoryUi.LeisureHobby
+    LedgerCategory.SAVING_FINANCE -> CategoryUi.SavingFinance
+    LedgerCategory.OTHER -> CategoryUi.Other
 }
 
 private fun PaymentMethod.toUiModel(): PaymentMethodUi = when (this) {

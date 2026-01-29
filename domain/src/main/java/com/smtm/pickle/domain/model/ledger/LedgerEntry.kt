@@ -16,7 +16,7 @@ data class LedgerEntry(
     val id: LedgerId,
     val type: LedgerType,
     val amount: Money,
-    val category: Category,
+    val category: LedgerCategory,
     val description: String,
     val occurredOn: LocalDate,
     val paymentMethod: PaymentMethod? = null,
@@ -29,7 +29,7 @@ enum class PaymentMethod {
     BANK_TRANSFER, CREDIT_CARD, CASH, DEBIT_CARD
 }
 
-enum class Category {
+enum class LedgerCategory {
     FOOD,
     TRANSPORT,
     HOUSING,

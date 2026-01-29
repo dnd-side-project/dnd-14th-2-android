@@ -1,6 +1,6 @@
 package com.smtm.pickle.data.repository.ledger
 
-import com.smtm.pickle.domain.model.ledger.Category
+import com.smtm.pickle.domain.model.ledger.LedgerCategory
 import com.smtm.pickle.domain.model.ledger.LedgerEntry
 import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.model.ledger.LedgerType
@@ -74,7 +74,7 @@ class FakeLedgerRepository @Inject constructor() : LedgerRepository {
                 id = LedgerId(id),
                 type = LedgerType.INCOME,
                 amount = Money(listOf(100_000L, 500_000L, 1_000_000L, 2_500_000L).random()),
-                category = Category.entries.random(),
+                category = LedgerCategory.entries.random(),
                 description = listOf("월급", "용돈", "부수입", "이자").random(),
                 occurredOn = date,
                 paymentMethod = PaymentMethod.entries.random()
@@ -84,7 +84,7 @@ class FakeLedgerRepository @Inject constructor() : LedgerRepository {
                 id = LedgerId(id),
                 type = LedgerType.EXPENSE,
                 amount = Money(listOf(5_000L, 12_000L, 25_000L, 45_000L, 80_000L).random()),
-                category = Category.entries.random(),
+                category = LedgerCategory.entries.random(),
                 description = listOf("점심", "커피", "택시", "쇼핑", "마트").random(),
                 occurredOn = date,
                 paymentMethod = PaymentMethod.entries.random()

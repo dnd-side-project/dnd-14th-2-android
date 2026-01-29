@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.common.utils.ThousandsSeparatorTransformation
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 
@@ -31,6 +33,9 @@ fun LedgerAmountInputField(
 ) {
     val focusManager = LocalFocusManager.current
     BasicTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp, vertical = 20.dp),
         value = value,
         onValueChange = { new ->
             val digitsOnly = new.filter(Char::isDigit)
@@ -48,9 +53,6 @@ fun LedgerAmountInputField(
             textAlign = TextAlign.End
         ),
         visualTransformation = ThousandsSeparatorTransformation(emptyText = EmptyDigit),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 18.dp, vertical = 20.dp),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -58,7 +60,7 @@ fun LedgerAmountInputField(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "₩",
+                    text = stringResource(R.string.common_currency_won),
                     style = PickleTheme.typography.head4SemiBold.copy(fontSize = 48.sp),
                     color = PickleTheme.colors.gray700
                 )

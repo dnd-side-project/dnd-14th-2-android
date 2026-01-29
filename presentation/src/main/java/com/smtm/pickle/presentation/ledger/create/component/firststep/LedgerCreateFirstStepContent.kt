@@ -23,7 +23,7 @@ fun LedgerCreateFirstStepContent(
     selectedLedgerType: LedgerTypeUi?,
     selectedCategory: CategoryUi?,
     description: String,
-    amountChange: (String) -> Unit,
+    onAmountChange: (String) -> Unit,
     onLedgerTypeClick: (LedgerTypeUi) -> Unit,
     onCategoryClick: (CategoryUi) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -38,9 +38,9 @@ fun LedgerCreateFirstStepContent(
             .verticalScroll(scrollState)
     ) {
         LedgerAmountInputField(
-            modifier = Modifier.padding(top = 40.dp),
+            modifier = Modifier.padding(top = 30.dp),
             value = amount,
-            onValueChange = amountChange,
+            onValueChange = onAmountChange,
         )
 
         LedgerTypeSelectors(
@@ -65,8 +65,6 @@ fun LedgerCreateFirstStepContent(
         Spacer(modifier = Modifier.weight(1f))
 
         LedgerCreateFirstBottomButton(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
             enableNext = amount.toLongOrNull()?.takeIf { it > 0 } != null &&
                     selectedLedgerType != null &&
                     selectedCategory != null,
@@ -87,7 +85,7 @@ private fun LedgerCreateFirstStepContentPreview() {
             amount = "0",
             selectedLedgerType = null,
             description = "",
-            amountChange = {},
+            onAmountChange = {},
             onLedgerTypeClick = {},
             selectedCategory = null,
             onCategoryClick = {},

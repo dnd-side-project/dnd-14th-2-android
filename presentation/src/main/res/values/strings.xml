@@ -47,5 +47,6 @@
     <string name="common_previous">이전</string>
     <string name="common_next">다음</string>
     <string name="common_input_success">선택완료</string>
+    <string name="common_currency_won">₩</string>
 
 </resources>

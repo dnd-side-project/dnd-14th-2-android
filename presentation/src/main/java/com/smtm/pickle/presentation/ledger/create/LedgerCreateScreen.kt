@@ -107,7 +107,7 @@ private fun LedgerCreateContent(
                     selectedLedgerType = uiState.selectedLedgerType,
                     selectedCategory = uiState.selectedCategory,
                     description = uiState.description,
-                    amountChange = setAmount,
+                    onAmountChange = setAmount,
                     onLedgerTypeClick = selectLedgerType,
                     onCategoryClick = selectCategory,
                     onDescriptionChange = setDescription,
