@@ -17,7 +17,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase
 ) : ViewModel() {
-    private val _effect = MutableSharedFlow<SplashEffect>(replay = 0)
+    private val _effect = MutableSharedFlow<SplashEffect>(replay = 1)
     val effect: SharedFlow<SplashEffect> = _effect.asSharedFlow()
 
     init {
@@ -26,7 +26,10 @@ class SplashViewModel @Inject constructor(
 
     private fun checkInitialDestination() {
         viewModelScope.launch {
-            val isOnboardingCompletedDeferred = async { getOnboardingStatusUseCase().first() }
+            val isOnboardingCompletedDeferred = async {
+                runCatching { getOnboardingStatusUseCase().first() }
+                    .getOrDefault(false)
+            }
 
             delay(1500L)
 
