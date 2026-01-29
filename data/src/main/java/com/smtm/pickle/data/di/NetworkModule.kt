@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://jsonplaceholder.typicode.com/" // TODO: 추후 서버 주소 삽입
+    private const val BASE_URL = "https://pickledev.duckdns.org/"
 
     @Provides
     @Singleton
