@@ -32,6 +32,7 @@ fun LedgerAmountInputField(
     onValueChange: (String) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
+
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()

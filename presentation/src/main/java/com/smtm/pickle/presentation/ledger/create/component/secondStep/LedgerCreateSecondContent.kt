@@ -51,8 +51,6 @@ fun LedgerCreateSecondContent(
         Spacer(modifier = Modifier.weight(1f))
 
         LedgerCreateSecondBottomButtons(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
             enabledSuccess = selectedPaymentMethod != null,
             onPreviousClick = onPreviousClick,
             onSuccessClick = onSuccessClick,

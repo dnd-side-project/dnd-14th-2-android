@@ -2,6 +2,7 @@ package com.smtm.pickle.presentation.ledger.create.component.secondStep
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,8 @@ fun LedgerCreateSecondBottomButtons(
     onSuccessClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PickleButton(
