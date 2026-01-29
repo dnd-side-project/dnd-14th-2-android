@@ -2,6 +2,7 @@ package com.smtm.pickle.presentation.onboarding.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +23,8 @@ fun OnboardingBottomButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(bottom = 14.dp, top = 6.dp),
+            .padding(bottom = 14.dp, top = 6.dp)
+            .navigationBarsPadding(),
     ) {
         val isLast = currentPage == lastPageIndex
 

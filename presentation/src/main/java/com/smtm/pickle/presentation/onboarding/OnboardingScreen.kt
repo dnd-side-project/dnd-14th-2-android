@@ -2,7 +2,6 @@ package com.smtm.pickle.presentation.onboarding
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
@@ -82,15 +81,13 @@ private fun OnboardingContent(
             )
         },
         bottomBar = {
-            Box(modifier = Modifier.navigationBarsPadding()) {
-                OnboardingBottomButton(
-                    currentPage = pagerState.currentPage,
-                    lastPageIndex = pagerState.pageCount - 1,
-                    onPrev = onPrevPage,
-                    onNext = onNextPage,
-                    onFinish = onSkipOrFinish
-                )
-            }
+            OnboardingBottomButton(
+                currentPage = pagerState.currentPage,
+                lastPageIndex = pagerState.pageCount - 1,
+                onPrev = onPrevPage,
+                onNext = onNextPage,
+                onFinish = onSkipOrFinish
+            )
         }
     ) { innerPadding ->
         Box(
