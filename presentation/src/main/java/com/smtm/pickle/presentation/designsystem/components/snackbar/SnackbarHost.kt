@@ -54,30 +54,33 @@ fun SnackbarHost(
     snackbarState: SnackbarState,
     modifier: Modifier = Modifier,
 ) {
-    val snackbar = snackbarState.currentSnackbar ?: return
+    val snackbar = snackbarState.currentSnackbar
+    val alignment = snackbar?.position?.toAlignment() ?: Alignment.TopCenter
 
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = snackbar.position.toAlignment()
+        contentAlignment = alignment
     ) {
         AnimatedVisibility(
-            visible = true,
+            visible = snackbar != null,
             enter = slideInVertically(
-                initialOffsetY = {
-                    if (snackbar.position.toAlignment() == Alignment.TopCenter) -it else it
+                initialOffsetY = { fullHeight ->
+                    if (alignment == Alignment.TopCenter) -fullHeight else fullHeight
                 }
             ) + fadeIn(),
             exit = slideOutVertically(
-                targetOffsetY = {
-                    if (snackbar.position.toAlignment() == Alignment.TopCenter) -it else it
+                targetOffsetY = { fullHeight ->
+                    if (alignment == Alignment.TopCenter) -fullHeight else fullHeight
                 }
             ) + fadeOut()
         ) {
-            PickleSnackbar(
-                snackbarData = snackbar,
-                modifier = Modifier.applyPositionPadding(snackbar.position),
-                onDismiss = { snackbarState.dismiss() }
-            )
+            snackbar?.let {
+                PickleSnackbar(
+                    snackbarData = it,
+                    modifier = Modifier.applyPositionPadding(it.position),
+                    onDismiss = snackbarState::dismiss
+                )
+            }
         }
     }
 }
