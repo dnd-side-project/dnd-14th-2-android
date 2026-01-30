@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +28,8 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            initTokenUseCase()
+            runCatching { initTokenUseCase() }
+                .onFailure { Timber.e(it) }
             checkInitialDestination()
         }
     }
