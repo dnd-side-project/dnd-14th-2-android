@@ -62,7 +62,7 @@ fun LedgerCreateFirstStepContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LedgerDescriptionInputFiled(
+        LedgerDescriptionInputField(
             modifier = Modifier.padding(16.dp),
             value = description,
             onValueChange = onDescriptionChange,

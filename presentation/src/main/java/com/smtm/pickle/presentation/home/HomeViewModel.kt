@@ -1,5 +1,6 @@
 package com.smtm.pickle.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.model.ledger.summarize
@@ -84,6 +85,9 @@ class HomeViewModel @Inject constructor(
             .onEach { ledgers ->
                 val summary = ledgers.summarize()
                 val ledgerCalendarDays = ledgers.toLedgerCalendarDays()
+                ledgerCalendarDays.forEach {
+                    Log.d("HomeViewModel", "ledgerCalendarDays: $it")
+                }
                 _uiState.update { state ->
                     state.copy(
                         ledgerCalendarDays = ledgerCalendarDays,

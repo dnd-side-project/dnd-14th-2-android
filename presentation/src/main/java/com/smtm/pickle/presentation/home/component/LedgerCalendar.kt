@@ -114,7 +114,7 @@ fun LedgerCalendar(
                             isSelected = selectedDate == day.date,
                             totalExpense = ledgerCalendarDay?.totalExpense,
                             totalIncome = ledgerCalendarDay?.totalIncome,
-                            onclick = { clickedDay ->
+                            onClick = { clickedDay ->
                                 onDateClick(clickedDay.date)
                             }
                         )

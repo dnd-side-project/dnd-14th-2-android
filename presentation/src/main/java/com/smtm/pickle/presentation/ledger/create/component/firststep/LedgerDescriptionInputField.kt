@@ -34,7 +34,7 @@ import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderText
 
 @Composable
-fun LedgerDescriptionInputFiled(
+fun LedgerDescriptionInputField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -124,9 +124,9 @@ fun LedgerDescriptionInputFiled(
     widthDp = 360
 )
 @Composable
-private fun LedgerDescriptionInputFiledEmptyPreview() {
+private fun LedgerDescriptionInputFieldEmptyPreview() {
     PickleTheme {
-        LedgerDescriptionInputFiled(
+        LedgerDescriptionInputField(
             value = "",
             onValueChange = {}
         )
@@ -139,9 +139,9 @@ private fun LedgerDescriptionInputFiledEmptyPreview() {
     widthDp = 360
 )
 @Composable
-private fun LedgerDescriptionInputFiledPreview() {
+private fun LedgerDescriptionInputFieldPreview() {
     PickleTheme {
-        LedgerDescriptionInputFiled(
+        LedgerDescriptionInputField(
             value = "가나다라마바사아자차카타파하.",
             onValueChange = {}
         )

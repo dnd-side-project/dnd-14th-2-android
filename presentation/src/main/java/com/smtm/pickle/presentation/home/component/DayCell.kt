@@ -52,7 +52,7 @@ fun WeeklyDayCell(
     isSelected: Boolean,
     totalExpense: Long? = null,
     totalIncome: Long? = null,
-    onclick: (WeekDay) -> Unit,
+    onClick: (WeekDay) -> Unit,
 ) {
     val isActiveDay = day.position == WeekDayPosition.RangeDate
     DayCell(
@@ -62,7 +62,7 @@ fun WeeklyDayCell(
         isSelected = isSelected,
         totalExpense = totalExpense,
         totalIncome = totalIncome,
-        onClick = { onclick(day) }
+        onClick = { onClick(day) }
     )
 }
 

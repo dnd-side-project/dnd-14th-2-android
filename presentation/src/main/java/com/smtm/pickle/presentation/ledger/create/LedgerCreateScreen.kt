@@ -69,7 +69,7 @@ fun LedgerCreateScreen(
 @Composable
 private fun LedgerCreateContent(
     date: LocalDate,
-    uiState: LedgerCreateUiSate,
+    uiState: LedgerCreateUiState,
     setAmount: (String) -> Unit,
     selectLedgerType: (LedgerTypeUi) -> Unit,
     selectCategory: (CategoryUi?) -> Unit,
