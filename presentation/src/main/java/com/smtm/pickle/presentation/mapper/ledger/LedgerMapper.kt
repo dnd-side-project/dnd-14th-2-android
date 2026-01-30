@@ -21,7 +21,7 @@ fun LedgerEntry.toUiModel(): LedgerUi = LedgerUi(
     description = description,
     occurredOn = occurredOn,
     dateText = occurredOn.toDisplayYMDDate(),
-    paymentMethod = paymentMethod?.toUiModel() ?: PaymentMethodUi.Cash,
+    paymentMethod = paymentMethod.toUiModel(),
     memo = memo
 )
 

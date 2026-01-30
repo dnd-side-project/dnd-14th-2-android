@@ -19,7 +19,7 @@ data class LedgerEntry(
     val category: LedgerCategory,
     val description: String,
     val occurredOn: LocalDate,
-    val paymentMethod: PaymentMethod? = null,
+    val paymentMethod: PaymentMethod,
     val memo: String? = null,
 )
 

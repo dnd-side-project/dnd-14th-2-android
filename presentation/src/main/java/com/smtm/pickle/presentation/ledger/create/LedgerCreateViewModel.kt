@@ -2,9 +2,10 @@ package com.smtm.pickle.presentation.ledger.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.model.ledger.Money
-import com.smtm.pickle.domain.model.ledger.NewLedgerEntry
-import com.smtm.pickle.domain.usecase.ledger.create.CreateLedgerUseCase
+import com.smtm.pickle.domain.usecase.ledger.CreateLedgerUseCase
 import com.smtm.pickle.presentation.home.model.CategoryUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
@@ -34,7 +35,9 @@ class LedgerCreateViewModel @Inject constructor(
 
     fun createLedger(date: LocalDate) {
         viewModelScope.launch {
-            val newLedgerEntry = NewLedgerEntry(
+            val id = (1000..99999).random().toLong()
+            val newLedgerEntry = LedgerEntry(
+                id = LedgerId(id),
                 type = _uiState.value.selectedLedgerType!!.toDomain(),
                 amount = Money(_uiState.value.amount.toLong()),
                 category = _uiState.value.selectedCategory!!.toDomain(),
