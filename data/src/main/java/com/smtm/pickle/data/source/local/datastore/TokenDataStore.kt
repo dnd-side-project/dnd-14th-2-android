@@ -66,7 +66,7 @@ class TokenDataStore @Inject constructor(
         preferences.getAuthToken()
     }
 
-    fun isLoggedInFlow(): Flow<Boolean> = getAccessTokenFlow().map { it != null }
+    fun isLoggedInFlow(): Flow<Boolean> = getTokenFlow().map { it != null }
 
     private fun Preferences.getAuthToken(): AuthToken? {
         val accessToken = this[ACCESS_TOKEN_KEY]
