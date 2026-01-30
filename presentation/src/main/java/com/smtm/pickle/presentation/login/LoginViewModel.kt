@@ -25,15 +25,15 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            googleLoginUseCase()
-                .onSuccess {
-                    _uiState.value = LoginUiState.Success(isNewUser = false)
-                    Timber.d("Google 로그인 성공")
-                }
-                .onFailure { error ->
-                    _uiState.value = LoginUiState.Error(error.message ?: "Google 로그인 실패")
-                    Timber.e(error)
-                }
+            runCatching {
+                googleLoginUseCase().getOrThrow()
+            }.onSuccess {
+                _uiState.value = LoginUiState.Success(isNewUser = false)
+                Timber.d("Google 로그인 성공")
+            }.onFailure { error ->
+                _uiState.value = LoginUiState.Error(error.message ?: "Google 로그인 실패")
+                Timber.e(error)
+            }
         }
     }
 
@@ -41,15 +41,15 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            kakaoLoginUseCase(token = accessToken)
-                .onSuccess {
-                    _uiState.value = LoginUiState.Success(isNewUser = false)
-                    Timber.d("Kakao 로그인 성공")
-                }
-                .onFailure { error ->
-                    _uiState.value = LoginUiState.Error(error.message ?: "Kakao 로그인 실패")
-                    Timber.e(error)
-                }
+            runCatching {
+                kakaoLoginUseCase(token = accessToken).getOrThrow()
+            }.onSuccess {
+                _uiState.value = LoginUiState.Success(isNewUser = false)
+                Timber.d("Kakao 로그인 성공")
+            }.onFailure { error ->
+                _uiState.value = LoginUiState.Error(error.message ?: "Kakao 로그인 실패")
+                Timber.e(error)
+            }
         }
     }
 

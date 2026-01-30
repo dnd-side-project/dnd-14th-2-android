@@ -1,7 +1,6 @@
 package com.smtm.pickle.data.source.local.datastore
 
 import android.content.Context
-import android.system.Os.access
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
@@ -28,21 +27,19 @@ class TokenDataStore @Inject constructor(
 ) {
     private val dataStore = context.dataStore
     private val dataStoreFlow = dataStore.data.catch { e ->
-        if (e is IOException) emit(emptyPreferences()) else throw e }
+        if (e is IOException) emit(emptyPreferences()) else throw e
+    }
 
     suspend fun saveToken(token: AuthToken) {
+        val encryptedRefresh = tokenEncryption.encrypt(token.refresh)
+        if (encryptedRefresh == null) {
+            Timber.e("토큰 암호화 실패")
+            return
+        }
+
         dataStore.edit { preferences ->
-
-            val encryptedRefresh = tokenEncryption.encrypt(token.refresh)
-
             preferences[ACCESS_TOKEN_KEY] = token.access
-
-            // 수명이 긴 refreshToken만 암호화
-            if (encryptedRefresh != null) {
-                preferences[REFRESH_TOKEN_KEY] = encryptedRefresh
-            } else {
-                Timber.e("토큰 암호화 실패")
-            }
+            preferences[REFRESH_TOKEN_KEY] = encryptedRefresh
         }
     }
 

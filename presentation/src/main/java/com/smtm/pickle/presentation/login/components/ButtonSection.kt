@@ -33,7 +33,7 @@ fun ButtonSection(
                 .fillMaxWidth()
                 .height(48.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFE812))
+            colors = ButtonDefaults.buttonColors(containerColor = PickleTheme.semantic.kakao)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_kakao),

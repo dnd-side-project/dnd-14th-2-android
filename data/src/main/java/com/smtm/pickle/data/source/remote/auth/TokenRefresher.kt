@@ -3,6 +3,7 @@ package com.smtm.pickle.data.source.remote.auth
 import com.smtm.pickle.data.source.remote.api.RefreshTokenApi
 import com.smtm.pickle.domain.model.auth.AuthToken
 import com.smtm.pickle.domain.provider.TokenProvider
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import retrofit2.HttpException
@@ -37,6 +38,7 @@ class TokenRefresher @Inject constructor(
             val response = runCatching {
                 refreshApi.refreshToken("Bearer $refreshToken")
             }.getOrElse { e ->
+                if (e is CancellationException) throw e
                 // 리프레시 토큰 만료 또는 무효일 때만 로그아웃 처리
                 if (e is HttpException && (e.code() == 401 || e.code() == 400)) {
                     tokenProvider.clearToken()
