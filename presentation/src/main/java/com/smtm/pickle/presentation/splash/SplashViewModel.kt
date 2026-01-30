@@ -7,6 +7,7 @@ import com.smtm.pickle.domain.usecase.auth.IsLoggedInUseCase
 import com.smtm.pickle.domain.usecase.onboarding.GetOnboardingStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,14 +26,14 @@ class SplashViewModel @Inject constructor(
     val effect: SharedFlow<SplashEffect> = _effect.asSharedFlow()
 
     init {
-        checkInitialDestination()
         viewModelScope.launch {
             initTokenUseCase()
+            checkInitialDestination()
         }
     }
 
-    private fun checkInitialDestination() {
-        viewModelScope.launch {
+    private suspend fun checkInitialDestination() {
+        coroutineScope {
             val isOnboardingCompletedDeferred = async {
                 runCatching { getOnboardingStatusUseCase().first() }
                     .getOrDefault(false)
