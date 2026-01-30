@@ -20,7 +20,7 @@ sealed interface SnackbarPosition {
 
     /** 커스텀 */
     data class Custom(
-        val alignment: Alignment,
+        val alignment: VerticalAlignment,
         val extraPadding: Dp = 0.dp
     ) : SnackbarPosition
 }

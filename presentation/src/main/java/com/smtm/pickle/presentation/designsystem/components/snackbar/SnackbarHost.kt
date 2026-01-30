@@ -1,6 +1,7 @@
 package com.smtm.pickle.presentation.designsystem.components.snackbar
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -11,11 +12,16 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarPosition
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarState
+import com.smtm.pickle.presentation.designsystem.components.snackbar.model.VerticalAlignment
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 
 /**
@@ -55,7 +61,14 @@ fun SnackbarHost(
     modifier: Modifier = Modifier,
 ) {
     val snackbar = snackbarState.currentSnackbar
-    val alignment = snackbar?.position?.toAlignment() ?: Alignment.TopCenter
+    val currentSnackbarData = remember { mutableStateOf<SnackbarData?>(null) }
+    val alignment = currentSnackbarData.value?.position?.toAlignment() ?: Alignment.TopCenter
+
+    LaunchedEffect(snackbar) {
+        if (snackbar != null) {
+            currentSnackbarData.value = snackbar
+        }
+    }
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -64,17 +77,19 @@ fun SnackbarHost(
         AnimatedVisibility(
             visible = snackbar != null,
             enter = slideInVertically(
+                animationSpec = tween(300),
                 initialOffsetY = { fullHeight ->
                     if (alignment == Alignment.TopCenter) -fullHeight else fullHeight
                 }
-            ) + fadeIn(),
+            ) + fadeIn(animationSpec = tween(300)),
             exit = slideOutVertically(
+                animationSpec = tween(300),
                 targetOffsetY = { fullHeight ->
                     if (alignment == Alignment.TopCenter) -fullHeight else fullHeight
                 }
-            ) + fadeOut()
+            ) + fadeOut(animationSpec = tween(300))
         ) {
-            snackbar?.let {
+            currentSnackbarData.value?.let {
                 PickleSnackbar(
                     snackbarData = it,
                     modifier = Modifier.applyPositionPadding(it.position),
@@ -93,7 +108,12 @@ private fun SnackbarPosition.toAlignment(): Alignment =
         SnackbarPosition.AboveSystemNavigation,
         is SnackbarPosition.AboveBottomContents -> Alignment.BottomCenter
 
-        is SnackbarPosition.Custom -> alignment
+        is SnackbarPosition.Custom -> {
+            when (alignment) {
+                VerticalAlignment.Top -> Alignment.TopCenter
+                VerticalAlignment.Bottom -> Alignment.BottomCenter
+            }
+        }
     }
 
 @Composable
@@ -118,20 +138,18 @@ private fun Modifier.applyPositionPadding(position: SnackbarPosition): Modifier 
         is SnackbarPosition.AboveBottomContents ->
             this
                 .navigationBarsPadding()
-                .padding(bottom = 72.dp + 10.dp)
+                .padding(bottom = Dimensions.bottomContentHeight + 10.dp)
 
         is SnackbarPosition.Custom ->
             when (position.alignment) {
-                Alignment.TopCenter ->
+                VerticalAlignment.Top ->
                     this
                         .statusBarsPadding()
                         .padding(top = position.extraPadding)
 
-                Alignment.BottomCenter ->
+                VerticalAlignment.Bottom ->
                     this
                         .navigationBarsPadding()
                         .padding(bottom = position.extraPadding)
-
-                else -> this
             }
     }
