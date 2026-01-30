@@ -20,7 +20,7 @@ import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CalendarMode
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
+import com.smtm.pickle.presentation.home.model.LedgerCalendarDay
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -28,7 +28,7 @@ import java.time.YearMonth
 @Composable
 fun LedgerCalendar(
     modifier: Modifier = Modifier,
-    dailyLedgerList: List<DailyLedgerUi>,
+    ledgerCalendarDays: List<LedgerCalendarDay>,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -94,10 +94,12 @@ fun LedgerCalendar(
                     state = monthlyCalendarState,
                     contentHeightMode = ContentHeightMode.Wrap,
                     dayContent = { day ->
+                        val ledgerCalendarDay = ledgerCalendarDays.firstOrNull { it.date == day.date }
                         MonthlyDayCell(
                             day = day,
                             isSelected = selectedDate == day.date,
-                            dailyLedger = dailyLedgerList.firstOrNull { it.date == day.date },
+                            totalExpense = ledgerCalendarDay?.totalExpense,
+                            totalIncome = ledgerCalendarDay?.totalIncome,
                             onClick = { clickedDay ->
                                 onDateClick(clickedDay.date)
                             }
@@ -111,10 +113,12 @@ fun LedgerCalendar(
                     modifier = Modifier.fillMaxWidth(),
                     state = weeklyCalendarState,
                     dayContent = { day ->
+                        val ledgerCalendarDay = ledgerCalendarDays.firstOrNull { it.date == day.date }
                         WeeklyDayCell(
                             day = day,
                             isSelected = selectedDate == day.date,
-                            dailyLedger = dailyLedgerList.firstOrNull { it.date == day.date },
+                            totalExpense = ledgerCalendarDay?.totalExpense,
+                            totalIncome = ledgerCalendarDay?.totalIncome,
                             onclick = { clickedDay ->
                                 onDateClick(clickedDay.date)
                             }
@@ -135,32 +139,8 @@ fun LedgerCalendar(
 private fun LedgerCalendarMonthlyPreview() {
     val currentDate = LocalDate.now()
 
-    val sampleLedgerList = listOf(
-        DailyLedgerUi(
-            date = currentDate,
-            dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
-            ledgers = emptyList(),
-            totalIncome = "3,000,000",
-            totalExpense = "10,000"
-        ),
-        DailyLedgerUi(
-            date = currentDate.minusDays(1),
-            dateText = "${currentDate.minusDays(1).monthValue}월 ${currentDate.minusDays(1).dayOfMonth}일",
-            ledgers = emptyList(),
-            totalIncome = null,
-            totalExpense = "5,000"
-        ),
-        DailyLedgerUi(
-            date = currentDate.plusDays(2),
-            dateText = "${currentDate.plusDays(2).monthValue}월 ${currentDate.plusDays(2).dayOfMonth}일",
-            ledgers = emptyList(),
-            totalIncome = "100,000",
-            totalExpense = null
-        )
-    )
-
     LedgerCalendar(
-        dailyLedgerList = sampleLedgerList,
+        ledgerCalendarDays = emptyList(),
         calendarMode = CalendarMode.MONTHLY,
         selectedDate = currentDate,
         onModeChange = {},
@@ -180,18 +160,8 @@ private fun LedgerCalendarMonthlyPreview() {
 private fun LedgerCalendarWeeklyPreview() {
     val currentDate = LocalDate.now()
 
-    val sampleLedgerList = listOf(
-        DailyLedgerUi(
-            date = currentDate,
-            dateText = "${currentDate.monthValue}월 ${currentDate.dayOfMonth}일",
-            ledgers = emptyList(),
-            totalIncome = "3,000,000",
-            totalExpense = "10,000"
-        )
-    )
-
     LedgerCalendar(
-        dailyLedgerList = sampleLedgerList,
+        ledgerCalendarDays = emptyList(),
         calendarMode = CalendarMode.WEEKLY,
         selectedDate = currentDate,
         onModeChange = {},

@@ -6,7 +6,7 @@ import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
 import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.home.model.CategoryUi
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
+import com.smtm.pickle.presentation.home.model.LedgerCalendarDay
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.home.model.LedgerUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
@@ -25,21 +25,21 @@ fun LedgerEntry.toUiModel(): LedgerUi = LedgerUi(
     memo = memo
 )
 
-fun List<LedgerEntry>.toDailyLedgerUiModel(): List<DailyLedgerUi> =
+fun List<LedgerEntry>.toLedgerCalendarDays(): List<LedgerCalendarDay> =
     groupBy { it.occurredOn }
-        .map { (date, entries) ->
-            DailyLedgerUi(
+        .map { (date, ledgers) ->
+            val dayTotalIncome = ledgers
+                .filter { it.type == LedgerType.INCOME }
+                .sumOf { it.amount.value }
+                .takeIf { it > 0 }
+            val dayTotalExpense = ledgers
+                .filter { it.type == LedgerType.EXPENSE }
+                .sumOf { it.amount.value }
+                .takeIf { it > 0 }
+            LedgerCalendarDay(
                 date = date,
-                dateText = date.toDisplayMDDate(),
-                ledgers = entries.map { it.toUiModel() },
-                totalIncome = entries.filter { it.type == LedgerType.INCOME }
-                    .sumOf { it.amount.value }
-                    .takeIf { it > 0 }
-                    ?.toMoneyFormat(),
-                totalExpense = entries.filter { it.type == LedgerType.EXPENSE }
-                    .sumOf { it.amount.value }
-                    .takeIf { it > 0 }
-                    ?.toMoneyFormat(),
+                totalIncome = dayTotalIncome,
+                totalExpense = dayTotalExpense,
             )
         }
         .sortedByDescending { it.date }

@@ -20,7 +20,8 @@ import com.smtm.pickle.presentation.home.component.HomeTopBar
 import com.smtm.pickle.presentation.home.component.LedgerCalendar
 import com.smtm.pickle.presentation.home.component.dailyLedgerInfoSection
 import com.smtm.pickle.presentation.home.model.CalendarMode
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
+import com.smtm.pickle.presentation.home.model.LedgerCalendarDay
+import com.smtm.pickle.presentation.home.model.LedgerUi
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -37,11 +38,12 @@ fun HomeScreen(
     }
 
     HomeContent(
-        onStatisticsClick = {},
-        onAlarmClick = {},
         monthlyTotalIncome = uiState.monthlyTotalIncome,
         monthlyTotalExpense = uiState.monthlyTotalExpense,
-        dailyLedgerList = uiState.dailyLedgers,
+        ledgerCalendarDays = uiState.ledgerCalendarDays,
+        dailyLedger = uiState.dailyLedger,
+        dailyTotalIncome = uiState.dailyTotalIncome,
+        dailyTotalExpense = uiState.dailyTotalExpense,
         calendarMode = uiState.calendarMode,
         selectedDate = uiState.selectedDate,
         onModeChange = viewModel::changeCalendarMode,
@@ -54,11 +56,12 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(
-    onStatisticsClick: () -> Unit,
-    onAlarmClick: () -> Unit,
     monthlyTotalIncome: Long,
     monthlyTotalExpense: Long,
-    dailyLedgerList: List<DailyLedgerUi>,
+    ledgerCalendarDays: List<LedgerCalendarDay>,
+    dailyLedger: List<LedgerUi>,
+    dailyTotalIncome: Long,
+    dailyTotalExpense: Long,
     calendarMode: CalendarMode,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
@@ -98,7 +101,7 @@ private fun HomeContent(
                     modifier = Modifier
                         .background(PickleTheme.colors.base0)
                         .padding(horizontal = 12.dp),
-                    dailyLedgerList = dailyLedgerList,
+                    ledgerCalendarDays = ledgerCalendarDays,
                     calendarMode = calendarMode,
                     selectedDate = selectedDate,
                     onModeChange = onModeChange,
@@ -111,7 +114,9 @@ private fun HomeContent(
 
             dailyLedgerInfoSection(
                 date = selectedDate,
-                dailyLedger = dailyLedgerList.firstOrNull { it.date == selectedDate }
+                ledgers = dailyLedger,
+                totalIncome = dailyTotalIncome,
+                totalExpense = dailyTotalExpense,
             )
         }
     }

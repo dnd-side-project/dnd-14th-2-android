@@ -15,10 +15,8 @@ data class LedgerUi(
     val memo: String?
 )
 
-data class DailyLedgerUi(
+data class LedgerCalendarDay(
     val date: LocalDate,
-    val dateText: String,
-    val ledgers: List<LedgerUi>,
-    val totalIncome: String?,
-    val totalExpense: String?,
+    val totalExpense: Long?,
+    val totalIncome: Long?,
 )

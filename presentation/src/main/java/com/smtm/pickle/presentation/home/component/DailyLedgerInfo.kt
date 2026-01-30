@@ -29,9 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.home.model.CategoryUi
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.home.model.LedgerUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
@@ -40,7 +40,9 @@ import java.time.LocalDate
 fun LazyListScope.dailyLedgerInfoSection(
     modifier: Modifier = Modifier,
     date: LocalDate,
-    dailyLedger: DailyLedgerUi?,
+    ledgers: List<LedgerUi>,
+    totalIncome: Long,
+    totalExpense: Long,
 ) {
     item("selected_date") {
         SelectedDate(
@@ -50,7 +52,7 @@ fun LazyListScope.dailyLedgerInfoSection(
             date = date
         )
     }
-    if (dailyLedger == null) {
+    if (ledgers.isEmpty()) {
         item("empty_notice") {
             EmptyNotice(modifier = modifier)
         }
@@ -59,17 +61,17 @@ fun LazyListScope.dailyLedgerInfoSection(
             SelectedDateAmount(
                 modifier = modifier
                     .padding(horizontal = 16.dp),
-                totalIncome = dailyLedger.totalIncome ?: "0",
-                totalExpense = dailyLedger.totalExpense ?: "0"
+                totalIncome = totalIncome,
+                totalExpense = totalExpense
             )
         }
 
         itemsIndexed(
-            items = dailyLedger.ledgers,
+            items = ledgers,
             key = { _, item -> item.id }
         ) { index, item ->
             val paddingTop = if (index == 0) 16.dp else 10.dp
-            val paddingBottom = if (index == dailyLedger.ledgers.size - 1) 90.dp else 0.dp
+            val paddingBottom = if (index == ledgers.size - 1) 90.dp else 0.dp
 
             LedgerCard(
                 modifier = modifier
@@ -138,8 +140,8 @@ fun EmptyNotice(modifier: Modifier = Modifier) {
 @Composable
 private fun SelectedDateAmount(
     modifier: Modifier = Modifier,
-    totalIncome: String,
-    totalExpense: String,
+    totalIncome: Long,
+    totalExpense: Long,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -155,7 +157,7 @@ private fun SelectedDateAmount(
 
         Text(
             modifier = Modifier.width(110.dp),
-            text = "+$totalIncome",
+            text = "+${totalIncome.toMoneyFormat()}",
             textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.primary400
@@ -173,7 +175,7 @@ private fun SelectedDateAmount(
 
         Text(
             modifier = Modifier.width(110.dp),
-            text = "-$totalExpense",
+            text = "-${totalExpense.toMoneyFormat()}",
             textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.error100
@@ -284,7 +286,9 @@ private fun DailyLedgerInfoSectionEmptyPreview() {
         LazyColumn {
             dailyLedgerInfoSection(
                 date = LocalDate.now(),
-                dailyLedger = null
+                ledgers = emptyList(),
+                totalIncome = 0L,
+                totalExpense = 0L
             )
         }
     }
@@ -336,19 +340,13 @@ private fun DailyLedgerInfoSectionWithDataPreview() {
         )
     )
 
-    val sampleDailyLedger = DailyLedgerUi(
-        date = LocalDate.now(),
-        dateText = "1월 26일",
-        ledgers = sampleLedgers,
-        totalIncome = "2,500,000",
-        totalExpense = "16,500"
-    )
-
     PickleTheme {
         LazyColumn {
             dailyLedgerInfoSection(
                 date = LocalDate.now(),
-                dailyLedger = sampleDailyLedger
+                ledgers = sampleLedgers,
+                totalIncome = 2500000L,
+                totalExpense = 16500L
             )
         }
     }

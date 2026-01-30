@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.usecase.ledger.EnsureLedgersSyncedUseCase
+import com.smtm.pickle.domain.usecase.ledger.ObserveLedgersByDayUseCase
 import com.smtm.pickle.domain.usecase.ledger.ObserveLedgersByMonthUseCase
 import com.smtm.pickle.presentation.home.model.CalendarMode
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
-import com.smtm.pickle.presentation.mapper.ledger.toDailyLedgerUiModel
+import com.smtm.pickle.presentation.home.model.LedgerCalendarDay
+import com.smtm.pickle.presentation.home.model.LedgerUi
+import com.smtm.pickle.presentation.mapper.ledger.toLedgerCalendarDays
+import com.smtm.pickle.presentation.mapper.ledger.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val observeLedgersByMonthUseCase: ObserveLedgersByMonthUseCase,
+    private val observeLedgersByDayUseCase: ObserveLedgersByDayUseCase,
     private val ensureLedgersSyncedUseCase: EnsureLedgersSyncedUseCase,
 ) : ViewModel() {
 
@@ -32,10 +36,12 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private val currentYearMonth = MutableStateFlow(YearMonth.now())
+    private val selectedDate = MutableStateFlow(LocalDate.now())
 
     init {
         syncInitialData()
         observeMonthLedgers()
+        observeSelectedDateLedgers()
     }
 
     private fun syncInitialData() {
@@ -62,19 +68,40 @@ class HomeViewModel @Inject constructor(
                 observeLedgersByMonthUseCase(yearMonth)
             }
             .onEach { ledgers ->
-                val dailyLedgers = ledgers.toDailyLedgerUiModel()
-                val totalIncome = ledgers
+                val monthlyTotalIncome = ledgers
                     .filter { it.type == LedgerType.INCOME }
                     .sumOf { it.amount.value }
-                val totalExpense = ledgers
+                val monthlyTotalExpense = ledgers
                     .filter { it.type == LedgerType.EXPENSE }
                     .sumOf { it.amount.value }
 
+                val ledgerCalendarDays = ledgers.toLedgerCalendarDays()
                 _uiState.update { state ->
                     state.copy(
-                        dailyLedgers = dailyLedgers,
-                        monthlyTotalIncome = totalIncome,
-                        monthlyTotalExpense = totalExpense,
+                        ledgerCalendarDays = ledgerCalendarDays,
+                        monthlyTotalIncome = monthlyTotalIncome,
+                        monthlyTotalExpense = monthlyTotalExpense,
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeSelectedDateLedgers() {
+        selectedDate
+            .flatMapLatest { date ->
+                observeLedgersByDayUseCase(date)
+            }.onEach { ledgers ->
+                _uiState.update { state ->
+                    state.copy(
+                        dailyLedger = ledgers.map { it.toUiModel() },
+                        dailyTotalIncome = ledgers
+                            .filter { it.type == LedgerType.INCOME }
+                            .sumOf { it.amount.value },
+                        dailyTotalExpense = ledgers
+                            .filter { it.type == LedgerType.EXPENSE }
+                            .sumOf { it.amount.value }
                     )
                 }
             }
@@ -90,6 +117,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectDate(newSelectedDate: LocalDate) {
+        selectedDate.value = newSelectedDate
         _uiState.update { state ->
             state.copy(selectedDate = newSelectedDate)
         }
@@ -103,9 +131,12 @@ class HomeViewModel @Inject constructor(
 }
 
 data class HomeUiState(
-    val dailyLedgers: List<DailyLedgerUi> = emptyList(),
+    val ledgerCalendarDays: List<LedgerCalendarDay> = emptyList(),
+    val dailyLedger: List<LedgerUi> = emptyList(),
     val monthlyTotalIncome: Long = 0L,
     val monthlyTotalExpense: Long = 0L,
+    val dailyTotalIncome: Long = 0L,
+    val dailyTotalExpense: Long = 0L,
     val selectedDate: LocalDate = LocalDate.now(),
     val calendarMode: CalendarMode = CalendarMode.MONTHLY,
 )

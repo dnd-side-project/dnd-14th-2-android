@@ -20,8 +20,8 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.WeekDayPosition
+import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
-import com.smtm.pickle.presentation.home.model.DailyLedgerUi
 import java.time.LocalDate
 
 @Composable
@@ -29,7 +29,8 @@ fun MonthlyDayCell(
     modifier: Modifier = Modifier,
     day: CalendarDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerUi?,
+    totalExpense: Long? = null,
+    totalIncome: Long? = null,
     onClick: (CalendarDay) -> Unit,
 ) {
     val isActiveDay = day.position == DayPosition.MonthDate
@@ -38,7 +39,8 @@ fun MonthlyDayCell(
         date = day.date,
         isActiveDay = isActiveDay,
         isSelected = isSelected,
-        dailyLedger = dailyLedger,
+        totalExpense = totalExpense,
+        totalIncome = totalIncome,
         onClick = { onClick(day) }
     )
 }
@@ -48,7 +50,8 @@ fun WeeklyDayCell(
     modifier: Modifier = Modifier,
     day: WeekDay,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerUi?,
+    totalExpense: Long? = null,
+    totalIncome: Long? = null,
     onclick: (WeekDay) -> Unit,
 ) {
     val isActiveDay = day.position == WeekDayPosition.RangeDate
@@ -57,7 +60,8 @@ fun WeeklyDayCell(
         date = day.date,
         isActiveDay = isActiveDay,
         isSelected = isSelected,
-        dailyLedger = dailyLedger,
+        totalExpense = totalExpense,
+        totalIncome = totalIncome,
         onClick = { onclick(day) }
     )
 }
@@ -69,7 +73,8 @@ private fun DayCell(
     date: LocalDate,
     isActiveDay: Boolean,
     isSelected: Boolean,
-    dailyLedger: DailyLedgerUi?,
+    totalExpense: Long? = null,
+    totalIncome: Long? = null,
     onClick: () -> Unit,
 ) {
     val dateTextColor = when {
@@ -97,19 +102,17 @@ private fun DayCell(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            if (dailyLedger != null) {
-                dailyLedger.totalExpense?.let { totalExpense ->
-                    AmountItem(
-                        amount = totalExpense,
-                        color = PickleTheme.colors.error50
-                    )
-                }
-                dailyLedger.totalIncome?.let { totalIncome ->
-                    AmountItem(
-                        amount = totalIncome,
-                        color = PickleTheme.colors.primary500
-                    )
-                }
+            totalExpense?.let { totalExpense ->
+                AmountItem(
+                    amount = totalExpense,
+                    color = PickleTheme.colors.error50
+                )
+            }
+            totalIncome?.let { totalIncome ->
+                AmountItem(
+                    amount = totalIncome,
+                    color = PickleTheme.colors.primary500
+                )
             }
         }
     }
@@ -118,12 +121,12 @@ private fun DayCell(
 @Composable
 private fun AmountItem(
     modifier: Modifier = Modifier,
-    amount: String,
+    amount: Long,
     color: Color,
 ) {
     Text(
         modifier = modifier,
-        text = amount,
+        text = amount.toMoneyFormat(),
         color = color,
         fontSize = 8.sp,
         maxLines = 1,
@@ -140,7 +143,6 @@ private fun DayCellPreview() {
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
             isSelected = false,
-            dailyLedger = null,
             onClick = {}
         )
     }
@@ -154,7 +156,6 @@ private fun DayCellSelectedPreview() {
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
             isSelected = true,
-            dailyLedger = null,
             onClick = {}
         )
     }
@@ -168,13 +169,8 @@ private fun DayCellWithFinancePreview() {
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = true,
             isSelected = false,
-            dailyLedger = DailyLedgerUi(
-                date = LocalDate.of(2024, 1, 15),
-                dateText = "1월 15일",
-                ledgers = emptyList(),
-                totalIncome = "3,000,000",
-                totalExpense = "12,000"
-            ),
+            totalIncome = 3_000_000L,
+            totalExpense = 12_000L,
             onClick = {}
         )
     }
@@ -188,7 +184,6 @@ private fun DayCellInactivePreview() {
             date = LocalDate.of(2024, 1, 15),
             isActiveDay = false,
             isSelected = false,
-            dailyLedger = null,
             onClick = {}
         )
     }
