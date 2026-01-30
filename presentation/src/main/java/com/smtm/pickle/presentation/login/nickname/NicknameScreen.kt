@@ -15,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.common.extension.clearFocusOnBackgroundTab
 import com.smtm.pickle.presentation.designsystem.components.appbar.PickleAppBar
 import com.smtm.pickle.presentation.designsystem.components.appbar.model.NavigationItem
 import com.smtm.pickle.presentation.designsystem.components.button.PickleButton
@@ -69,7 +71,10 @@ fun NicknameContent(
     onSaveNickname: () -> Unit = {},
     onBackClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
+        modifier = Modifier.clearFocusOnBackgroundTab(focusManager),
         topBar = {
             PickleAppBar(
                 title = "닉네임 입력",
