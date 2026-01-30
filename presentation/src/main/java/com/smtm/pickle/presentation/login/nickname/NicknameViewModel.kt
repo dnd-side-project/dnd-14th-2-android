@@ -92,7 +92,7 @@ class NicknameViewModel @Inject constructor(
     private fun validateFormat(nickname: String): InputState {
         if (nickname.isBlank()) return InputState.Idle
         if (nickname.length > AVAILABLE_LENGTH) return InputState.Error("최대 5자 이내로 설정해주세요.")
-        if (!nickname.matches(Regex("^[a-z0-9]+$"))) return InputState.Error("특수 문자 및 영어 대문자는 사용할 수 없어요.")
+        if (!nickname.matches(Regex("^[a-z0-9가-힣]+$"))) return InputState.Error("특수 문자 및 영어 대문자는 사용할 수 없어요.")
         return InputState.Success(null)
     }
 
