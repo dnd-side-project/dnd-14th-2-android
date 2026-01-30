@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.smtm.pickle.presentation.common.auth.KakaoLoginManager
 import com.smtm.pickle.presentation.designsystem.components.PickleLogo
 import com.smtm.pickle.presentation.designsystem.components.tooltip.PickleTooltip
@@ -42,8 +43,7 @@ fun LoginScreen(
                 val isNewUser = (uiState as LoginUiState.Success).isNewUser
 
                 if (isNewUser) {
-                    // TODO: 신규 유저면 닉네임 설정 화면으로 이동
-//                    navigator.navigateToNickname()
+                    navigator.navigateToNickname()
                 } else {
                     navigator.navigateToMain()
                 }
