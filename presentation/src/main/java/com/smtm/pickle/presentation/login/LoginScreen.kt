@@ -40,9 +40,9 @@ fun LoginScreen(
     LaunchedEffect(uiState) {
         when (uiState) {
             is LoginUiState.Success -> {
-                val isNewUser = (uiState as LoginUiState.Success).isNewUser
+                val isFirstLogin = (uiState as LoginUiState.Success).isFirstLogin
 
-                if (isNewUser) {
+                if (isFirstLogin) {
                     navigator.navigateToNickname()
                 } else {
                     navigator.navigateToMain()
@@ -68,7 +68,6 @@ fun LoginScreen(
                 }
             )
         },
-        onLoginClick = navigator::navigateToMain
     )
 }
 
@@ -77,7 +76,6 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     onGoogleLogin: () -> Unit,
     onKakaoLogin: () -> Unit,
-    onLoginClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -105,9 +103,6 @@ fun LoginContent(
                 onKakaoLogin = onKakaoLogin,
             )
             Spacer(modifier = Modifier.height(40.dp))
-
-            // TODO: 로그인 서버 연결 후 삭제
-            Button(onClick = onLoginClick) { Text("로그인") }
         }
     }
 }
@@ -119,7 +114,6 @@ private fun LoginContentPreview() {
         LoginContent(
             onGoogleLogin = {},
             onKakaoLogin = {},
-            onLoginClick = {},
         )
     }
 }

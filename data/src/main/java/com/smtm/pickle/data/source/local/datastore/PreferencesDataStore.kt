@@ -15,6 +15,7 @@ class PreferencesDataStore @Inject constructor(
 ) {
     private object PreferencesKeys {
         val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
+        val IS_FIRST_LOGIN = booleanPreferencesKey("is_first_login")
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
@@ -26,6 +27,18 @@ class PreferencesDataStore @Inject constructor(
     fun isOnboardingCompleted(): Flow<Boolean> {
         return dataStore.data.map { preferences ->
             preferences[PreferencesKeys.ONBOARDING_COMPLETED] ?: false
+        }
+    }
+
+    suspend fun setFirstLogin(isFirstLogin: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_FIRST_LOGIN] = isFirstLogin
+        }
+    }
+
+    fun isFirstLogin(): Flow<Boolean> {
+        return dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.IS_FIRST_LOGIN] ?: true
         }
     }
 }
