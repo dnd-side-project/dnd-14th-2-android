@@ -23,6 +23,10 @@ data class Ledger(
     val memo: String? = null,
 )
 
+data class LedgerSummary(
+    val totalIncome: Long,
+    val totalExpense: Long,
+)
 enum class LedgerType { INCOME, EXPENSE }
 
 enum class PaymentMethod {
@@ -40,3 +44,8 @@ enum class LedgerCategory {
     SAVING_FINANCE,
     OTHER,
 }
+
+fun List<Ledger>.summarize(): LedgerSummary = LedgerSummary(
+    totalIncome = filter { it.type == LedgerType.INCOME }.sumOf { it.amount.value },
+    totalExpense = filter { it.type == LedgerType.EXPENSE }.sumOf { it.amount.value }
+)

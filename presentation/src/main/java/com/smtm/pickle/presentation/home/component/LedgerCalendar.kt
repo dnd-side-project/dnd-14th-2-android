@@ -37,7 +37,6 @@ fun LedgerCalendar(
     onMonthChanged: (YearMonth) -> Unit,
     onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
-    val currentDate = LocalDate.now()
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(12)
     val endMonth = currentMonth.plusMonths(12)
@@ -52,7 +51,7 @@ fun LedgerCalendar(
     val weeklyCalendarState = rememberWeekCalendarState(
         startDate = startMonth.atStartOfMonth(),
         endDate = endMonth.atEndOfMonth(),
-        firstVisibleWeekDate = currentDate,
+        firstVisibleWeekDate = selectedDate,
         firstDayOfWeek = DayOfWeek.SATURDAY,
     )
 

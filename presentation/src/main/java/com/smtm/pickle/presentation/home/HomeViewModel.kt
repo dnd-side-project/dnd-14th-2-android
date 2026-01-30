@@ -2,7 +2,7 @@ package com.smtm.pickle.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smtm.pickle.domain.model.ledger.LedgerType
+import com.smtm.pickle.domain.model.ledger.summarize
 import com.smtm.pickle.domain.usecase.ledger.EnsureLedgersSyncedUseCase
 import com.smtm.pickle.domain.usecase.ledger.ObserveLedgersByDayUseCase
 import com.smtm.pickle.domain.usecase.ledger.ObserveLedgersByMonthUseCase
@@ -14,11 +14,13 @@ import com.smtm.pickle.presentation.mapper.ledger.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -32,11 +34,19 @@ class HomeViewModel @Inject constructor(
     private val ensureLedgersSyncedUseCase: EnsureLedgersSyncedUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
-
     private val currentYearMonth = MutableStateFlow(YearMonth.now())
     private val selectedDate = MutableStateFlow(LocalDate.now())
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = combine(
+        _uiState,
+        selectedDate
+    ) { state, date ->
+        state.copy(selectedDate = date)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeUiState()
+    )
 
     init {
         syncInitialData()
@@ -68,19 +78,13 @@ class HomeViewModel @Inject constructor(
                 observeLedgersByMonthUseCase(yearMonth)
             }
             .onEach { ledgers ->
-                val monthlyTotalIncome = ledgers
-                    .filter { it.type == LedgerType.INCOME }
-                    .sumOf { it.amount.value }
-                val monthlyTotalExpense = ledgers
-                    .filter { it.type == LedgerType.EXPENSE }
-                    .sumOf { it.amount.value }
-
+                val summary = ledgers.summarize()
                 val ledgerCalendarDays = ledgers.toLedgerCalendarDays()
                 _uiState.update { state ->
                     state.copy(
                         ledgerCalendarDays = ledgerCalendarDays,
-                        monthlyTotalIncome = monthlyTotalIncome,
-                        monthlyTotalExpense = monthlyTotalExpense,
+                        monthlyTotalIncome = summary.totalIncome,
+                        monthlyTotalExpense = summary.totalExpense,
                     )
                 }
             }
@@ -93,15 +97,12 @@ class HomeViewModel @Inject constructor(
             .flatMapLatest { date ->
                 observeLedgersByDayUseCase(date)
             }.onEach { ledgers ->
+                val summary = ledgers.summarize()
                 _uiState.update { state ->
                     state.copy(
                         dailyLedger = ledgers.map { it.toUiModel() },
-                        dailyTotalIncome = ledgers
-                            .filter { it.type == LedgerType.INCOME }
-                            .sumOf { it.amount.value },
-                        dailyTotalExpense = ledgers
-                            .filter { it.type == LedgerType.EXPENSE }
-                            .sumOf { it.amount.value }
+                        dailyTotalIncome = summary.totalIncome,
+                        dailyTotalExpense = summary.totalExpense
                     )
                 }
             }
@@ -118,9 +119,6 @@ class HomeViewModel @Inject constructor(
 
     fun selectDate(newSelectedDate: LocalDate) {
         selectedDate.value = newSelectedDate
-        _uiState.update { state ->
-            state.copy(selectedDate = newSelectedDate)
-        }
     }
 
     fun changeCalendarMode(newMode: CalendarMode) {
