@@ -12,7 +12,7 @@ value class Money(val value: Long) {
     }
 }
 
-data class LedgerEntry(
+data class Ledger(
     val id: LedgerId,
     val type: LedgerType,
     val amount: Money,

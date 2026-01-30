@@ -4,7 +4,7 @@ import com.smtm.pickle.data.mapper.toDomain
 import com.smtm.pickle.data.mapper.toEntity
 import com.smtm.pickle.data.source.local.database.dao.LedgerDao
 import com.smtm.pickle.data.source.remote.api.LedgerApi
-import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.Ledger
 import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.repository.ledger.LedgerRepository
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ class LedgerRepositoryImpl @Inject constructor(
     override fun observeLedgers(
         from: LocalDate,
         to: LocalDate,
-    ): Flow<List<LedgerEntry>> {
+    ): Flow<List<Ledger>> {
         return ledgerDao.observeByDateRange(
             fromEpochDay = from.toEpochDay(),
             toEpochDay = to.toEpochDay(),
@@ -56,12 +56,12 @@ class LedgerRepositoryImpl @Inject constructor(
         return months
     }
 
-    override suspend fun createLedger(ledger: LedgerEntry): LedgerId {
+    override suspend fun createLedger(ledger: Ledger): LedgerId {
         val insertedId = ledgerDao.insert(ledger.toEntity())
         return LedgerId(insertedId)
     }
 
-    override suspend fun updateLedger(ledger: LedgerEntry) {
+    override suspend fun updateLedger(ledger: Ledger) {
         ledgerDao.update(ledger.toEntity())
     }
 

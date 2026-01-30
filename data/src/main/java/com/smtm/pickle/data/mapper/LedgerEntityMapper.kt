@@ -2,14 +2,14 @@ package com.smtm.pickle.data.mapper
 
 import com.smtm.pickle.data.source.local.database.entity.LedgerEntity
 import com.smtm.pickle.domain.model.ledger.LedgerCategory
-import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.Ledger
 import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.Money
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
 import java.time.LocalDate
 
-fun LedgerEntity.toDomain(): LedgerEntry = LedgerEntry(
+fun LedgerEntity.toDomain(): Ledger = Ledger(
     id = LedgerId(id),
     type = LedgerType.valueOf(type),
     amount = Money(amount),
@@ -20,7 +20,7 @@ fun LedgerEntity.toDomain(): LedgerEntry = LedgerEntry(
     memo = memo
 )
 
-fun LedgerEntry.toEntity(): LedgerEntity = LedgerEntity(
+fun Ledger.toEntity(): LedgerEntity = LedgerEntity(
     id = id.value,
     type = type.name,
     amount = amount.value,

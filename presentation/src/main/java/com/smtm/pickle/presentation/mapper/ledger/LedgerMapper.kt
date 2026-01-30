@@ -1,7 +1,7 @@
 package com.smtm.pickle.presentation.mapper.ledger
 
 import com.smtm.pickle.domain.model.ledger.LedgerCategory
-import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.Ledger
 import com.smtm.pickle.domain.model.ledger.LedgerType
 import com.smtm.pickle.domain.model.ledger.PaymentMethod
 import com.smtm.pickle.presentation.common.utils.toMoneyFormat
@@ -12,7 +12,7 @@ import com.smtm.pickle.presentation.home.model.LedgerUi
 import com.smtm.pickle.presentation.home.model.PaymentMethodUi
 import java.time.LocalDate
 
-fun LedgerEntry.toUiModel(): LedgerUi = LedgerUi(
+fun Ledger.toUiModel(): LedgerUi = LedgerUi(
     id = id.value,
     type = type.toUiModel(),
     amount = amount.value.toMoneyFormat(),
@@ -25,7 +25,7 @@ fun LedgerEntry.toUiModel(): LedgerUi = LedgerUi(
     memo = memo
 )
 
-fun List<LedgerEntry>.toLedgerCalendarDays(): List<LedgerCalendarDay> =
+fun List<Ledger>.toLedgerCalendarDays(): List<LedgerCalendarDay> =
     groupBy { it.occurredOn }
         .map { (date, ledgers) ->
             val dayTotalIncome = ledgers

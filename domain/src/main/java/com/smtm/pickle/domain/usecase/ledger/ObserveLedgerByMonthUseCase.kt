@@ -1,6 +1,6 @@
 package com.smtm.pickle.domain.usecase.ledger
 
-import com.smtm.pickle.domain.model.ledger.LedgerEntry
+import com.smtm.pickle.domain.model.ledger.Ledger
 import com.smtm.pickle.domain.repository.ledger.LedgerRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
@@ -10,7 +10,7 @@ class ObserveLedgersByMonthUseCase @Inject constructor(
     private val ledgerRepository: LedgerRepository,
 ) {
 
-    operator fun invoke(yearMonth: YearMonth): Flow<List<LedgerEntry>> {
+    operator fun invoke(yearMonth: YearMonth): Flow<List<Ledger>> {
         val from = yearMonth.atDay(1)
         val to = yearMonth.atEndOfMonth()
         return ledgerRepository.observeLedgers(from, to)
