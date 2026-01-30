@@ -99,20 +99,21 @@ private fun DayCell(
                 color = dateTextColor,
                 style = PickleTheme.typography.body2Medium,
             )
+            if (isActiveDay) {
+                Spacer(modifier = Modifier.height(6.dp))
 
-            Spacer(modifier = Modifier.height(6.dp))
-
-            totalExpense?.let { totalExpense ->
-                AmountItem(
-                    amount = totalExpense,
-                    color = PickleTheme.colors.error50
-                )
-            }
-            totalIncome?.let { totalIncome ->
-                AmountItem(
-                    amount = totalIncome,
-                    color = PickleTheme.colors.primary500
-                )
+                totalExpense?.let { totalExpense ->
+                    AmountItem(
+                        amount = totalExpense,
+                        color = PickleTheme.colors.error50
+                    )
+                }
+                totalIncome?.let { totalIncome ->
+                    AmountItem(
+                        amount = totalIncome,
+                        color = PickleTheme.colors.primary500
+                    )
+                }
             }
         }
     }

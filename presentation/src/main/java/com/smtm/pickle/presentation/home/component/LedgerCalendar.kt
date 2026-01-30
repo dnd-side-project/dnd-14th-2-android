@@ -30,12 +30,12 @@ fun LedgerCalendar(
     modifier: Modifier = Modifier,
     ledgerCalendarDays: List<LedgerCalendarDay>,
     calendarMode: CalendarMode,
+    selectedYearMonth: YearMonth,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
     onMonthArrowClick: () -> Unit,
     onDateClick: (LocalDate) -> Unit,
     onMonthChanged: (YearMonth) -> Unit,
-    onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(12)
@@ -63,9 +63,8 @@ fun LedgerCalendar(
     LaunchedEffect(weeklyCalendarState) {
         snapshotFlow { weeklyCalendarState.firstVisibleWeek }
             .collect { visibleWeek ->
-                val weekStartDate = visibleWeek.days.first().date
-                val weekEndDate = visibleWeek.days.last().date
-                onWeekChanged(weekStartDate, weekEndDate)
+                val activatedMonth = YearMonth.from(visibleWeek.days.first().date)
+                onMonthChanged(activatedMonth)
             }
     }
 
@@ -76,10 +75,7 @@ fun LedgerCalendar(
             .padding(vertical = 16.dp)
     ) {
         MonthHeader(
-            yearMonth = when (calendarMode) {
-                CalendarMode.MONTHLY -> monthlyCalendarState.firstVisibleMonth.yearMonth
-                CalendarMode.WEEKLY -> YearMonth.from(weeklyCalendarState.firstVisibleWeek.days.first().date)
-            },
+            yearMonth = selectedYearMonth,
             calendarMode = calendarMode,
             onModeChange = onModeChange,
             onMonthArrowClick = onMonthArrowClick
@@ -141,12 +137,12 @@ private fun LedgerCalendarMonthlyPreview() {
     LedgerCalendar(
         ledgerCalendarDays = emptyList(),
         calendarMode = CalendarMode.MONTHLY,
+        selectedYearMonth = YearMonth.now(),
         selectedDate = currentDate,
         onModeChange = {},
         onMonthArrowClick = {},
         onDateClick = {},
         onMonthChanged = {},
-        onWeekChanged = { _, _ -> },
     )
 }
 
@@ -162,11 +158,11 @@ private fun LedgerCalendarWeeklyPreview() {
     LedgerCalendar(
         ledgerCalendarDays = emptyList(),
         calendarMode = CalendarMode.WEEKLY,
+        selectedYearMonth = YearMonth.now(),
         selectedDate = currentDate,
         onModeChange = {},
         onMonthArrowClick = {},
         onDateClick = {},
         onMonthChanged = {},
-        onWeekChanged = { _, _ -> },
     )
 }

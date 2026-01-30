@@ -45,12 +45,12 @@ fun HomeScreen(
         dailyTotalIncome = uiState.dailyTotalIncome,
         dailyTotalExpense = uiState.dailyTotalExpense,
         calendarMode = uiState.calendarMode,
+        selectedYearMonth = uiState.selectedYearMonth,
         selectedDate = uiState.selectedDate,
         onModeChange = viewModel::changeCalendarMode,
         onMonthArrowClick = { },
         onDateClick = viewModel::selectDate,
         onMonthChanged = viewModel::onMonthChanged,
-        onWeekChanged = viewModel::onWeekChanged
     )
 }
 
@@ -63,12 +63,12 @@ private fun HomeContent(
     dailyTotalIncome: Long,
     dailyTotalExpense: Long,
     calendarMode: CalendarMode,
+    selectedYearMonth: YearMonth,
     selectedDate: LocalDate,
     onModeChange: (CalendarMode) -> Unit,
     onMonthArrowClick: () -> Unit,
     onDateClick: (LocalDate) -> Unit,
     onMonthChanged: (YearMonth) -> Unit,
-    onWeekChanged: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
 
     Surface(
@@ -103,12 +103,12 @@ private fun HomeContent(
                         .padding(horizontal = 12.dp),
                     ledgerCalendarDays = ledgerCalendarDays,
                     calendarMode = calendarMode,
+                    selectedYearMonth = selectedYearMonth,
                     selectedDate = selectedDate,
                     onModeChange = onModeChange,
                     onMonthArrowClick = onMonthArrowClick,
                     onDateClick = onDateClick,
                     onMonthChanged = onMonthChanged,
-                    onWeekChanged = onWeekChanged
                 )
             }
 

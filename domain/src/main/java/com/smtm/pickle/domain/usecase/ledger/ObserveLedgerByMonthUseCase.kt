@@ -10,9 +10,13 @@ class ObserveLedgersByMonthUseCase @Inject constructor(
     private val ledgerRepository: LedgerRepository,
 ) {
 
-    operator fun invoke(yearMonth: YearMonth): Flow<List<Ledger>> {
-        val from = yearMonth.atDay(1)
-        val to = yearMonth.atEndOfMonth()
+    operator fun invoke(
+        yearMonth: YearMonth,
+        backwardMonths: Long = 1L,
+        forwardMonths: Long = 1L,
+    ): Flow<List<Ledger>> {
+        val from = yearMonth.minusMonths(backwardMonths).atDay(1)
+        val to = yearMonth.plusMonths(forwardMonths).atEndOfMonth()
         return ledgerRepository.observeLedgers(from, to)
     }
 }

@@ -34,14 +34,18 @@ class HomeViewModel @Inject constructor(
     private val ensureLedgersSyncedUseCase: EnsureLedgersSyncedUseCase,
 ) : ViewModel() {
 
-    private val currentYearMonth = MutableStateFlow(YearMonth.now())
+    private val selectedYearMonth = MutableStateFlow(YearMonth.now())
     private val selectedDate = MutableStateFlow(LocalDate.now())
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = combine(
         _uiState,
+        selectedYearMonth,
         selectedDate
-    ) { state, date ->
-        state.copy(selectedDate = date)
+    ) { state, yearMonth, date ->
+        state.copy(
+            selectedYearMonth = yearMonth,
+            selectedDate = date
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -72,7 +76,7 @@ class HomeViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeMonthLedgers() {
-        currentYearMonth
+        selectedYearMonth
             .flatMapLatest { yearMonth ->
                 ensureLedgersSynced(yearMonth)
                 observeLedgersByMonthUseCase(yearMonth)
@@ -110,11 +114,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onMonthChanged(yearMonth: YearMonth) {
-        currentYearMonth.value = yearMonth
-    }
-
-    fun onWeekChanged(startDate: LocalDate, endDate: LocalDate) {
-        // TODO 활성화된 날짜의 달 불어와야함.
+        selectedYearMonth.value = yearMonth
     }
 
     fun selectDate(newSelectedDate: LocalDate) {
@@ -135,6 +135,7 @@ data class HomeUiState(
     val monthlyTotalExpense: Long = 0L,
     val dailyTotalIncome: Long = 0L,
     val dailyTotalExpense: Long = 0L,
+    val selectedYearMonth: YearMonth = YearMonth.now(),
     val selectedDate: LocalDate = LocalDate.now(),
     val calendarMode: CalendarMode = CalendarMode.MONTHLY,
 )
