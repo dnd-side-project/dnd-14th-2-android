@@ -69,6 +69,7 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
     // Social SDK
     implementation(libs.bundles.google.login)

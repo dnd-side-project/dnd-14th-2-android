@@ -7,9 +7,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import com.smtm.pickle.presentation.designsystem.components.PickleLogo
 import com.smtm.pickle.presentation.navigation.navigator.AuthNavigator
 
@@ -18,16 +15,12 @@ fun SplashScreen(
     navigator: AuthNavigator,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    LaunchedEffect(viewModel, lifecycleOwner) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.navigationEvent.collect { event ->
-                when (event) {
-                    SplashViewModel.NavEvent.NavigateToOnboarding -> navigator.navigateToOnboarding()
-                    SplashViewModel.NavEvent.NavigateToLogin -> navigator.navigateToLogin()
-                    SplashViewModel.NavEvent.NavigateToMain -> navigator.navigateToMain()
-                }
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { event ->
+            when (event) {
+                SplashViewModel.SplashEffect.NavigateToOnboarding -> navigator.navigateToOnboarding()
+                SplashViewModel.SplashEffect.NavigateToLogin -> navigator.navigateToLogin()
+                SplashViewModel.SplashEffect.NavigateToMain -> navigator.navigateToMain()
             }
         }
     }
