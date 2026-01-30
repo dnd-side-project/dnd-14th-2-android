@@ -1,6 +1,5 @@
 package com.smtm.pickle.presentation.ledger.create.component.firststep
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,29 +27,36 @@ fun LedgerTypeSelectors(
     onLedgerTypeClick: (LedgerTypeUi) -> Unit,
     selectedType: LedgerTypeUi? = null,
 ) {
-    Row(
+    Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        color = PickleTheme.colors.background50,
+        shape = RoundedCornerShape(Dimensions.radiusSurface)
     ) {
-        LedgerTypeChip(
-            modifier = modifier.weight(1f),
-            isSelected = LedgerTypeUi.Income == selectedType,
-            type = LedgerTypeUi.Income,
-            onClick = {
-                onLedgerTypeClick(LedgerTypeUi.Income)
-            }
-        )
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(2.dp),
+        ) {
+            LedgerTypeChip(
+                modifier = modifier.weight(1f),
+                isSelected = LedgerTypeUi.Income == selectedType,
+                type = LedgerTypeUi.Income,
+                onClick = {
+                    onLedgerTypeClick(LedgerTypeUi.Income)
+                }
+            )
 
-        LedgerTypeChip(
-            modifier = modifier.weight(1f),
-            isSelected = LedgerTypeUi.Expense == selectedType,
-            type = LedgerTypeUi.Expense,
-            onClick = {
-                onLedgerTypeClick(LedgerTypeUi.Expense)
-            }
-        )
+            LedgerTypeChip(
+                modifier = modifier.weight(1f),
+                isSelected = LedgerTypeUi.Expense == selectedType,
+                type = LedgerTypeUi.Expense,
+                onClick = {
+                    onLedgerTypeClick(LedgerTypeUi.Expense)
+                }
+            )
+        }
     }
 }
 
@@ -61,14 +67,14 @@ private fun LedgerTypeChip(
     type: LedgerTypeUi,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (isSelected) PickleTheme.colors.gray700 else PickleTheme.colors.gray100
+    val backgroundColor = if (isSelected) PickleTheme.colors.gray700 else PickleTheme.colors.transparent
     val textColor = if (isSelected) PickleTheme.colors.base0 else PickleTheme.colors.gray600
 
     Surface(
-        modifier = modifier.height(60.dp),
+        modifier = modifier.height(44.dp),
         onClick = onClick,
         color = backgroundColor,
-        shape = RoundedCornerShape(Dimensions.radius)
+        shape = RoundedCornerShape(14.dp)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),

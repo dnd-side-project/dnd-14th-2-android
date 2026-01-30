@@ -36,7 +36,7 @@ fun LedgerAmountInputField(
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp, vertical = 20.dp),
+            .padding(horizontal = 18.dp, vertical = 10.dp),
         value = value,
         onValueChange = { new ->
             val digitsOnly = new.filter(Char::isDigit)

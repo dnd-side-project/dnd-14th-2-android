@@ -49,8 +49,7 @@ fun LedgerDescriptionInputFiled(
     val borderWidth = if (value.isEmpty()) 0.dp else 1.5.dp
 
     Column(
-        modifier = modifier
-            .padding(horizontal = 16.dp)
+        modifier = modifier.padding(vertical = 4.dp)
     ) {
         LedgerCreateHeaderText(
             text = stringResource(R.string.ledger_create_description_header),
@@ -114,6 +113,8 @@ fun LedgerDescriptionInputFiled(
                 }
             }
         )
+
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 

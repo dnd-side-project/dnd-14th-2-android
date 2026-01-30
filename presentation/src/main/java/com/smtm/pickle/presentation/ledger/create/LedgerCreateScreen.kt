@@ -72,7 +72,7 @@ private fun LedgerCreateContent(
     uiState: LedgerCreateUiSate,
     setAmount: (String) -> Unit,
     selectLedgerType: (LedgerTypeUi) -> Unit,
-    selectCategory: (CategoryUi) -> Unit,
+    selectCategory: (CategoryUi?) -> Unit,
     setDescription: (String) -> Unit,
     setStep: (LedgerCreateStep) -> Unit,
     selectPaymentMethod: (PaymentMethodUi) -> Unit,

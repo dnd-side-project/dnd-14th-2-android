@@ -23,23 +23,28 @@ import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 import com.smtm.pickle.presentation.home.model.CategoryUi
+import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderText
 
 @Composable
 fun LedgerCategorySelectors(
     modifier: Modifier = Modifier,
+    selectedLedgerType: LedgerTypeUi? = null,
     selectedCategory: CategoryUi? = null,
     onCategoryClick: (CategoryUi) -> Unit
 ) {
-    Column(modifier = modifier) {
+    val categories = getCategories(selectedLedgerType)
+
+    Column(modifier = modifier.padding(vertical = 4.dp)) {
         LedgerCreateHeaderText(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
             text = stringResource(R.string.ledger_create_category_header),
             highlightText = stringResource(R.string.ledger_create_category_header_highlight),
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
+
         CategoryGrid(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            categories = categories,
             selectedCategory = selectedCategory,
             onCategoryClick = onCategoryClick,
         )
@@ -49,14 +54,10 @@ fun LedgerCategorySelectors(
 @Composable
 private fun CategoryGrid(
     modifier: Modifier = Modifier,
+    categories: List<CategoryUi>,
     selectedCategory: CategoryUi? = null,
     onCategoryClick: (CategoryUi) -> Unit,
 ) {
-    val categories = listOf(
-        CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
-        CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
-        CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other
-    )
     val rows = categories.chunked(3)
     Column(
         modifier = modifier,
@@ -119,6 +120,33 @@ private fun CategoryChip(
 
     }
 }
+
+private fun getCategories(ledgerType: LedgerTypeUi?): List<CategoryUi> = when (ledgerType) {
+    LedgerTypeUi.Income -> {
+        listOf(
+            CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other,
+            CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
+            CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
+        )
+    }
+
+    LedgerTypeUi.Expense -> {
+        listOf(
+            CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
+            CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
+            CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other,
+        )
+    }
+
+    null -> {
+        listOf(
+            CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
+            CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
+            CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other,
+        )
+    }
+}
+
 
 @Preview(
     name = "LedgerCategorySelectorsPreview - Non Selected",

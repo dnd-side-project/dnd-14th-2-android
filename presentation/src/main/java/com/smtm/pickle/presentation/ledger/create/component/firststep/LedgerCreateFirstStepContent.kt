@@ -25,7 +25,7 @@ fun LedgerCreateFirstStepContent(
     description: String,
     onAmountChange: (String) -> Unit,
     onLedgerTypeClick: (LedgerTypeUi) -> Unit,
-    onCategoryClick: (CategoryUi) -> Unit,
+    onCategoryClick: (CategoryUi?) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -37,30 +37,38 @@ fun LedgerCreateFirstStepContent(
             .imePadding()
             .verticalScroll(scrollState)
     ) {
+        LedgerTypeSelectors(
+            selectedType = selectedLedgerType,
+            onLedgerTypeClick = { selectedType ->
+                if (selectedType == selectedLedgerType) return@LedgerTypeSelectors
+                onLedgerTypeClick(selectedType)
+                onCategoryClick(null)
+            },
+        )
+
         LedgerAmountInputField(
-            modifier = Modifier.padding(top = 30.dp),
             value = amount,
             onValueChange = onAmountChange,
         )
 
-        LedgerTypeSelectors(
-            selectedType = selectedLedgerType,
-            onLedgerTypeClick = onLedgerTypeClick,
-        )
+        Spacer(modifier = Modifier.height(10.dp))
 
         LedgerCategorySelectors(
+            modifier = Modifier.padding(16.dp),
+            selectedLedgerType = selectedLedgerType,
             selectedCategory = selectedCategory,
             onCategoryClick = onCategoryClick,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         LedgerDescriptionInputFiled(
+            modifier = Modifier.padding(16.dp),
             value = description,
             onValueChange = onDescriptionChange,
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Spacer(modifier = Modifier.weight(1f))
 

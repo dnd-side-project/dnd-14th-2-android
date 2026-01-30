@@ -79,7 +79,7 @@ class LedgerCreateViewModel @Inject constructor(
         _uiState.update { state -> state.copy(selectedLedgerType = type) }
     }
 
-    fun selectCategory(category: CategoryUi) {
+    fun selectCategory(category: CategoryUi?) {
         _uiState.update { state -> state.copy(selectedCategory = category) }
     }
 
