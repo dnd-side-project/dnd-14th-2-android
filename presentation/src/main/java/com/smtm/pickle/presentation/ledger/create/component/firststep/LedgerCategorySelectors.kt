@@ -124,9 +124,9 @@ private fun CategoryChip(
 private fun getCategories(ledgerType: LedgerTypeUi?): List<CategoryUi> = when (ledgerType) {
     LedgerTypeUi.Income -> {
         listOf(
-            CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other,
-            CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
-            CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
+            CategoryUi.Salary, CategoryUi.SideIncome, CategoryUi.Bonus,
+            CategoryUi.Allowance, CategoryUi.PartTimeIncome, CategoryUi.FinancialIncome,
+            CategoryUi.SplitBill, CategoryUi.Transfer, CategoryUi.Other,
         )
     }
 

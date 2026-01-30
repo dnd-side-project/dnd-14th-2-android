@@ -27,6 +27,7 @@ data class LedgerSummary(
     val totalIncome: Long,
     val totalExpense: Long,
 )
+
 enum class LedgerType { INCOME, EXPENSE }
 
 enum class PaymentMethod {
@@ -34,15 +35,28 @@ enum class PaymentMethod {
 }
 
 enum class LedgerCategory {
-    FOOD,
-    TRANSPORT,
-    HOUSING,
-    SHOPPING,
-    HEALTH_MEDICAL,
-    EDUCATION_SELF_DEVELOPMENT,
-    LEISURE_HOBBY,
-    SAVING_FINANCE,
-    OTHER,
+    // 지출
+    Food,
+    Transport,
+    Housing,
+    Shopping,
+    HealthMedical,
+    EducationSelfDevelopment,
+    LeisureHobby,
+    SavingFinance,
+
+    // 수입
+    Salary,
+    SideIncome,
+    Bonus,
+    Allowance,
+    PartTimeIncome,
+    FinancialIncome,
+    SplitBill,
+    Transfer,
+
+    // 기타
+    Other,
 }
 
 fun List<Ledger>.summarize(): LedgerSummary = LedgerSummary(

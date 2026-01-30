@@ -57,6 +57,54 @@ sealed class CategoryUi(
         inactivatedIconResId = R.drawable.ic_ledger_category_saving_finance_inactivated,
     )
 
+    data object Salary : CategoryUi(
+        stringResId = R.string.ledger_category_salary,
+        activatedIconResId = R.drawable.ic_ledger_category_salary_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_salary_inactivated,
+    )
+
+    data object SideIncome : CategoryUi(
+        stringResId = R.string.ledger_category_side_income,
+        activatedIconResId = R.drawable.ic_ledger_category_side_income_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_side_income_inactivated,
+    )
+
+    data object Bonus : CategoryUi(
+        stringResId = R.string.ledger_category_bonus,
+        activatedIconResId = R.drawable.ic_ledger_category_bonus_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_bonus_inactivated,
+    )
+
+    data object Allowance : CategoryUi(
+        stringResId = R.string.ledger_category_allowance,
+        activatedIconResId = R.drawable.ic_ledger_category_allowance_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_allowance_inactivated,
+    )
+
+    data object PartTimeIncome : CategoryUi(
+        stringResId = R.string.ledger_category_part_time_income,
+        activatedIconResId = R.drawable.ic_ledger_category_part_time_income_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_part_time_income_inactivated,
+    )
+
+    data object FinancialIncome : CategoryUi(
+        stringResId = R.string.ledger_category_financial_income,
+        activatedIconResId = R.drawable.ic_ledger_category_financial_income_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_financial_income_inactivated,
+    )
+
+    data object SplitBill : CategoryUi(
+        stringResId = R.string.ledger_category_split_bill,
+        activatedIconResId = R.drawable.ic_ledger_category_split_bill_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_split_bill_inactivated,
+    )
+
+    data object Transfer : CategoryUi(
+        stringResId = R.string.ledger_category_transfer,
+        activatedIconResId = R.drawable.ic_ledger_category_transfer_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_transfer_inactivated,
+    )
+
     data object Other : CategoryUi(
         stringResId = R.string.ledger_category_other,
         activatedIconResId = R.drawable.ic_ledger_category_other_activated,
