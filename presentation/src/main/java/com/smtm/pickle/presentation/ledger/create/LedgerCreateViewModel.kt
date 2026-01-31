@@ -30,26 +30,36 @@ class LedgerCreateViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LedgerCreateUiState())
     val uiState: StateFlow<LedgerCreateUiState> = _uiState.asStateFlow()
 
-    private val _sideEffect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
-    val sideEffect: SharedFlow<LedgerCreateEffect> = _sideEffect.asSharedFlow()
+    private val _effect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
+    val effect: SharedFlow<LedgerCreateEffect> = _effect.asSharedFlow()
 
     fun createLedger(date: LocalDate) {
         viewModelScope.launch {
             val id = (1000..99999).random().toLong()
+            val state = _uiState.value
+            val type = state.selectedLedgerType?.toDomain() ?: return@launch
+            val amount = state.amount.toLongOrNull()?.takeIf { it > 0 } ?: return@launch
+            val category = state.selectedCategory?.toDomain() ?: return@launch
+            val paymentMethod = state.selectedPaymentMethod?.toDomain() ?: return@launch
+
             val newLedger = Ledger(
                 id = LedgerId(id),
-                type = _uiState.value.selectedLedgerType!!.toDomain(),
-                amount = Money(_uiState.value.amount.toLong()),
-                category = _uiState.value.selectedCategory!!.toDomain(),
-                description = _uiState.value.description,
+                type = type,
+                amount = Money(amount),
+                category = category,
+                description = state.description,
                 occurredOn = date,
-                paymentMethod = _uiState.value.selectedPaymentMethod!!.toDomain(),
-                memo = _uiState.value.memo.takeIf { it.isNotEmpty() }
+                paymentMethod = paymentMethod,
+                memo = state.memo.takeIf { it.isNotEmpty() }
             )
 
-            val ledgerId = createLedgerUseCase(newLedger)
-
-            _sideEffect.emit(LedgerCreateEffect.NavigateToHome)
+            createLedgerUseCase(newLedger)
+                .onSuccess {
+                    _effect.emit(LedgerCreateEffect.NavigateToHome)
+                }
+                .onFailure {
+                    _effect.emit(LedgerCreateEffect.ShowSnackBar("저장에 실패했습니다."))
+                }
         }
     }
 
@@ -108,6 +118,7 @@ data class LedgerCreateUiState(
 
 sealed interface LedgerCreateEffect {
     data object NavigateToHome : LedgerCreateEffect
+    data class ShowSnackBar(val msg: String) : LedgerCreateEffect
 }
 
 enum class LedgerCreateStep { FIRST, SECOND }

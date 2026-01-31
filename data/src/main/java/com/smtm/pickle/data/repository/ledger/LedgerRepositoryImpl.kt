@@ -8,7 +8,9 @@ import com.smtm.pickle.domain.model.ledger.Ledger
 import com.smtm.pickle.domain.model.ledger.LedgerId
 import com.smtm.pickle.domain.repository.ledger.LedgerRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
@@ -27,7 +29,17 @@ class LedgerRepositoryImpl @Inject constructor(
         return ledgerDao.observeByDateRange(
             fromEpochDay = from.toEpochDay(),
             toEpochDay = to.toEpochDay(),
-        ).map { entities -> entities.map { it.toDomain() } }
+        ).map { entities ->
+            entities.mapNotNull { entity ->
+                try {
+                    entity.toDomain()
+                } catch (e: IllegalStateException) {
+                    Timber.e(e, "Invalid entity skipped: id=${entity.id}")
+                    null
+                }
+            }
+        }
+            .distinctUntilChanged()
     }
 
     override suspend fun ensureSynced(from: LocalDate, to: LocalDate) {
@@ -56,9 +68,8 @@ class LedgerRepositoryImpl @Inject constructor(
         return months
     }
 
-    override suspend fun createLedger(ledger: Ledger): LedgerId {
-        val insertedId = ledgerDao.insert(ledger.toEntity())
-        return LedgerId(insertedId)
+    override suspend fun createLedger(ledger: Ledger) {
+        ledgerDao.insert(ledger.toEntity())
     }
 
     override suspend fun updateLedger(ledger: Ledger) {

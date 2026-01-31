@@ -27,7 +27,7 @@ interface LedgerDao {
     fun observeById(id: Long): Flow<LedgerEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: LedgerEntity): Long
+    suspend fun insert(entity: LedgerEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<LedgerEntity>)

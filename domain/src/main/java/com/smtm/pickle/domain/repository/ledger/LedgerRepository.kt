@@ -12,7 +12,7 @@ interface LedgerRepository {
     // 동기화: 외부 데이터 -> Room 캐시 보장
     suspend fun ensureSynced(from: LocalDate, to: LocalDate)
 
-    suspend fun createLedger(ledger: Ledger): LedgerId
+    suspend fun createLedger(ledger: Ledger)
     suspend fun updateLedger(ledger: Ledger)
     suspend fun deleteLedger(ledger: LedgerId)
 }

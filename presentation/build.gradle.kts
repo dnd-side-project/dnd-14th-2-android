@@ -61,6 +61,9 @@ dependencies {
     // Calendar
     implementation(libs.kizitonwose.calendar.compose)
 
+    // Logging
+    implementation(libs.timber)
+
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.test)
