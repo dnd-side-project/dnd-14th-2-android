@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarData
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarPosition
 import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarState
-import com.smtm.pickle.presentation.designsystem.components.snackbar.model.VerticalAlignment
+import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarAlignment
 import com.smtm.pickle.presentation.designsystem.theme.dimension.Dimensions
 
 /**
@@ -110,8 +110,8 @@ private fun SnackbarPosition.toAlignment(): Alignment =
 
         is SnackbarPosition.Custom -> {
             when (alignment) {
-                VerticalAlignment.Top -> Alignment.TopCenter
-                VerticalAlignment.Bottom -> Alignment.BottomCenter
+                SnackbarAlignment.Top -> Alignment.TopCenter
+                SnackbarAlignment.Bottom -> Alignment.BottomCenter
             }
         }
     }
@@ -142,12 +142,12 @@ private fun Modifier.applyPositionPadding(position: SnackbarPosition): Modifier 
 
         is SnackbarPosition.Custom ->
             when (position.alignment) {
-                VerticalAlignment.Top ->
+                SnackbarAlignment.Top ->
                     this
                         .statusBarsPadding()
                         .padding(top = position.extraPadding)
 
-                VerticalAlignment.Bottom ->
+                SnackbarAlignment.Bottom ->
                     this
                         .navigationBarsPadding()
                         .padding(bottom = position.extraPadding)
