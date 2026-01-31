@@ -53,6 +53,7 @@ object Dimensions {
     // Corner Radius
     val radiusSmall = 10.dp
     val radius = 12.dp
+    val radiusStadium = 100.dp
     /** 컨텐츠를 포함하는 카드 */
     val radiusSurface = 16.dp
     /** 바텀시트, 다이얼로그 등 */

@@ -1,0 +1,168 @@
+package com.smtm.pickle.presentation.home.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.ContentHeightMode
+import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.WeekCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.model.CalendarMode
+import com.smtm.pickle.presentation.home.model.LedgerCalendarDay
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+
+@Composable
+fun LedgerCalendar(
+    modifier: Modifier = Modifier,
+    ledgerCalendarDays: Map<LocalDate, LedgerCalendarDay>,
+    calendarMode: CalendarMode,
+    selectedYearMonth: YearMonth,
+    selectedDate: LocalDate,
+    onModeChange: (CalendarMode) -> Unit,
+    onMonthArrowClick: () -> Unit,
+    onDateClick: (LocalDate) -> Unit,
+    onMonthChanged: (YearMonth) -> Unit,
+) {
+    val currentMonth = YearMonth.now()
+    val startMonth = currentMonth.minusMonths(12)
+    val endMonth = currentMonth.plusMonths(12)
+
+    val monthlyCalendarState = rememberCalendarState(
+        startMonth = startMonth,
+        endMonth = endMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = DayOfWeek.SATURDAY,
+    )
+
+    val weeklyCalendarState = rememberWeekCalendarState(
+        startDate = startMonth.atStartOfMonth(),
+        endDate = endMonth.atEndOfMonth(),
+        firstVisibleWeekDate = selectedDate,
+        firstDayOfWeek = DayOfWeek.SATURDAY,
+    )
+
+    LaunchedEffect(monthlyCalendarState) {
+        snapshotFlow { monthlyCalendarState.firstVisibleMonth.yearMonth }
+            .collect { visibleMonth -> onMonthChanged(visibleMonth) }
+    }
+
+    LaunchedEffect(weeklyCalendarState) {
+        snapshotFlow { weeklyCalendarState.firstVisibleWeek }
+            .collect { visibleWeek ->
+                val activatedMonth = YearMonth.from(visibleWeek.days.first().date)
+                onMonthChanged(activatedMonth)
+            }
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(PickleTheme.colors.base0)
+            .padding(vertical = 16.dp)
+    ) {
+        MonthHeader(
+            yearMonth = selectedYearMonth,
+            calendarMode = calendarMode,
+            onModeChange = onModeChange,
+            onMonthArrowClick = onMonthArrowClick
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        WeekDaysHeader()
+        when (calendarMode) {
+            CalendarMode.MONTHLY -> {
+                HorizontalCalendar(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = monthlyCalendarState,
+                    contentHeightMode = ContentHeightMode.Wrap,
+                    dayContent = { day ->
+                        val ledgerCalendarDay = ledgerCalendarDays[day.date]
+                        MonthlyDayCell(
+                            day = day,
+                            isSelected = selectedDate == day.date,
+                            totalExpense = ledgerCalendarDay?.totalExpense,
+                            totalIncome = ledgerCalendarDay?.totalIncome,
+                            onClick = { clickedDay ->
+                                onDateClick(clickedDay.date)
+                            }
+                        )
+                    }
+                )
+            }
+
+            CalendarMode.WEEKLY -> {
+                WeekCalendar(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = weeklyCalendarState,
+                    dayContent = { day ->
+                        val ledgerCalendarDay = ledgerCalendarDays[day.date]
+                        WeeklyDayCell(
+                            day = day,
+                            isSelected = selectedDate == day.date,
+                            totalExpense = ledgerCalendarDay?.totalExpense,
+                            totalIncome = ledgerCalendarDay?.totalIncome,
+                            onClick = { clickedDay ->
+                                onDateClick(clickedDay.date)
+                            }
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Preview(
+    name = "LedgerCalendar - Monthly",
+    showBackground = true,
+    widthDp = 360
+)
+@Composable
+private fun LedgerCalendarMonthlyPreview() {
+    val currentDate = LocalDate.now()
+
+    LedgerCalendar(
+        ledgerCalendarDays = emptyMap(),
+        calendarMode = CalendarMode.MONTHLY,
+        selectedYearMonth = YearMonth.now(),
+        selectedDate = currentDate,
+        onModeChange = {},
+        onMonthArrowClick = {},
+        onDateClick = {},
+        onMonthChanged = {},
+    )
+}
+
+@Preview(
+    name = "LedgerCalendar - Weekly",
+    showBackground = true,
+    widthDp = 360
+)
+@Composable
+private fun LedgerCalendarWeeklyPreview() {
+    val currentDate = LocalDate.now()
+
+    LedgerCalendar(
+        ledgerCalendarDays = emptyMap(),
+        calendarMode = CalendarMode.WEEKLY,
+        selectedYearMonth = YearMonth.now(),
+        selectedDate = currentDate,
+        onModeChange = {},
+        onMonthArrowClick = {},
+        onDateClick = {},
+        onMonthChanged = {},
+    )
+}

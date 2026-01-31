@@ -1,11 +1,13 @@
 package com.smtm.pickle.presentation.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.unit.dp
 import com.smtm.pickle.presentation.designsystem.theme.color.LightColorScheme
 import com.smtm.pickle.presentation.designsystem.theme.color.LightPickleColors
 import com.smtm.pickle.presentation.designsystem.theme.color.LightSemanticColors
@@ -35,7 +37,13 @@ fun PickleTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography(),
-            content = content
+            content = {
+                CompositionLocalProvider(
+                    LocalMinimumInteractiveComponentSize provides 0.dp,
+                ) {
+                    content()
+                }
+            }
         )
     }
 }

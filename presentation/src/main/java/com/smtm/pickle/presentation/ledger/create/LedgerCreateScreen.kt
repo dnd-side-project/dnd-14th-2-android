@@ -1,27 +1,147 @@
 package com.smtm.pickle.presentation.ledger.create
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.smtm.pickle.presentation.R
+import com.smtm.pickle.presentation.common.extension.clearFocusOnBackgroundTab
+import com.smtm.pickle.presentation.designsystem.components.snackbar.PickleSnackbar
+import com.smtm.pickle.presentation.designsystem.components.snackbar.SnackbarHost
+import com.smtm.pickle.presentation.designsystem.components.snackbar.model.SnackbarState
+import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
+import com.smtm.pickle.presentation.home.model.CategoryUi
+import com.smtm.pickle.presentation.home.model.LedgerTypeUi
+import com.smtm.pickle.presentation.home.model.PaymentMethodUi
+import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateTopBar
+import com.smtm.pickle.presentation.ledger.create.component.firststep.LedgerCreateFirstStepContent
+import com.smtm.pickle.presentation.ledger.create.component.secondStep.LedgerCreateSecondContent
+import java.time.LocalDate
 
 @Composable
-fun LedgerCreateScreen() {
+fun LedgerCreateScreen(
+    viewModel: LedgerCreateViewModel = hiltViewModel(),
+    date: LocalDate,
+    onNavigateBack: () -> Unit,
+    onNavigateToHome: () -> Unit,
+) {
 
-    LedgerCreateContent()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarState = remember { SnackbarState() }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    LedgerCreateEffect.NavigateToHome -> {
+                        onNavigateToHome()
+                    }
+
+                    is LedgerCreateEffect.ShowSnackBar -> {
+                        snackbarState.show(
+                            PickleSnackbar.snackbarShort(
+                                message = effect.msg,
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LedgerCreateContent(
+            date = date,
+            uiState = uiState,
+            setAmount = viewModel::setAmount,
+            selectLedgerType = viewModel::selectLedgerType,
+            selectCategory = viewModel::selectCategory,
+            setDescription = viewModel::setDescription,
+            setStep = viewModel::setStep,
+            selectPaymentMethod = viewModel::selectPaymentMethod,
+            setMemo = viewModel::setMemo,
+            createLedger = viewModel::createLedger,
+            onNavigateBack = onNavigateBack,
+        )
+
+        SnackbarHost(snackbarState = snackbarState)
+    }
 }
 
 @Composable
-private fun LedgerCreateContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+private fun LedgerCreateContent(
+    date: LocalDate,
+    uiState: LedgerCreateUiState,
+    setAmount: (String) -> Unit,
+    selectLedgerType: (LedgerTypeUi) -> Unit,
+    selectCategory: (CategoryUi?) -> Unit,
+    setDescription: (String) -> Unit,
+    setStep: (LedgerCreateStep) -> Unit,
+    selectPaymentMethod: (PaymentMethodUi) -> Unit,
+    setMemo: (String) -> Unit,
+    createLedger: (LocalDate) -> Unit,
+    onNavigateBack: () -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PickleTheme.colors.base0)
+            .systemBarsPadding()
+            .clearFocusOnBackgroundTab(focusManager),
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Ledger Create Screen")
+        LedgerCreateTopBar(
+            text = stringResource(R.string.ledger_create_date_format, date.year, date.monthValue, date.dayOfMonth),
+            onNavigationClick = {
+                when (uiState.step) {
+                    LedgerCreateStep.FIRST -> onNavigateBack()
+                    LedgerCreateStep.SECOND -> setStep(LedgerCreateStep.FIRST)
+                }
+            },
+            step = uiState.step
+        )
+
+        when (uiState.step) {
+            LedgerCreateStep.FIRST -> {
+                LedgerCreateFirstStepContent(
+                    amount = uiState.amount,
+                    selectedLedgerType = uiState.selectedLedgerType,
+                    selectedCategory = uiState.selectedCategory,
+                    description = uiState.description,
+                    onAmountChange = setAmount,
+                    onLedgerTypeClick = selectLedgerType,
+                    onCategoryClick = selectCategory,
+                    onDescriptionChange = setDescription,
+                    onNextClick = { setStep(LedgerCreateStep.SECOND) },
+                )
+            }
+
+            LedgerCreateStep.SECOND -> {
+                LedgerCreateSecondContent(
+                    selectedPaymentMethod = uiState.selectedPaymentMethod,
+                    memo = uiState.memo,
+                    onSelectedPaymentMethod = selectPaymentMethod,
+                    onMemoChange = setMemo,
+                    onPreviousClick = { setStep(LedgerCreateStep.FIRST) },
+                    onSuccessClick = { createLedger(date) },
+                )
+            }
         }
     }
 }
