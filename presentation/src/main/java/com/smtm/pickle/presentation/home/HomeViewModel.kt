@@ -30,7 +30,6 @@ import timber.log.Timber
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -67,15 +66,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun ensureLedgersSynced(yearMonth: YearMonth) {
-        try {
-            ensureLedgersSyncedUseCase(
-                baseMonth = yearMonth,
-                monthsBack = 3,
-                monthsForward = 3,
-            )
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
+        ensureLedgersSyncedUseCase(
+            baseMonth = yearMonth,
+            monthsBack = 3,
+            monthsForward = 3,
+        ).onFailure { e ->
             Timber.e(e, "ensureLedgersSynced() failed")
             _effect.emit(HomeEffect.ShowSnackBar("최신 데이터를 불러오는데 실패했습니다."))
         }

@@ -10,6 +10,8 @@ import com.smtm.pickle.domain.repository.ledger.LedgerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.YearMonth
@@ -21,6 +23,7 @@ class LedgerRepositoryImpl @Inject constructor(
 ) : LedgerRepository {
 
     private val syncedMonths = mutableSetOf<YearMonth>()
+    private val syncMutex = Mutex()
 
     override fun observeLedgers(
         from: LocalDate,
@@ -43,18 +46,20 @@ class LedgerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun ensureSynced(from: LocalDate, to: LocalDate) {
-        val requestedMonths = generateMonthRange(from, to)
-        val unsyncedMonths = requestedMonths.filter { it !in syncedMonths }
+        syncMutex.withLock {
+            val requestedMonths = generateMonthRange(from, to)
+            val unsyncedMonths = requestedMonths.filter { it !in syncedMonths }
 
-        if (unsyncedMonths.isEmpty()) return
+            if (unsyncedMonths.isEmpty()) return
 
-        val syncFrom = unsyncedMonths.min().atDay(1)
-        val syncTo = unsyncedMonths.max().atEndOfMonth()
+            val syncFrom = unsyncedMonths.min().atDay(1)
+            val syncTo = unsyncedMonths.max().atEndOfMonth()
 
-        val remoteLedgers = ledgerApi.getLedgers(syncFrom, syncTo)
-        ledgerDao.insertAll(remoteLedgers)
+            val remoteLedgers = ledgerApi.getLedgers(syncFrom, syncTo)
+            ledgerDao.insertAll(remoteLedgers)
 
-        syncedMonths.addAll(unsyncedMonths)
+            syncedMonths.addAll(unsyncedMonths)
+        }
     }
 
     private fun generateMonthRange(from: LocalDate, to: LocalDate): List<YearMonth> {

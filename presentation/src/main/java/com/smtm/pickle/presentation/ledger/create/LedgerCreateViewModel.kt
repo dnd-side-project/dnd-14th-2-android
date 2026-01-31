@@ -33,7 +33,12 @@ class LedgerCreateViewModel @Inject constructor(
     private val _effect = MutableSharedFlow<LedgerCreateEffect>(replay = 0)
     val effect: SharedFlow<LedgerCreateEffect> = _effect.asSharedFlow()
 
+    private var isCreating: Boolean = false
+
     fun createLedger(date: LocalDate) {
+        if (isCreating) return
+        isCreating = true
+
         viewModelScope.launch {
             val id = (1000..99999).random().toLong()
             val state = _uiState.value
@@ -60,6 +65,8 @@ class LedgerCreateViewModel @Inject constructor(
                 .onFailure {
                     _effect.emit(LedgerCreateEffect.ShowSnackBar("저장에 실패했습니다."))
                 }
+
+            isCreating = false
         }
     }
 
