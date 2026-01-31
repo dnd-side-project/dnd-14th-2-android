@@ -47,8 +47,8 @@ sealed class CategoryUi(
 
     data object LeisureHobby : CategoryUi(
         stringResId = R.string.ledger_category_leisure_hobby,
-        activatedIconResId = R.drawable.ic_ledger_category_leisure_hoby_activated,
-        inactivatedIconResId = R.drawable.ic_ledger_category_leisure_hoby_inactivated,
+        activatedIconResId = R.drawable.ic_ledger_category_leisure_hobby_activated,
+        inactivatedIconResId = R.drawable.ic_ledger_category_leisure_hobby_inactivated,
     )
 
     data object SavingFinance : CategoryUi(
