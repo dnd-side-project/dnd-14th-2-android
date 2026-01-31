@@ -1,5 +1,7 @@
 package com.smtm.pickle.data.di
 
+import com.smtm.pickle.data.repository.UserRepositoryImpl
+import com.smtm.pickle.domain.repository.UserRepository
 import com.smtm.pickle.data.repository.FakeNicknameRepository
 import com.smtm.pickle.data.repository.ledger.LedgerRepositoryImpl
 import com.smtm.pickle.domain.repository.NicknameRepository
@@ -13,6 +15,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 
     @Binds
     abstract fun bindNicknameRepository(impl: FakeNicknameRepository): NicknameRepository

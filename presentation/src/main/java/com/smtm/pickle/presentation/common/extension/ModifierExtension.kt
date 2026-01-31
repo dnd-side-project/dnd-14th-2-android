@@ -41,7 +41,10 @@ fun Modifier.clearFocusOnBackgroundTab(
     focusManager: FocusManager
 ) = pointerInput(focusManager) {
     awaitEachGesture {
-        val down = awaitFirstDown(pass = PointerEventPass.Final)    // 내부 Composable의 처리를 우선하기 위해 `PointerEventPass.Final` 사용
+        val down = awaitFirstDown(
+            pass = PointerEventPass.Final, // 내부 Composable의 처리를 우선하기 위해 `PointerEventPass.Final` 사용
+            requireUnconsumed = false
+        )
         if (down.isConsumed) return@awaitEachGesture
 
         val pointerId = down.id

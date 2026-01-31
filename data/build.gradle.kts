@@ -52,6 +52,7 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
     // Hilt
     implementation(libs.hilt.android)
