@@ -40,33 +40,35 @@ class LedgerCreateViewModel @Inject constructor(
         isCreating = true
 
         viewModelScope.launch {
-            val id = (1000..99999).random().toLong()
-            val state = _uiState.value
-            val type = state.selectedLedgerType?.toDomain() ?: return@launch
-            val amount = state.amount.toLongOrNull()?.takeIf { it > 0 } ?: return@launch
-            val category = state.selectedCategory?.toDomain() ?: return@launch
-            val paymentMethod = state.selectedPaymentMethod?.toDomain() ?: return@launch
+            try {
+                val id = (1000..99999).random().toLong()
+                val state = _uiState.value
+                val type = state.selectedLedgerType?.toDomain() ?: return@launch
+                val amount = state.amount.toLongOrNull()?.takeIf { it > 0 } ?: return@launch
+                val category = state.selectedCategory?.toDomain() ?: return@launch
+                val paymentMethod = state.selectedPaymentMethod?.toDomain() ?: return@launch
 
-            val newLedger = Ledger(
-                id = LedgerId(id),
-                type = type,
-                amount = Money(amount),
-                category = category,
-                description = state.description,
-                occurredOn = date,
-                paymentMethod = paymentMethod,
-                memo = state.memo.takeIf { it.isNotEmpty() }
-            )
+                val newLedger = Ledger(
+                    id = LedgerId(id),
+                    type = type,
+                    amount = Money(amount),
+                    category = category,
+                    description = state.description,
+                    occurredOn = date,
+                    paymentMethod = paymentMethod,
+                    memo = state.memo.takeIf { it.isNotEmpty() }
+                )
 
-            createLedgerUseCase(newLedger)
-                .onSuccess {
-                    _effect.emit(LedgerCreateEffect.NavigateToHome)
-                }
-                .onFailure {
-                    _effect.emit(LedgerCreateEffect.ShowSnackBar("저장에 실패했습니다."))
-                }
-
-            isCreating = false
+                createLedgerUseCase(newLedger)
+                    .onSuccess {
+                        _effect.emit(LedgerCreateEffect.NavigateToHome)
+                    }
+                    .onFailure {
+                        _effect.emit(LedgerCreateEffect.ShowSnackBar("저장에 실패했습니다."))
+                    }
+            } finally {
+                isCreating = false
+            }
         }
     }
 
