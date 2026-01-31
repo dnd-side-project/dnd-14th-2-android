@@ -36,7 +36,7 @@ class LedgerRepositoryImpl @Inject constructor(
             entities.mapNotNull { entity ->
                 try {
                     entity.toDomain()
-                } catch (e: IllegalStateException) {
+                } catch (e: Exception) {
                     Timber.e(e, "Invalid entity skipped: id=${entity.id}")
                     null
                 }

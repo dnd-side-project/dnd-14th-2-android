@@ -25,7 +25,7 @@ fun Ledger.toUiModel(): LedgerUi = LedgerUi(
     memo = memo
 )
 
-fun List<Ledger>.toLedgerCalendarDays(): List<LedgerCalendarDay> =
+fun List<Ledger>.toLedgerCalendarDays(): Map<LocalDate, LedgerCalendarDay> =
     groupBy { it.occurredOn }
         .map { (date, ledgers) ->
             val dayTotalIncome = ledgers
@@ -42,7 +42,7 @@ fun List<Ledger>.toLedgerCalendarDays(): List<LedgerCalendarDay> =
                 totalExpense = dayTotalExpense,
             )
         }
-        .sortedByDescending { it.date }
+        .associateBy { it.date }
 
 fun LedgerTypeUi.toDomain(): LedgerType = when (this) {
     LedgerTypeUi.Income -> LedgerType.INCOME

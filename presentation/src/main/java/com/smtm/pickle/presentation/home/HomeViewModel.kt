@@ -139,7 +139,7 @@ class HomeViewModel @Inject constructor(
 }
 
 data class HomeUiState(
-    val ledgerCalendarDays: List<LedgerCalendarDay> = emptyList(),
+    val ledgerCalendarDays: Map<LocalDate, LedgerCalendarDay> = emptyMap(),
     val dailyLedger: List<LedgerUi> = emptyList(),
     val monthlyTotalIncome: Long = 0L,
     val monthlyTotalExpense: Long = 0L,

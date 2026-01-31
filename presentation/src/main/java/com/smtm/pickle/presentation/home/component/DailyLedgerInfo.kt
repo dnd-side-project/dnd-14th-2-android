@@ -78,7 +78,7 @@ fun LazyListScope.dailyLedgerInfoSection(
                     .padding(horizontal = 16.dp)
                     .padding(top = paddingTop, bottom = paddingBottom),
                 title = stringResource(item.category.stringResId),
-                description = stringResource(item.category.stringResId),
+                description = item.description,
                 amount = if (item.type == LedgerTypeUi.Income) {
                     "+${item.amount}"
                 } else {

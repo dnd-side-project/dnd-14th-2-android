@@ -88,7 +88,7 @@ fun HomeScreen(
 private fun HomeContent(
     monthlyTotalIncome: Long,
     monthlyTotalExpense: Long,
-    ledgerCalendarDays: List<LedgerCalendarDay>,
+    ledgerCalendarDays: Map<LocalDate, LedgerCalendarDay>,
     dailyLedger: List<LedgerUi>,
     dailyTotalIncome: Long,
     dailyTotalExpense: Long,

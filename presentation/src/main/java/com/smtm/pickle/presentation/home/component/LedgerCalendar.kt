@@ -28,7 +28,7 @@ import java.time.YearMonth
 @Composable
 fun LedgerCalendar(
     modifier: Modifier = Modifier,
-    ledgerCalendarDays: List<LedgerCalendarDay>,
+    ledgerCalendarDays: Map<LocalDate, LedgerCalendarDay>,
     calendarMode: CalendarMode,
     selectedYearMonth: YearMonth,
     selectedDate: LocalDate,
@@ -89,7 +89,7 @@ fun LedgerCalendar(
                     state = monthlyCalendarState,
                     contentHeightMode = ContentHeightMode.Wrap,
                     dayContent = { day ->
-                        val ledgerCalendarDay = ledgerCalendarDays.firstOrNull { it.date == day.date }
+                        val ledgerCalendarDay = ledgerCalendarDays[day.date]
                         MonthlyDayCell(
                             day = day,
                             isSelected = selectedDate == day.date,
@@ -108,7 +108,7 @@ fun LedgerCalendar(
                     modifier = Modifier.fillMaxWidth(),
                     state = weeklyCalendarState,
                     dayContent = { day ->
-                        val ledgerCalendarDay = ledgerCalendarDays.firstOrNull { it.date == day.date }
+                        val ledgerCalendarDay = ledgerCalendarDays[day.date]
                         WeeklyDayCell(
                             day = day,
                             isSelected = selectedDate == day.date,
@@ -135,7 +135,7 @@ private fun LedgerCalendarMonthlyPreview() {
     val currentDate = LocalDate.now()
 
     LedgerCalendar(
-        ledgerCalendarDays = emptyList(),
+        ledgerCalendarDays = emptyMap(),
         calendarMode = CalendarMode.MONTHLY,
         selectedYearMonth = YearMonth.now(),
         selectedDate = currentDate,
@@ -156,7 +156,7 @@ private fun LedgerCalendarWeeklyPreview() {
     val currentDate = LocalDate.now()
 
     LedgerCalendar(
-        ledgerCalendarDays = emptyList(),
+        ledgerCalendarDays = emptyMap(),
         calendarMode = CalendarMode.WEEKLY,
         selectedYearMonth = YearMonth.now(),
         selectedDate = currentDate,
