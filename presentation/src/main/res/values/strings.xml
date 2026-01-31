@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Bottom Navigation -->
-    <string name="nav_home">홈</string>
-    <string name="nav_verdict">판결</string>
-    <string name="nav_mypage">마이페이지</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_verdict">Verdict</string>
+    <string name="nav_mypage">MyPage</string>
+
+    <!-- 에러 관련 -->
+    <string name="invaild_credential_type">Invalid credential type</string>
+    <string name="unknown_error">Unknown Error</string>
 </resources>
