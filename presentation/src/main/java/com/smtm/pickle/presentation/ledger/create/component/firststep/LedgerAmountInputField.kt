@@ -25,7 +25,8 @@ import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.common.utils.ThousandsSeparatorTransformation
 import com.smtm.pickle.presentation.designsystem.theme.PickleTheme
 
-private const val EmptyDigit = "0"
+private const val EMPTY_DIGIT = "0"
+private const val AMOUNT_MAX_LENGTH = 13
 
 @Composable
 fun LedgerAmountInputField(
@@ -35,6 +36,11 @@ fun LedgerAmountInputField(
 ) {
     val focusManager = LocalFocusManager.current
 
+    val baseFontSize = 40.sp
+    val digits = value.filter(Char::isDigit).length.coerceAtLeast(1)
+    val fontSizeScale = (9f / digits).coerceAtMost(1f)
+    val amountFontSize = baseFontSize * fontSizeScale
+
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -42,8 +48,8 @@ fun LedgerAmountInputField(
         value = value,
         onValueChange = { new ->
             val digitsOnly = new.filter(Char::isDigit)
-            val normalized = digitsOnly.trimStart('0').ifEmpty { EmptyDigit }
-            onValueChange(normalized)
+            val normalized = digitsOnly.trimStart('0').ifEmpty { EMPTY_DIGIT }
+            onValueChange(normalized.take(AMOUNT_MAX_LENGTH))
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -52,12 +58,12 @@ fun LedgerAmountInputField(
         ),
         textStyle = TextStyle(
             fontFamily = PickleTheme.typography.fontFamily,
-            fontSize = 40.sp,
+            fontSize = amountFontSize,
             fontWeight = FontWeight.Normal,
             color = PickleTheme.colors.gray800,
             textAlign = TextAlign.End
         ),
-        visualTransformation = ThousandsSeparatorTransformation(emptyText = EmptyDigit),
+        visualTransformation = ThousandsSeparatorTransformation(emptyText = EMPTY_DIGIT),
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
