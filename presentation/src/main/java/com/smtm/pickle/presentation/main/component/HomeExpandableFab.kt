@@ -1,12 +1,12 @@
 package com.smtm.pickle.presentation.main.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,30 +37,33 @@ fun HomeExpandableFab(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 IconButton(onClick = onCreateClick) {
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.ic_fab_edit),
                         contentDescription = "close",
                         modifier = Modifier.size(52.dp),
+                        tint = Color.Unspecified,
                     )
                 }
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onCloseClick) {
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.ic_fab_close),
-                        modifier = Modifier.size(52.dp),
                         contentDescription = "close",
+                        modifier = Modifier.size(52.dp),
+                        tint = Color.Unspecified,
                     )
                 }
             }
         }
     } else {
         IconButton(onClick = onOpenClick) {
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_fab_add),
                 contentDescription = "open",
                 modifier = Modifier.size(52.dp),
+                tint = Color.Unspecified,
             )
         }
     }

@@ -38,7 +38,7 @@ fun HomeProfile(
     ) {
         PickleProfile()
 
-        Spacer(modifier.width(12.dp))
+        Spacer(Modifier.width(12.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -52,7 +52,7 @@ fun HomeProfile(
             )
         }
 
-        Spacer(modifier.weight(1f))
+        Spacer(Modifier.weight(1f))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)

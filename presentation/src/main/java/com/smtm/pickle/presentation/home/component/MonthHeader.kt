@@ -1,7 +1,6 @@
 package com.smtm.pickle.presentation.home.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,10 +58,11 @@ fun MonthHeader(
                 modifier = Modifier.size(20.dp),
                 onClick = onMonthArrowClick
             ) {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.ic_arrow_down),
                     contentDescription = "arrow_down",
                     modifier = Modifier.size(20.dp),
+                    tint = Color.Unspecified,
                 )
             }
         }
@@ -113,14 +115,15 @@ fun CalendarModeToggle(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            Image(
+            Icon(
                 modifier = Modifier.size(width = 14.dp, height = 13.dp),
                 painter = if (calendarMode == CalendarMode.MONTHLY) {
                     painterResource(R.drawable.ic_arrow_cross_gray)
                 } else {
                     painterResource(R.drawable.ic_arrow_cross_white)
                 },
-                contentDescription = "arrow_cross"
+                contentDescription = "arrow_cross",
+                tint = Color.Unspecified,
             )
 
             Text(

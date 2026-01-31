@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -211,12 +212,13 @@ fun LedgerCard(
                 color = PickleTheme.colors.gray50
             ) {
                 mainIconResId?.let { resId ->
-                    Image(
+                    Icon(
                         painter = painterResource(resId),
                         contentDescription = "main_image",
                         modifier = Modifier
                             .size(20.dp)
-                            .padding(4.dp)
+                            .padding(4.dp),
+                        tint = Color.Unspecified,
                     )
                 }
             }
@@ -236,15 +238,17 @@ fun LedgerCard(
                         color = PickleTheme.colors.gray800
                     )
 
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.ic_ellipse_dot),
                         contentDescription = "ellipse_dot",
-                        modifier = Modifier.padding(horizontal = 2.dp)
+                        modifier = Modifier.padding(horizontal = 2.dp),
+                        tint = Color.Unspecified,
                     )
-                    Image(
+                    Icon(
                         painter = painterResource(subIconResId),
                         contentDescription = "sub_image",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Unspecified,
                     )
                 }
 
@@ -266,10 +270,11 @@ fun LedgerCard(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_arrow_right),
                 contentDescription = "arrow_right",
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
+                tint = Color.Unspecified,
             )
         }
     }

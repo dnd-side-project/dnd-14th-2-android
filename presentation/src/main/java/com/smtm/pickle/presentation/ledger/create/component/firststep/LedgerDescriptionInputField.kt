@@ -1,6 +1,5 @@
 package com.smtm.pickle.presentation.ledger.create.component.firststep
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,11 +15,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -101,12 +102,13 @@ fun LedgerDescriptionInputField(
                     if (value.isNotEmpty()) {
                         Row {
                             Spacer(modifier = Modifier.width(4.dp))
-                            Image(
+                            Icon(
                                 painter = painterResource(R.drawable.ic_ledger_content_close),
                                 contentDescription = "clear",
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .clickable { onValueChange("") }
+                                    .clickable { onValueChange("") },
+                                tint = Color.Unspecified,
                             )
                         }
                     }
