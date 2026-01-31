@@ -118,7 +118,7 @@ class LedgerCreateViewModel @Inject constructor(
 data class LedgerCreateUiState(
     val step: LedgerCreateStep = LedgerCreateStep.FIRST,
     val amount: String = "",
-    val selectedLedgerType: LedgerTypeUi? = null,
+    val selectedLedgerType: LedgerTypeUi = LedgerTypeUi.Expense,
     val selectedCategory: CategoryUi? = null,
     val description: String = "",
     val selectedPaymentMethod: PaymentMethodUi? = null,

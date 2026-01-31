@@ -25,7 +25,7 @@ import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 fun LedgerTypeSelectors(
     modifier: Modifier = Modifier,
     onLedgerTypeClick: (LedgerTypeUi) -> Unit,
-    selectedType: LedgerTypeUi? = null,
+    selectedType: LedgerTypeUi,
 ) {
     Surface(
         modifier = modifier
@@ -41,19 +41,19 @@ fun LedgerTypeSelectors(
         ) {
             LedgerTypeChip(
                 modifier = modifier.weight(1f),
-                isSelected = LedgerTypeUi.Income == selectedType,
-                type = LedgerTypeUi.Income,
+                isSelected = LedgerTypeUi.Expense == selectedType,
+                type = LedgerTypeUi.Expense,
                 onClick = {
-                    onLedgerTypeClick(LedgerTypeUi.Income)
+                    onLedgerTypeClick(LedgerTypeUi.Expense)
                 }
             )
 
             LedgerTypeChip(
                 modifier = modifier.weight(1f),
-                isSelected = LedgerTypeUi.Expense == selectedType,
-                type = LedgerTypeUi.Expense,
+                isSelected = LedgerTypeUi.Income == selectedType,
+                type = LedgerTypeUi.Income,
                 onClick = {
-                    onLedgerTypeClick(LedgerTypeUi.Expense)
+                    onLedgerTypeClick(LedgerTypeUi.Income)
                 }
             )
         }
@@ -67,7 +67,14 @@ private fun LedgerTypeChip(
     type: LedgerTypeUi,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (isSelected) PickleTheme.colors.gray700 else PickleTheme.colors.transparent
+    val backgroundColor = if (isSelected) {
+        when (type) {
+            LedgerTypeUi.Income -> PickleTheme.colors.primary400
+            LedgerTypeUi.Expense -> PickleTheme.colors.error100
+        }
+    } else {
+        PickleTheme.colors.transparent
+    }
     val textColor = if (isSelected) PickleTheme.colors.base0 else PickleTheme.colors.gray600
 
     Surface(
@@ -83,25 +90,10 @@ private fun LedgerTypeChip(
             Text(
                 text = stringResource(type.stringResId),
                 color = textColor,
-                style = PickleTheme.typography.body1Bold,
+                style = PickleTheme.typography.body2Medium,
                 textAlign = TextAlign.Center
             )
         }
-    }
-}
-
-@Preview(
-    name = "LedgerTypeSelectors - None Selected",
-    showBackground = true,
-    widthDp = 360
-)
-@Composable
-private fun LedgerTypeSelectorsNoneSelectedPreview() {
-    PickleTheme {
-        LedgerTypeSelectors(
-            onLedgerTypeClick = {},
-            selectedType = null
-        )
     }
 }
 

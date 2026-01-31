@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,8 +50,10 @@ fun LedgerAmountInputField(
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus(force = true) }
         ),
-        textStyle = PickleTheme.typography.head4SemiBold.copy(
+        textStyle = TextStyle(
+            fontFamily = PickleTheme.typography.fontFamily,
             fontSize = 40.sp,
+            fontWeight = FontWeight.Normal,
             color = PickleTheme.colors.gray800,
             textAlign = TextAlign.End
         ),
@@ -62,8 +66,12 @@ fun LedgerAmountInputField(
             ) {
                 Text(
                     text = stringResource(R.string.common_currency_won),
-                    style = PickleTheme.typography.head4SemiBold.copy(fontSize = 48.sp),
-                    color = PickleTheme.colors.gray700
+                    style = TextStyle(
+                        fontFamily = PickleTheme.typography.fontFamily,
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = PickleTheme.colors.gray700,
+                    )
                 )
                 Box(
                     modifier = Modifier

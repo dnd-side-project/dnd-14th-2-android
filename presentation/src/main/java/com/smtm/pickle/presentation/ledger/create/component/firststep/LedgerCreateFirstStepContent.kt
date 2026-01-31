@@ -20,7 +20,7 @@ import com.smtm.pickle.presentation.home.model.LedgerTypeUi
 fun LedgerCreateFirstStepContent(
     modifier: Modifier = Modifier,
     amount: String,
-    selectedLedgerType: LedgerTypeUi?,
+    selectedLedgerType: LedgerTypeUi,
     selectedCategory: CategoryUi?,
     description: String,
     onAmountChange: (String) -> Unit,
@@ -74,7 +74,6 @@ fun LedgerCreateFirstStepContent(
 
         LedgerCreateFirstBottomButton(
             enableNext = amount.toLongOrNull()?.takeIf { it > 0 } != null &&
-                    selectedLedgerType != null &&
                     selectedCategory != null,
             onNextClick = onNextClick,
         )
@@ -91,7 +90,7 @@ private fun LedgerCreateFirstStepContentPreview() {
     PickleTheme {
         LedgerCreateFirstStepContent(
             amount = "0",
-            selectedLedgerType = null,
+            selectedLedgerType = LedgerTypeUi.Expense,
             description = "",
             onAmountChange = {},
             onLedgerTypeClick = {},

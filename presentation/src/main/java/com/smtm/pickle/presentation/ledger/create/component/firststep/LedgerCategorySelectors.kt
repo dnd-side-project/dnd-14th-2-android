@@ -30,7 +30,7 @@ import com.smtm.pickle.presentation.ledger.create.component.LedgerCreateHeaderTe
 @Composable
 fun LedgerCategorySelectors(
     modifier: Modifier = Modifier,
-    selectedLedgerType: LedgerTypeUi? = null,
+    selectedLedgerType: LedgerTypeUi,
     selectedCategory: CategoryUi? = null,
     onCategoryClick: (CategoryUi) -> Unit
 ) {
@@ -123,7 +123,7 @@ private fun CategoryChip(
     }
 }
 
-private fun getCategories(ledgerType: LedgerTypeUi?): List<CategoryUi> = when (ledgerType) {
+private fun getCategories(ledgerType: LedgerTypeUi): List<CategoryUi> = when (ledgerType) {
     LedgerTypeUi.Income -> {
         listOf(
             CategoryUi.Salary, CategoryUi.SideIncome, CategoryUi.Bonus,
@@ -133,14 +133,6 @@ private fun getCategories(ledgerType: LedgerTypeUi?): List<CategoryUi> = when (l
     }
 
     LedgerTypeUi.Expense -> {
-        listOf(
-            CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
-            CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
-            CategoryUi.LeisureHobby, CategoryUi.SavingFinance, CategoryUi.Other,
-        )
-    }
-
-    null -> {
         listOf(
             CategoryUi.Food, CategoryUi.Transport, CategoryUi.Housing,
             CategoryUi.Shopping, CategoryUi.HealthMedical, CategoryUi.EducationSelfDevelopment,
@@ -159,6 +151,7 @@ private fun getCategories(ledgerType: LedgerTypeUi?): List<CategoryUi> = when (l
 private fun LedgerCategorySelectorsNonSelectedPreview() {
     PickleTheme {
         LedgerCategorySelectors(
+            selectedLedgerType = LedgerTypeUi.Expense,
             selectedCategory = null,
             onCategoryClick = {}
         )
@@ -174,6 +167,7 @@ private fun LedgerCategorySelectorsNonSelectedPreview() {
 private fun LedgerCategorySelectorsSelectedPreview() {
     PickleTheme {
         LedgerCategorySelectors(
+            selectedLedgerType = LedgerTypeUi.Expense,
             selectedCategory = CategoryUi.Housing,
             onCategoryClick = {}
         )
