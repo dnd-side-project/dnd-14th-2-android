@@ -27,7 +27,7 @@
     <!-- Ledger Payment Method -->
     <string name="ledger_payment_method_bank_transfer">계좌이체</string>
     <string name="ledger_payment_method_credit_card">신용카드</string>
-    <string name="ledger_payment_method_debit_card">체크카트</string>
+    <string name="ledger_payment_method_debit_card">체크카드</string>
     <string name="ledger_payment_method_cash">현금</string>
 
     <!-- Ledger Type -->
@@ -56,5 +56,9 @@
     <string name="common_next">다음</string>
     <string name="common_input_success">선택완료</string>
     <string name="common_currency_won">₩</string>
+    <string name="common_income">수입</string>
+    <string name="common_expense">지출</string>
+    <string name="common_minus_str">-%s</string>
+    <string name="common_plus_str">+%s</string>
 
 </resources>

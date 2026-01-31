@@ -80,9 +80,9 @@ fun LazyListScope.dailyLedgerInfoSection(
                 title = stringResource(item.category.stringResId),
                 description = item.description,
                 amount = if (item.type == LedgerTypeUi.Income) {
-                    "+${item.amount}"
+                    stringResource(R.string.common_plus_str, item.amount)
                 } else {
-                    "-${item.amount}"
+                    stringResource(R.string.common_minus_str, item.amount)
                 },
                 amountColor = if (item.type == LedgerTypeUi.Income) {
                     PickleTheme.colors.primary500
@@ -148,7 +148,7 @@ private fun SelectedDateAmount(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "수입",
+            text = stringResource(R.string.common_income),
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.black,
         )
@@ -157,7 +157,7 @@ private fun SelectedDateAmount(
 
         Text(
             modifier = Modifier.width(110.dp),
-            text = "+${totalIncome.toMoneyFormat()}",
+            text = stringResource(R.string.common_plus_str, totalIncome.toMoneyFormat()),
             textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.primary400
@@ -166,7 +166,7 @@ private fun SelectedDateAmount(
         Spacer(modifier = Modifier.width(10.dp))
 
         Text(
-            text = "지출",
+            text = stringResource(R.string.common_expense),
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.black,
         )
@@ -175,7 +175,7 @@ private fun SelectedDateAmount(
 
         Text(
             modifier = Modifier.width(110.dp),
-            text = "-${totalExpense.toMoneyFormat()}",
+            text = stringResource(R.string.common_minus_str, totalExpense.toMoneyFormat()),
             textAlign = TextAlign.Start,
             style = PickleTheme.typography.body4Medium,
             color = PickleTheme.colors.error100

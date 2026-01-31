@@ -11,9 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smtm.pickle.presentation.R
 import com.smtm.pickle.presentation.common.utils.toMoneyFormat
 import com.smtm.pickle.presentation.designsystem.components.button.PickleBadge
 import com.smtm.pickle.presentation.designsystem.components.profile.PickleProfile
@@ -57,13 +59,13 @@ fun HomeProfile(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "수입",
+                    text = stringResource(R.string.common_income),
                     style = PickleTheme.typography.body4Medium,
                     color = PickleTheme.colors.gray800
                 )
                 Text(
                     modifier = Modifier.width(130.dp),
-                    text = "+${income.toMoneyFormat()}",
+                    text = stringResource(R.string.common_plus_str, income.toMoneyFormat()),
                     textAlign = TextAlign.End,
                     style = PickleTheme.typography.body4Medium,
                     color = PickleTheme.colors.primary500
@@ -72,13 +74,13 @@ fun HomeProfile(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "지출",
+                    text = stringResource(R.string.common_expense),
                     style = PickleTheme.typography.body4Medium,
                     color = PickleTheme.colors.gray800
                 )
                 Text(
                     modifier = Modifier.width(130.dp),
-                    text = "-${expense.toMoneyFormat()}",
+                    text = stringResource(R.string.common_minus_str, expense.toMoneyFormat()),
                     textAlign = TextAlign.End,
                     style = PickleTheme.typography.body4Medium,
                     color = PickleTheme.colors.error100
