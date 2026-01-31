@@ -11,11 +11,11 @@ sealed interface SnackbarPosition {
     /** 앱바 바로 아래 */
     data object BelowTopAppBar : SnackbarPosition
 
-    /** 바텀 네비게이션 위 */
+    /** 시스템 바텀 네비게이션 위 */
     data object AboveSystemNavigation : SnackbarPosition
 
-    /** 하단 고정 버튼 위 */
-    data object AboveBottomContents: SnackbarPosition
+    /** 하단 내비게이션 또는 버튼 위 */
+    data object AboveBottomContents : SnackbarPosition
 
     /** 커스텀 */
     data class Custom(

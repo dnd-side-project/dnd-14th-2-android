@@ -61,14 +61,7 @@ fun SnackbarHost(
     modifier: Modifier = Modifier,
 ) {
     val snackbar = snackbarState.currentSnackbar
-    val currentSnackbarData = remember { mutableStateOf<SnackbarData?>(null) }
-    val alignment = currentSnackbarData.value?.position?.toAlignment() ?: Alignment.TopCenter
-
-    LaunchedEffect(snackbar) {
-        if (snackbar != null) {
-            currentSnackbarData.value = snackbar
-        }
-    }
+    val alignment = snackbar?.position?.toAlignment() ?: Alignment.TopCenter
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -89,7 +82,7 @@ fun SnackbarHost(
                 }
             ) + fadeOut(animationSpec = tween(300))
         ) {
-            currentSnackbarData.value?.let {
+            snackbar?.let {
                 PickleSnackbar(
                     snackbarData = it,
                     modifier = Modifier.applyPositionPadding(it.position),
