@@ -1,6 +1,5 @@
 package com.smtm.pickle.presentation.designsystem.components.snackbar.model
 
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
